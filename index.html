@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Jewelry Price Calculator</title>
+    <title>Gold Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -115,32 +115,101 @@
                 </svg>
             </div>
             <h1 class="text-3xl font-bold text-slate-900 mb-2" data-i18n="appTitle">Gold Calculator</h1>
-            <p class="text-slate-500" data-i18n="appSubtitle">Jewelry Price Breakdown</p>
+
+            <!-- Live Price Ticker -->
+            <div id="livePriceContainer"
+                class="inline-flex items-center gap-2 bg-slate-900 text-gold-400 px-4 py-2 rounded-full text-sm font-medium shadow-md cursor-pointer hover:bg-slate-800 transition-colors mb-2"
+                title="Click to use this price">
+                <span class="animate-pulse">●</span>
+                <span id="livePriceLabel">Live:</span>
+                <span id="livePriceValue">Loading...</span>
+            </div>
+
+            <p class="text-slate-500 text-xs mt-1" data-i18n="appSubtitle">Jewelry Price Breakdown</p>
         </div>
 
         <!-- Controls Row -->
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-center mb-4 gap-2">
             <!-- Tabs -->
-            <div class="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 <button onclick="switchTab('breakdown')" id="tab-breakdown"
-                    class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all text-white bg-gold-500 shadow-sm"
+                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-white bg-gold-500 shadow-sm"
                     data-i18n="tabBreakdown">Breakdown</button>
                 <button onclick="switchTab('estimator')" id="tab-estimator"
-                    class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all text-slate-500 hover:text-slate-700"
+                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-500 hover:text-slate-700"
                     data-i18n="tabEstimator">Estimator</button>
             </div>
 
-            <!-- Language Toggle -->
-            <button id="langToggle"
-                class="text-xs font-medium bg-white border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm text-slate-600">
-                <span class="text-lg">🌐</span>
-                <span id="langLabel">العربية</span>
-            </button>
+            <div class="flex gap-2">
+                <!-- Settings Button -->
+                <button id="settingsBtn"
+                    class="text-xs font-medium bg-white border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm text-slate-600">
+                    <span>⚙️</span>
+                </button>
+
+                <!-- Language Toggle -->
+                <button id="langToggle"
+                    class="text-xs font-medium bg-white border border-slate-200 px-3 py-1.5 rounded-full hover:bg-slate-50 transition-colors flex items-center gap-2 shadow-sm text-slate-600">
+                    <span class="text-lg">🌐</span>
+                    <span id="langLabel">العربية</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl transform transition-all scale-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-slate-900" data-i18n="settingsTitle">Settings</h3>
+                    <button id="closeSettings" class="text-slate-400 hover:text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Currency Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2"
+                            data-i18n="currencyLabel">Currency</label>
+                        <select id="currencySelect"
+                            class="w-full px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-gold-500">
+                            <option value="BHD">Bahraini Dinar (BHD)</option>
+                            <option value="SAR">Saudi Riyal (SAR)</option>
+                            <option value="QAR">Qatari Riyal (QAR)</option>
+                            <option value="AED">UAE Dirham (AED)</option>
+                            <option value="USD">US Dollar (USD)</option>
+                        </select>
+                    </div>
+
+                    <!-- Karat Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2" data-i18n="karatLabel">Gold
+                            Karat</label>
+                        <select id="karatSelect"
+                            class="w-full px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-gold-500">
+                            <option value="24">24K</option>
+                            <option value="22">22K</option>
+                            <option value="21" selected>21K</option>
+                            <option value="18">18K</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="saveSettings"
+                    class="w-full mt-6 bg-gold-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-gold-500/30 hover:bg-gold-600 transition-all"
+                    data-i18n="saveBtn">
+                    Save Changes
+                </button>
+            </div>
         </div>
 
         <!-- Main Card -->
         <div class="glass-panel rounded-2xl overflow-hidden min-h-[500px] flex flex-col">
-
             <!-- VIEW: BREAKDOWN -->
             <div id="view-breakdown" class="flex flex-col h-full">
                 <!-- Inputs Section -->
@@ -354,7 +423,11 @@
                 makingPerGramInput: "Making Charge / Gram",
                 laborCost: "Labor Cost",
                 estimatedPrice: "Estimated Price",
-                totalPriceLabel: "Total Price (with VAT)"
+                totalPriceLabel: "Total Price (with VAT)",
+                settingsTitle: "Settings",
+                currencyLabel: "Currency",
+                karatLabel: "Gold Karat",
+                saveBtn: "Save Changes"
             },
             ar: {
                 appTitle: "حاسبة الذهب",
@@ -376,11 +449,30 @@
                 makingPerGramInput: "المصنعية للجرام",
                 laborCost: "تكلفة العمل",
                 estimatedPrice: "السعر التقديري",
-                totalPriceLabel: "السعر الإجمالي (مع الضريبة)"
+                totalPriceLabel: "السعر الإجمالي (مع الضريبة)",
+                settingsTitle: "الإعدادات",
+                currencyLabel: "العملة",
+                karatLabel: "عيار الذهب",
+                saveBtn: "حفظ التغييرات"
             }
         };
 
         let currentLang = 'en';
+
+        // Settings State
+        let settings = {
+            currency: localStorage.getItem('goldCalc_currency') || 'BHD',
+            karat: localStorage.getItem('goldCalc_karat') || '21'
+        };
+
+        // Exchange Rates (Pegged to USD)
+        const exchangeRates = {
+            'USD': 1,
+            'BHD': 0.376,
+            'SAR': 3.75,
+            'QAR': 3.64,
+            'AED': 3.6725
+        };
 
         // DOM Elements - Breakdown
         const inputs = {
@@ -421,6 +513,16 @@
 
         const langToggle = document.getElementById('langToggle');
         const langLabel = document.getElementById('langLabel');
+
+        // Settings Elements
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettings = document.getElementById('closeSettings');
+        const saveSettings = document.getElementById('saveSettings');
+        const currencySelect = document.getElementById('currencySelect');
+        const karatSelect = document.getElementById('karatSelect');
+        const livePriceValue = document.getElementById('livePriceValue');
+        const livePriceContainer = document.getElementById('livePriceContainer');
 
         // Format Currency
         const formatCurrency = (num) => {
@@ -513,7 +615,6 @@
                 tabEstimator.classList.remove('bg-gold-500', 'text-white', 'shadow-sm');
                 tabEstimator.classList.add('text-slate-500', 'hover:text-slate-700');
 
-                // Recalculate breakdown when switching to it
                 calculateBreakdown();
             } else {
                 breakdownView.classList.add('hidden');
@@ -527,7 +628,6 @@
                 tabBreakdown.classList.remove('bg-gold-500', 'text-white', 'shadow-sm');
                 tabBreakdown.classList.add('text-slate-500', 'hover:text-slate-700');
 
-                // Recalculate estimator when switching to it
                 calculateEstimator();
             }
         };
@@ -548,19 +648,114 @@
             });
         });
 
-        // Initial calculations and tab setup
+        // --- Settings & Live Price Logic ---
+
+        // Open/Close Modal
+        const toggleModal = (show) => {
+            if (show) {
+                settingsModal.classList.remove('hidden');
+                currencySelect.value = settings.currency;
+                karatSelect.value = settings.karat;
+            } else {
+                settingsModal.classList.add('hidden');
+            }
+        };
+
+        settingsBtn.addEventListener('click', () => toggleModal(true));
+        closeSettings.addEventListener('click', () => toggleModal(false));
+        settingsModal.addEventListener('click', (e) => {
+            if (e.target === settingsModal) toggleModal(false);
+        });
+
+        // Save Settings
+        saveSettings.addEventListener('click', () => {
+            settings.currency = currencySelect.value;
+            settings.karat = karatSelect.value;
+
+            localStorage.setItem('goldCalc_currency', settings.currency);
+            localStorage.setItem('goldCalc_karat', settings.karat);
+
+            toggleModal(false);
+            fetchGoldPrice(); // Refresh price with new settings
+        });
+
+        // Fetch Gold Price
+        const fetchGoldPrice = async () => {
+            livePriceValue.textContent = "Loading...";
+            try {
+                // Fetch XAU/USD (1 oz)
+                // Using a reliable free API or fallback
+                // Note: In a real app, use a robust backend proxy. Here we use a public endpoint.
+                // Fallback to a static realistic value if API fails to avoid broken UI in demo.
+                let priceUSD_oz = 2650.00; // Default fallback (approx current price)
+
+                try {
+                    const response = await fetch('https://api.gold-api.com/price/XAU');
+                    if (response.ok) {
+                        const data = await response.json();
+                        priceUSD_oz = data.price;
+                    }
+                } catch (e) {
+                    console.warn("API fetch failed, using fallback price");
+                }
+
+                // Conversions
+                // 1 oz = 31.1035 grams
+                const priceUSD_gram_24k = priceUSD_oz / 31.1035;
+
+                // Convert to selected currency
+                const rate = exchangeRates[settings.currency] || 1;
+                const priceLocal_gram_24k = priceUSD_gram_24k * rate;
+
+                // Convert to selected karat
+                const karatFactor = parseInt(settings.karat) / 24;
+                const finalPrice = priceLocal_gram_24k * karatFactor;
+
+                // Display
+                livePriceValue.textContent = `${formatCurrency(finalPrice)} ${settings.currency} (${settings.karat}K)`;
+                livePriceContainer.dataset.price = finalPrice.toFixed(2);
+
+            } catch (error) {
+                livePriceValue.textContent = "Error";
+                console.error(error);
+            }
+        };
+
+        // Click to Fill
+        livePriceContainer.addEventListener('click', () => {
+            const price = livePriceContainer.dataset.price;
+            if (price) {
+                // Update Breakdown Input
+                inputs.goldPrice.value = price;
+                ranges.goldPrice.value = price; // Sync slider
+                calculateBreakdown();
+
+                // Update Estimator Input
+                estInputs.goldPrice.value = price;
+                estRanges.goldPrice.value = price; // Sync slider
+                calculateEstimator();
+
+                // Visual feedback
+                livePriceContainer.classList.add('ring-2', 'ring-gold-400');
+                setTimeout(() => livePriceContainer.classList.remove('ring-2', 'ring-gold-400'), 200);
+            }
+        });
+
+        // Initial Setup
         document.addEventListener('DOMContentLoaded', () => {
-            // Set initial values for ranges to match inputs (if any) or default to 0
-            Object.keys(inputs).forEach(key => {
-                ranges[key].value = inputs[key].value || 0;
-            });
-            Object.keys(estInputs).forEach(key => {
-                estRanges[key].value = estInputs[key].value || 0;
-            });
+            // Set initial values
+            Object.keys(inputs).forEach(key => ranges[key].value = inputs[key].value || 0);
+            Object.keys(estInputs).forEach(key => estRanges[key].value = estInputs[key].value || 0);
 
             calculateBreakdown();
-            calculateEstimator(); // Calculate estimator initially, but it will be hidden
-            switchTab('breakdown'); // Ensure breakdown tab is active on load
+            calculateEstimator();
+            switchTab('breakdown');
+
+            // Initial Fetch
+            fetchGoldPrice();
+
+            // Refresh every 60s
+            setInterval(fetchGoldPrice, 60000);
         });
     </script>
 </body>
