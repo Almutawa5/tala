@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #c68e2d;
+    --primary-dark: #aa6f22;
+    --primary-light: #d4a746;
+    --bg-main: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.95);
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border: #e2e8f0;
+  }
+
+  body.theme-silver {
+    --primary: #71717a;
+    --primary-dark: #52525b;
+    --primary-light: #a1a1aa;
+  }
+
+  body.theme-dark {
+    --primary: #fbbf24;
+    --primary-dark: #f59e0b;
+    --primary-light: #fcd34d;
+    --bg-main: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.95);
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --border: #334155;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+
+  body.theme-light {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #60a5fa;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  }
+
+  .input-group:focus-within label {
+    color: var(--primary);
+  }
+
+  .input-group:focus-within input[type="number"] {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(198, 142, 45, 0.1);
+  }
+  
+  /* Range Slider Customization */
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--primary);
+    cursor: pointer;
+    margin-top: -6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: #e2e8f0;
+    border-radius: 2px;
+  }
+
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #cbd5e1;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.help-step {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.theme-swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.theme-swatch:hover {
+  transform: scale(1.1);
+}
+
+.theme-swatch.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(198, 142, 45, 0.2);
+}
