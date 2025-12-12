@@ -102,7 +102,7 @@ const SettingsModal = ({ isOpen, onClose, settings, updateSettings }) => {
                     onClick={handleSave}
                     className="w-full mt-6 bg-gold-500 text-white py-3 rounded-xl font-bold shadow-lg shadow-gold-500/30 hover:bg-gold-600 transition-all"
                 >
-                    {t.saveBtn}
+                    {t.settingsSaveBtn}
                 </button>
             </div>
         </div>

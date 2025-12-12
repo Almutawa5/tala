@@ -37,5 +37,11 @@ export const useHistory = () => {
         setHistory([]);
     };
 
-    return { history, saveCalculation, deleteCalculation, clearHistory };
+    const renameCalculation = (id, newName) => {
+        setHistory(prev => prev.map(item =>
+            item.id === id ? { ...item, name: newName } : item
+        ));
+    };
+
+    return { history, saveCalculation, deleteCalculation, clearHistory, renameCalculation };
 };

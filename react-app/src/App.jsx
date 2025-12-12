@@ -7,6 +7,7 @@ import EstimatorView from './components/EstimatorView';
 import SettingsModal from './components/SettingsModal';
 import HelpModal from './components/HelpModal';
 import HistoryModal from './components/HistoryModal';
+import SaveModal from './components/SaveModal';
 import { useSettings } from './hooks/useSettings';
 import { useGoldPrice } from './hooks/useGoldPrice';
 import { useHistory } from './hooks/useHistory';
@@ -14,12 +15,14 @@ import { useHistory } from './hooks/useHistory';
 function App() {
   const { settings, updateSettings } = useSettings();
   const { price, loading, lastUpdated, refresh } = useGoldPrice(settings.currency, settings.karat);
-  const { history, saveCalculation, deleteCalculation, clearHistory } = useHistory();
+  const { history, saveCalculation, deleteCalculation, clearHistory, renameCalculation } = useHistory();
 
   const [activeTab, setActiveTab] = useState('breakdown');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [pendingSave, setPendingSave] = useState(null);
   const [restoredData, setRestoredData] = useState(null);
 
   // State to trigger price updates in child components
@@ -36,7 +39,21 @@ function App() {
   };
 
   const handleSave = (type, inputs, results) => {
-    saveCalculation(type, inputs, results, settings.currency);
+    setPendingSave({ type, inputs, results });
+    setIsSaveModalOpen(true);
+  };
+
+  const handleConfirmSave = (name) => {
+    if (pendingSave) {
+      saveCalculation(
+        pendingSave.type,
+        pendingSave.inputs,
+        pendingSave.results,
+        settings.currency,
+        name
+      );
+      setPendingSave(null);
+    }
   };
 
   const handleRestore = (item) => {
@@ -104,6 +121,14 @@ function App() {
         onDelete={deleteCalculation}
         onClear={clearHistory}
         onRestore={handleRestore}
+        onRename={renameCalculation}
+        language={settings.language}
+      />
+
+      <SaveModal
+        isOpen={isSaveModalOpen}
+        onClose={() => setIsSaveModalOpen(false)}
+        onConfirm={handleConfirmSave}
         language={settings.language}
       />
     </Layout>

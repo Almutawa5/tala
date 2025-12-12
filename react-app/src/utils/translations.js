@@ -26,7 +26,7 @@ export const translations = {
         currencyLabel: "Currency",
         karatLabel: "Gold Karat",
         vatLabel: "VAT Percentage (%)",
-        saveBtn: "Save Changes",
+        settingsSaveBtn: "Save Changes",
         helpTitle: "How to Use",
         helpStep1Title: "1. Live Price",
         helpStep1: "Click the live price ticker at the top to automatically fill the gold price in both calculators.",
@@ -50,7 +50,8 @@ export const translations = {
         enterNamePlaceholder: "e.g., Wedding Ring",
         cancelBtn: "Cancel",
         confirmSaveBtn: "Save Record",
-        untitledRecord: "Untitled Record"
+        untitledRecord: "Untitled Record",
+        editNameBtn: "Edit Name"
     },
     ar: {
         appTitle: "حاسبة الذهب",
@@ -79,7 +80,7 @@ export const translations = {
         currencyLabel: "العملة",
         karatLabel: "عيار الذهب",
         vatLabel: "نسبة الضريبة (%)",
-        saveBtn: "حفظ التغييرات",
+        settingsSaveBtn: "حفظ التغييرات",
         helpTitle: "كيفية الاستخدام",
         helpStep1Title: "١. السعر المباشر",
         helpStep1: "انقر على مؤشر السعر المباشر في الأعلى لملء سعر الذهب تلقائياً في كلا الحاسبتين.",
@@ -103,6 +104,7 @@ export const translations = {
         enterNamePlaceholder: "مثال: خاتم زفاف",
         cancelBtn: "إلغاء",
         confirmSaveBtn: "حفظ السجل",
-        untitledRecord: "سجل بدون عنوان"
+        untitledRecord: "سجل بدون عنوان",
+        editNameBtn: "تعديل الاسم"
     }
 };
