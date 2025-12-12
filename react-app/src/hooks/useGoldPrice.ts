@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const EXCHANGE_RATES = {
+const EXCHANGE_RATES: Record<string, number> = {
     'USD': 1,
     'BHD': 0.376,
     'SAR': 3.75,
@@ -8,11 +8,11 @@ const EXCHANGE_RATES = {
     'AED': 3.6725
 };
 
-export const useGoldPrice = (currency, karat) => {
+export const useGoldPrice = (currency: string, karat: string) => {
     const [price, setPrice] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [lastUpdated, setLastUpdated] = useState(null);
+    const [error, setError] = useState<string | null>(null);
+    const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
     const fetchPrice = useCallback(async () => {
         setLoading(true);
@@ -39,7 +39,11 @@ export const useGoldPrice = (currency, karat) => {
             setPrice(finalPrice);
             setLastUpdated(new Date());
         } catch (err) {
-            setError(err.message);
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("An unknown error occurred");
+            }
         } finally {
             setLoading(false);
         }

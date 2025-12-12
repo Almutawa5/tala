@@ -2,7 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
 import { translations } from '../utils/translations';
 
-const SaveModal = ({ isOpen, onClose, onConfirm, language }) => {
+import { Language } from '../utils/translations';
+
+interface SaveModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: (name: string) => void;
+    language: Language;
+}
+
+const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, language }) => {
     const [name, setName] = useState('');
     const t = translations[language];
 
@@ -14,7 +23,7 @@ const SaveModal = ({ isOpen, onClose, onConfirm, language }) => {
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onConfirm(name);
         onClose();

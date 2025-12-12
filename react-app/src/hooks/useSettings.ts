@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
+import { Language } from '../utils/translations';
 
-const DEFAULT_SETTINGS = {
+export interface Settings {
+    currency: string;
+    karat: string;
+    vatPercentage: number;
+    theme: string;
+    language: Language;
+}
+
+const DEFAULT_SETTINGS: Settings = {
     currency: 'BHD',
     karat: '21',
     vatPercentage: 10,
@@ -9,7 +18,7 @@ const DEFAULT_SETTINGS = {
 };
 
 export const useSettings = () => {
-    const [settings, setSettings] = useState(() => {
+    const [settings, setSettings] = useState<Settings>(() => {
         const saved = localStorage.getItem('goldCalc_settings');
         return saved ? { ...DEFAULT_SETTINGS, ...JSON.parse(saved) } : DEFAULT_SETTINGS;
     });
@@ -18,7 +27,9 @@ export const useSettings = () => {
         localStorage.setItem('goldCalc_settings', JSON.stringify(settings));
 
         // Apply theme to body
-        document.body.className = document.body.className.replace(/theme-\w+/g, '');
+        const themes = ['theme-silver', 'theme-dark', 'theme-light'];
+        document.body.classList.remove(...themes);
+
         if (settings.theme !== 'gold') {
             document.body.classList.add(`theme-${settings.theme}`);
         }
@@ -29,7 +40,7 @@ export const useSettings = () => {
 
     }, [settings]);
 
-    const updateSettings = (newSettings) => {
+    const updateSettings = (newSettings: Partial<Settings>) => {
         setSettings(prev => ({ ...prev, ...newSettings }));
     };
 

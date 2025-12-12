@@ -2,14 +2,22 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { translations } from '../utils/translations';
 
-const HelpModal = ({ isOpen, onClose, language }) => {
+import { Language } from '../utils/translations';
+
+interface HelpModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    language: Language;
+}
+
+const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose, language }) => {
     if (!isOpen) return null;
     const t = translations[language];
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all scale-100 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-6">
+            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all scale-100 max-h-[80vh] overflow-y-auto custom-scrollbar flex flex-col" onClick={e => e.stopPropagation()}>
+                <div className="flex justify-between items-center mb-6 flex-shrink-0">
                     <h3 className="text-lg font-bold text-slate-900">{t.helpTitle}</h3>
                     <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
                         <X size={24} />

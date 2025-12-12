@@ -1,6 +1,18 @@
 import React from 'react';
 
-const InputGroup = ({
+interface InputGroupProps {
+    id: string;
+    label: string;
+    subLabel?: string;
+    value: number | string;
+    onChange: (value: string | number) => void;
+    min?: number;
+    max?: number;
+    step?: number;
+    placeholder?: string;
+}
+
+const InputGroup: React.FC<InputGroupProps> = ({
     id,
     label,
     subLabel,

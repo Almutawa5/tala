@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Layout from './components/Layout';
 import Header from './components/Header';
 import Controls from './components/Controls';
@@ -12,9 +12,11 @@ import { useSettings } from './hooks/useSettings';
 import { useGoldPrice } from './hooks/useGoldPrice';
 import { useHistory } from './hooks/useHistory';
 
+import { HistoryInput, HistoryResult, HistoryItem } from './hooks/useHistory';
+
 function App() {
   const { settings, updateSettings } = useSettings();
-  const { price, loading, lastUpdated, refresh } = useGoldPrice(settings.currency, settings.karat);
+  const { price, loading, lastUpdated } = useGoldPrice(settings.currency, settings.karat);
   const { history, saveCalculation, deleteCalculation, clearHistory, renameCalculation } = useHistory();
 
   const [activeTab, setActiveTab] = useState('breakdown');
@@ -22,11 +24,18 @@ function App() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
-  const [pendingSave, setPendingSave] = useState(null);
-  const [restoredData, setRestoredData] = useState(null);
+
+  interface PendingSave {
+    type: 'breakdown' | 'estimator';
+    inputs: HistoryInput;
+    results: HistoryResult;
+  }
+
+  const [pendingSave, setPendingSave] = useState<PendingSave | null>(null);
+  const [restoredData, setRestoredData] = useState<HistoryItem | null>(null);
 
   // State to trigger price updates in child components
-  const [livePriceTrigger, setLivePriceTrigger] = useState(null);
+  const [livePriceTrigger, setLivePriceTrigger] = useState<((price: string) => void) | null>(null);
 
   const handleUseLivePrice = () => {
     if (price > 0 && livePriceTrigger) {
@@ -38,12 +47,12 @@ function App() {
     updateSettings({ language: settings.language === 'en' ? 'ar' : 'en' });
   };
 
-  const handleSave = (type, inputs, results) => {
+  const handleSave = (type: 'breakdown' | 'estimator', inputs: HistoryInput, results: HistoryResult) => {
     setPendingSave({ type, inputs, results });
     setIsSaveModalOpen(true);
   };
 
-  const handleConfirmSave = (name) => {
+  const handleConfirmSave = (name: string) => {
     if (pendingSave) {
       saveCalculation(
         pendingSave.type,
@@ -56,7 +65,7 @@ function App() {
     }
   };
 
-  const handleRestore = (item) => {
+  const handleRestore = (item: HistoryItem) => {
     setActiveTab(item.type);
     setRestoredData(item);
   };

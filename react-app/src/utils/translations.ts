@@ -1,4 +1,6 @@
-export const translations = {
+export type Language = 'en' | 'ar';
+
+export const translations: Record<string, Record<string, string>> = {
     en: {
         appTitle: "Gold Calculator",
         appSubtitle: "Jewelry Price Breakdown",

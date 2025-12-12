@@ -3,26 +3,40 @@ import { X, Trash2, RotateCcw, Clock, Edit2, Check } from 'lucide-react';
 import { translations } from '../utils/translations';
 import { formatCurrency } from '../utils/calculations';
 
-const HistoryModal = ({ isOpen, onClose, history, onDelete, onClear, onRestore, onRename, language }) => {
-    const [editingId, setEditingId] = useState(null);
+import { HistoryItem } from '../hooks/useHistory';
+import { Language } from '../utils/translations';
+
+interface HistoryModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    history: HistoryItem[];
+    onDelete: (id: number) => void;
+    onClear: () => void;
+    onRestore: (item: HistoryItem) => void;
+    onRename: (id: number, name: string) => void;
+    language: Language;
+}
+
+const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, onDelete, onClear, onRestore, onRename, language }) => {
+    const [editingId, setEditingId] = useState<number | null>(null);
     const [editName, setEditName] = useState('');
 
     if (!isOpen) return null;
     const t = translations[language];
 
-    const formatDate = (isoString) => {
+    const formatDate = (isoString: string) => {
         const date = new Date(isoString);
         return new Intl.DateTimeFormat(language === 'en' ? 'en-US' : 'ar-SA', {
             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
         }).format(date);
     };
 
-    const startEditing = (item) => {
+    const startEditing = (item: HistoryItem) => {
         setEditingId(item.id);
         setEditName(item.name || '');
     };
 
-    const saveEditing = (id) => {
+    const saveEditing = (id: number) => {
         onRename(id, editName);
         setEditingId(null);
     };
@@ -34,8 +48,8 @@ const HistoryModal = ({ isOpen, onClose, history, onDelete, onClear, onRestore, 
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all scale-100 max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-4">
+            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all scale-100 max-h-[80vh] flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
+                <div className="flex justify-between items-center mb-4 flex-shrink-0">
                     <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                         <Clock size={20} className="text-gold-500" />
                         {t.historyTitle}
@@ -143,13 +157,13 @@ const HistoryModal = ({ isOpen, onClose, history, onDelete, onClear, onRestore, 
                                     {item.type === 'breakdown' && (
                                         <div className="text-slate-600 col-span-2">
                                             <span className="text-xs text-slate-400 block">{t.itemPrice}</span>
-                                            {formatCurrency(item.inputs.itemPrice)} {item.currency}
+                                            {formatCurrency(item.inputs.itemPrice || 0)} {item.currency}
                                         </div>
                                     )}
                                     {item.type === 'estimator' && (
                                         <div className="text-slate-900 font-bold col-span-2">
                                             <span className="text-xs text-slate-400 block font-normal">{t.totalPrice}</span>
-                                            {formatCurrency(item.results.totalPrice)} {item.currency}
+                                            {formatCurrency(item.results.totalPrice || 0)} {item.currency}
                                         </div>
                                     )}
                                 </div>

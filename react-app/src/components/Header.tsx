@@ -2,7 +2,17 @@ import React from 'react';
 import { formatCurrency } from '../utils/calculations';
 import { translations } from '../utils/translations';
 
-const Header = ({
+import { Settings } from '../hooks/useSettings';
+
+interface HeaderProps {
+    settings: Settings;
+    livePrice: number;
+    lastUpdated: Date | null;
+    onUseLivePrice: () => void;
+    loading: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({
     settings,
     livePrice,
     lastUpdated,
@@ -11,10 +21,10 @@ const Header = ({
 }) => {
     const t = translations[settings.language];
 
-    const formatTimestamp = (date) => {
+    const formatTimestamp = (date: Date | null) => {
         if (!date) return '--';
         const now = new Date();
-        const diff = Math.floor((now - date) / 1000);
+        const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
 
         if (diff < 60) return settings.language === 'en' ? 'Just now' : 'الآن';
         if (diff < 3600) {

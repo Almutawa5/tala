@@ -2,8 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { translations } from '../utils/translations';
 
-const SettingsModal = ({ isOpen, onClose, settings, updateSettings }) => {
-    const [localSettings, setLocalSettings] = useState(settings);
+import { Settings } from '../hooks/useSettings';
+
+interface SettingsModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    settings: Settings;
+    updateSettings: (newSettings: Partial<Settings>) => void;
+}
+
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings, updateSettings }) => {
+    const [localSettings, setLocalSettings] = useState<Settings>(settings);
     const t = translations[settings.language];
 
     useEffect(() => {
@@ -21,8 +30,8 @@ const SettingsModal = ({ isOpen, onClose, settings, updateSettings }) => {
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl transform transition-all scale-100 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-6">
+            <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl transform transition-all scale-100 max-h-[80vh] overflow-y-auto custom-scrollbar flex flex-col" onClick={e => e.stopPropagation()}>
+                <div className="flex justify-between items-center mb-6 flex-shrink-0">
                     <h3 className="text-lg font-bold text-slate-900">{t.settingsTitle}</h3>
                     <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
                         <X size={24} />

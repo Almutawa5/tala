@@ -1,4 +1,17 @@
-export const calculateBreakdown = (goldPrice, itemPrice, weight, vatPercentage) => {
+export interface BreakdownResult {
+    vatAmount: number;
+    priceNoVat: number;
+    rawGoldCost: number;
+    totalMaking: number;
+    makingPerGram: number;
+}
+
+export const calculateBreakdown = (
+    goldPrice: number,
+    itemPrice: number,
+    weight: number,
+    vatPercentage: number
+): BreakdownResult => {
     if (goldPrice > 0 && itemPrice > 0 && weight > 0) {
         const vatAmount = itemPrice * (vatPercentage / 100);
         const priceNoVat = itemPrice - vatAmount;
@@ -23,7 +36,19 @@ export const calculateBreakdown = (goldPrice, itemPrice, weight, vatPercentage) 
     };
 };
 
-export const calculateEstimator = (goldPrice, weight, makingPerGram, vatPercentage) => {
+export interface EstimatorResult {
+    rawGoldCost: number;
+    totalMaking: number;
+    vatAmount: number;
+    totalPrice: number;
+}
+
+export const calculateEstimator = (
+    goldPrice: number,
+    weight: number,
+    makingPerGram: number,
+    vatPercentage: number
+): EstimatorResult => {
     if (goldPrice > 0 && weight > 0) {
         const rawGoldCost = weight * goldPrice;
         const totalMaking = weight * makingPerGram;
@@ -46,6 +71,6 @@ export const calculateEstimator = (goldPrice, weight, makingPerGram, vatPercenta
     };
 };
 
-export const formatCurrency = (num) => {
+export const formatCurrency = (num: number): string => {
     return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };

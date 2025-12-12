@@ -2,7 +2,19 @@ import React from 'react';
 import { Settings, HelpCircle, Globe, Clock } from 'lucide-react';
 import { translations } from '../utils/translations';
 
-const Controls = ({
+import { Language } from '../utils/translations';
+
+interface ControlsProps {
+    activeTab: string;
+    setActiveTab: (tab: string) => void;
+    onOpenSettings: () => void;
+    onOpenHelp: () => void;
+    onOpenHistory: () => void;
+    onToggleLanguage: () => void;
+    language: Language;
+}
+
+const Controls: React.FC<ControlsProps> = ({
     activeTab,
     setActiveTab,
     onOpenSettings,
