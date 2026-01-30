@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../assets/logo.png';
 import { formatCurrency } from '../utils/calculations';
 import { translations } from '../utils/translations';
 
@@ -41,10 +42,8 @@ const Header: React.FC<HeaderProps> = ({
 
     return (
         <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center p-3 bg-gold-100 rounded-full mb-4 shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gold-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="inline-flex items-center justify-center p-3 mb-4">
+                <img src={logo} alt="Tala Logo" className="h-20 w-auto object-contain" />
             </div>
             <h1 className="text-3xl font-bold text-slate-900 mb-2">{t.appTitle}</h1>
 
