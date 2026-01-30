@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Save } from 'lucide-react';
 import InputGroup from './InputGroup';
+import ShareButton from './ShareButton';
 import { calculateEstimator, formatCurrency } from '../utils/calculations';
 import { translations } from '../utils/translations';
+import { trackEvent } from '../utils/analytics';
 
 import { Settings } from '../hooks/useSettings';
 import { HistoryItem } from '../hooks/useHistory';
@@ -65,12 +67,13 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, setLivePriceTri
 
     const handleSave = () => {
         onSave('estimator', inputs, results);
+        trackEvent('save_clicked', { type: 'estimator', inputs, results });
         setShowSaved(true);
         setTimeout(() => setShowSaved(false), 2000);
     };
 
     return (
-        <div className="flex flex-col h-full">
+        <div id="estimator-view" className="flex flex-col h-full">
             <div className="p-6 space-y-6 flex-grow">
                 <InputGroup
                     id="estGoldPrice"
@@ -104,42 +107,49 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, setLivePriceTri
                         <span className="w-2 h-2 rounded-full bg-gold-500"></span>
                         <span>{t.estimatedPrice}</span>
                     </h3>
-                    <button
-                        onClick={handleSave}
-                        className="flex items-center gap-1 text-xs bg-slate-800 hover:bg-slate-700 text-gold-400 px-3 py-1.5 rounded-lg transition-colors"
-                    >
-                        {showSaved ? (
-                            <span className="text-emerald-400">{t.savedSuccess}</span>
-                        ) : (
-                            <>
-                                <Save size={14} />
-                                <span>{t.saveBtn}</span>
-                            </>
-                        )}
-                    </button>
+                    <div className="flex gap-2">
+                        <ShareButton
+                            elementId="estimator-view"
+                            language={settings.language}
+                            calculationType={t.estimatedPrice}
+                        />
+                        <button
+                            onClick={handleSave}
+                            className="flex items-center gap-1 text-xs bg-slate-800 hover:bg-slate-700 text-gold-400 px-3 py-1.5 rounded-lg transition-colors"
+                        >
+                            {showSaved ? (
+                                <span className="text-emerald-400">{t.savedSuccess}</span>
+                            ) : (
+                                <>
+                                    <Save size={14} />
+                                    <span>{t.saveBtn}</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
 
                 <div className="space-y-4">
                     <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
                         <span className="text-slate-400 text-sm">{t.rawGold}</span>
-                        <span className="font-mono text-lg font-medium text-gold-400">{formatCurrency(results.rawGoldCost)}</span>
+                        <span className="font-mono text-lg font-medium text-gold-400 result-value">{formatCurrency(results.rawGoldCost)}</span>
                     </div>
 
                     <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
                         <span className="text-slate-400 text-sm">{t.totalMaking}</span>
-                        <span className="font-mono text-lg font-medium text-emerald-400">{formatCurrency(results.totalMaking)}</span>
+                        <span className="font-mono text-lg font-medium text-emerald-400 result-value">{formatCurrency(results.totalMaking)}</span>
                     </div>
 
                     <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
                         <span className="text-slate-400 text-sm">
                             {settings.language === 'en' ? `VAT Amount (${settings.vatPercentage}%)` : `قيمة الضريبة (${settings.vatPercentage}%)`}
                         </span>
-                        <span className="font-mono text-lg font-medium text-white">{formatCurrency(results.vatAmount)}</span>
+                        <span className="font-mono text-lg font-medium text-white result-value">{formatCurrency(results.vatAmount)}</span>
                     </div>
 
                     <div className="flex justify-between items-center pt-2">
                         <span className="text-slate-400 text-sm">{t.totalPriceLabel}</span>
-                        <span className="font-mono text-2xl font-bold text-white">{formatCurrency(results.totalPrice)}</span>
+                        <span className="font-mono text-2xl font-bold text-white result-value">{formatCurrency(results.totalPrice)}</span>
                     </div>
                 </div>
             </div>

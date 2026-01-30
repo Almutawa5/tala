@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Controls from './components/Controls';
 import BreakdownView from './components/BreakdownView';
 import EstimatorView from './components/EstimatorView';
+import ComparisonMode from './components/ComparisonMode';
 import SettingsModal from './components/SettingsModal';
 import HelpModal from './components/HelpModal';
 import HistoryModal from './components/HistoryModal';
@@ -11,13 +12,19 @@ import SaveModal from './components/SaveModal';
 import { useSettings } from './hooks/useSettings';
 import { useGoldPrice } from './hooks/useGoldPrice';
 import { useHistory } from './hooks/useHistory';
+import { recordVisitor } from './utils/analytics';
 
 import { HistoryInput, HistoryResult, HistoryItem } from './hooks/useHistory';
+import { useEffect } from 'react';
 
 function App() {
   const { settings, updateSettings } = useSettings();
   const { price, loading, lastUpdated } = useGoldPrice(settings.currency, settings.karat);
   const { history, saveCalculation, deleteCalculation, clearHistory, renameCalculation } = useHistory();
+
+  useEffect(() => {
+    recordVisitor();
+  }, []);
 
   const [activeTab, setActiveTab] = useState('breakdown');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -90,7 +97,7 @@ function App() {
         language={settings.language}
       />
 
-      <div className="glass-panel rounded-2xl overflow-hidden min-h-[500px] flex flex-col">
+      <div className="glass-panel rounded-2xl overflow-hidden min-h-[500px] flex flex-col animate-fade-in">
         {activeTab === 'breakdown' ? (
           <BreakdownView
             settings={settings}
@@ -99,13 +106,18 @@ function App() {
             onSave={handleSave}
             restoredData={restoredData}
           />
-        ) : (
+        ) : activeTab === 'estimator' ? (
           <EstimatorView
             settings={settings}
             livePrice={price}
             setLivePriceTrigger={setLivePriceTrigger}
             onSave={handleSave}
             restoredData={restoredData}
+          />
+        ) : (
+          <ComparisonMode
+            settings={settings}
+            goldPrice={price}
           />
         )}
       </div>

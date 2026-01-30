@@ -26,6 +26,17 @@
     --primary-light: #a1a1aa;
   }
 
+  body.theme-silver.dark-mode {
+    --primary: #a1a1aa;
+    --primary-dark: #71717a;
+    --primary-light: #d4d4d8;
+    --bg-main: #18181b;
+    --bg-card: rgba(39, 39, 42, 0.95);
+    --text-primary: #f4f4f5;
+    --text-secondary: #d4d4d8;
+    --border: #3f3f46;
+  }
+
   body.theme-dark {
     --primary: #fbbf24;
     --primary-dark: #f59e0b;
@@ -41,6 +52,249 @@
     --primary: #3b82f6;
     --primary-dark: #2563eb;
     --primary-light: #60a5fa;
+  }
+
+  body.theme-light.dark-mode {
+    --primary: #60a5fa;
+    --primary-dark: #3b82f6;
+    --primary-light: #93c5fd;
+    --bg-main: #0c1222;
+    --bg-card: rgba(30, 41, 59, 0.95);
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --border: #334155;
+  }
+
+  /* High Contrast Theme for Accessibility */
+  body.theme-high-contrast {
+    --primary: #000000;
+    --primary-dark: #000000;
+    --primary-light: #333333;
+    --bg-main: #ffffff;
+    --bg-card: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --border: #000000;
+  }
+
+  body.theme-high-contrast .glass-panel {
+    border: 2px solid #000000;
+    box-shadow: none;
+  }
+
+  body.theme-high-contrast input,
+  body.theme-high-contrast button {
+    border: 2px solid #000000;
+  }
+
+  body.theme-high-contrast .text-gold-400,
+  body.theme-high-contrast .text-gold-500,
+  body.theme-high-contrast .text-gold-600 {
+    color: #000000 !important;
+  }
+
+  body.theme-high-contrast .bg-gold-100,
+  body.theme-high-contrast .bg-gold-500 {
+    background-color: #e5e5e5 !important;
+  }
+
+  body.theme-high-contrast .text-emerald-400,
+  body.theme-high-contrast .text-emerald-500 {
+    color: #000000 !important;
+    font-weight: bold;
+  }
+
+  /* Universal Dark Mode Overrides */
+  body.dark-mode {
+    --bg-main: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.95);
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --border: #334155;
+  }
+
+  /* Specific theme colors in dark mode */
+  body.theme-silver.dark-mode {
+    --primary: #a1a1aa;
+    --primary-dark: #71717a;
+    --primary-light: #d4d4d8;
+    --bg-main: #18181b;
+    --bg-card: rgba(39, 39, 42, 0.95);
+    --border: #3f3f46;
+  }
+
+  body.theme-light.dark-mode {
+    --primary: #60a5fa;
+    --primary-dark: #3b82f6;
+    --primary-light: #93c5fd;
+    --bg-main: #0c1222;
+  }
+
+  body.theme-high-contrast.dark-mode {
+    --bg-main: #000000;
+    --bg-card: #000000;
+    --text-primary: #ffffff;
+    --text-secondary: #ffffff;
+    --border: #ffffff;
+    --primary: #ffffff;
+  }
+
+  /* Dark mode component overrides (Universal) */
+  body.dark-mode .bg-white,
+  body.dark-mode .bg-slate-50 {
+    background-color: var(--bg-card) !important;
+  }
+
+  body.dark-mode .bg-slate-900 {
+    background-color: #0f172a !important;
+  }
+
+  body.dark-mode .text-slate-900,
+  body.dark-mode .text-slate-800,
+  body.dark-mode .text-slate-700 {
+    color: var(--text-primary) !important;
+  }
+
+  body.dark-mode .text-slate-600,
+  body.dark-mode .text-slate-500,
+  body.dark-mode .text-slate-400 {
+    color: var(--text-secondary) !important;
+  }
+
+  body.dark-mode .border-slate-200,
+  body.dark-mode .border-slate-100 {
+    border-color: var(--border) !important;
+  }
+
+  body.dark-mode input,
+  body.dark-mode select {
+    background-color: rgba(30, 41, 59, 0.8) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+  }
+
+  body.dark-mode .glass-panel {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* Dark mode - Header text */
+  body.dark-mode h1 {
+    color: var(--text-primary) !important;
+  }
+
+  /* Dark mode - Gold icon background */
+  body.dark-mode .bg-gold-100 {
+    background-color: rgba(251, 191, 36, 0.2) !important;
+  }
+
+  /* Dark mode - Control buttons (icon buttons) */
+  body.dark-mode button.rounded-full {
+    background-color: rgba(30, 41, 59, 0.9) !important;
+    border-color: var(--border) !important;
+    color: var(--text-secondary) !important;
+  }
+
+  body.dark-mode button.rounded-full:hover {
+    background-color: rgba(51, 65, 85, 0.9) !important;
+  }
+
+  /* Dark mode - Tab container */
+  body.dark-mode .flex.bg-white {
+    background-color: rgba(30, 41, 59, 0.9) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* Dark mode - Tab buttons in container */
+  body.dark-mode .flex.bg-white button.rounded-lg {
+    color: var(--text-secondary) !important;
+  }
+
+  body.dark-mode .flex.bg-white button.rounded-lg:hover {
+    color: var(--text-primary) !important;
+  }
+
+  /* Dark mode - Active tab button override (keep gold) */
+  body.dark-mode .bg-gold-500 {
+    background-color: var(--primary) !important;
+    color: #0f172a !important;
+  }
+
+  /* Dark mode - Inactive tab text */
+  body.dark-mode button.text-slate-500 {
+    color: var(--text-secondary) !important;
+  }
+
+  body.dark-mode button.text-slate-500:hover {
+    color: var(--text-primary) !important;
+  }
+
+  /* Dark mode - Improved input styling */
+  body.dark-mode input[type="text"],
+  body.dark-mode input[type="number"] {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    color: #f1f5f9 !important;
+    border: 1px solid rgba(71, 85, 105, 0.5) !important;
+    border-radius: 0.75rem;
+  }
+
+  body.dark-mode input[type="text"]:focus,
+  body.dark-mode input[type="number"]:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(212, 167, 70, 0.2) !important;
+  }
+
+  /* Dark mode - Range slider */
+  body.dark-mode input[type="range"] {
+    background: transparent !important;
+  }
+
+  body.dark-mode input[type="range"]::-webkit-slider-track {
+    background: rgba(71, 85, 105, 0.5) !important;
+    border-radius: 0.5rem;
+  }
+
+  body.dark-mode input[type="range"]::-webkit-slider-thumb {
+    background: var(--primary) !important;
+    border: 2px solid #0f172a !important;
+  }
+
+  /* Dark mode - Glass panel improvements */
+  body.dark-mode .glass-panel {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98)) !important;
+    border: 1px solid rgba(71, 85, 105, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  /* Dark mode - Result section */
+  body.dark-mode .bg-slate-900 {
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(10, 15, 30, 0.98)) !important;
+  }
+
+  /* Dark mode - Labels */
+  body.dark-mode label {
+    color: var(--text-secondary) !important;
+  }
+
+  /* Dark mode - Select dropdowns */
+  body.dark-mode select {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    color: #f1f5f9 !important;
+    border: 1px solid rgba(71, 85, 105, 0.5) !important;
+  }
+
+  /* Dark mode - Buttons styling */
+  body.dark-mode .bg-gold-100 {
+    background-color: rgba(212, 167, 70, 0.15) !important;
+  }
+
+  body.dark-mode .text-gold-600 {
+    color: var(--primary) !important;
+  }
+
+  /* Dark mode - Dividers */
+  body.dark-mode .border-slate-800\/50 {
+    border-color: rgba(51, 65, 85, 0.5) !important;
   }
 }
 
@@ -110,6 +364,15 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: var(--text-secondary);
   }
+
+  /* Result value animation */
+  .result-value {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .result-value.updated {
+    animation: valueUpdate 0.5s ease-out;
+  }
 }
 
 /* Animations */
@@ -125,8 +388,87 @@
   }
 }
 
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes valueUpdate {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+    color: var(--primary);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(198, 142, 45, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(198, 142, 45, 0.5);
+  }
+}
+
 .help-step {
   animation: fadeIn 0.3s ease-in;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 .theme-swatch {
@@ -145,4 +487,10 @@
 .theme-swatch.active {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(198, 142, 45, 0.2);
+}
+
+/* High contrast swatch */
+.theme-swatch.high-contrast {
+  background: linear-gradient(135deg, #000000 50%, #ffffff 50%);
+  border: 2px solid #000000;
 }

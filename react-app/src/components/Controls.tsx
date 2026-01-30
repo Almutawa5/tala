@@ -27,10 +27,10 @@ const Controls: React.FC<ControlsProps> = ({
 
     return (
         <div className="flex justify-between items-center mb-4 gap-2">
-            <div className="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="flex bg-white p-1 rounded-xl border border-slate-200 shadow-sm overflow-visible flex-shrink-0">
                 <button
                     onClick={() => setActiveTab('breakdown')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeTab === 'breakdown'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${activeTab === 'breakdown'
                         ? 'text-white bg-gold-500 shadow-sm'
                         : 'text-slate-500 hover:text-slate-700'
                         }`}
@@ -39,12 +39,21 @@ const Controls: React.FC<ControlsProps> = ({
                 </button>
                 <button
                     onClick={() => setActiveTab('estimator')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${activeTab === 'estimator'
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${activeTab === 'estimator'
                         ? 'text-white bg-gold-500 shadow-sm'
                         : 'text-slate-500 hover:text-slate-700'
                         }`}
                 >
                     {t.tabEstimator}
+                </button>
+                <button
+                    onClick={() => setActiveTab('compare')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${activeTab === 'compare'
+                        ? 'text-white bg-gold-500 shadow-sm'
+                        : 'text-slate-500 hover:text-slate-700'
+                        }`}
+                >
+                    {t.tabCompare}
                 </button>
             </div>
 

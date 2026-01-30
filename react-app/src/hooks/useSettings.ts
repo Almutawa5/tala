@@ -6,6 +6,7 @@ export interface Settings {
     karat: string;
     vatPercentage: number;
     theme: string;
+    darkMode: boolean;
     language: Language;
 }
 
@@ -14,6 +15,7 @@ const DEFAULT_SETTINGS: Settings = {
     karat: '21',
     vatPercentage: 10,
     theme: 'gold',
+    darkMode: false,
     language: 'en'
 };
 
@@ -26,12 +28,16 @@ export const useSettings = () => {
     useEffect(() => {
         localStorage.setItem('goldCalc_settings', JSON.stringify(settings));
 
-        // Apply theme to body
-        const themes = ['theme-silver', 'theme-dark', 'theme-light'];
-        document.body.classList.remove(...themes);
+        // Apply theme and dark mode to body
+        const themes = ['theme-silver', 'theme-dark', 'theme-light', 'theme-high-contrast'];
+        document.body.classList.remove(...themes, 'dark-mode');
 
         if (settings.theme !== 'gold') {
             document.body.classList.add(`theme-${settings.theme}`);
+        }
+
+        if (settings.darkMode || settings.theme === 'dark') {
+            document.body.classList.add('dark-mode');
         }
 
         // Apply language direction

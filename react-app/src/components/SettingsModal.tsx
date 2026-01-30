@@ -42,23 +42,38 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                     {/* Theme Selection */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">{t.themeLabel}</label>
-                        <div className="flex gap-3">
-                            {['gold', 'silver', 'dark', 'light'].map(theme => (
+                        <div className="flex gap-3 flex-wrap">
+                            {['gold', 'silver', 'dark', 'light', 'high-contrast'].map(theme => (
                                 <div
                                     key={theme}
-                                    className={`theme-swatch ${localSettings.theme === theme ? 'active' : ''}`}
+                                    className={`theme-swatch ${localSettings.theme === theme ? 'active' : ''} ${theme === 'high-contrast' ? 'high-contrast' : ''}`}
                                     data-theme={theme}
-                                    onClick={() => setLocalSettings({ ...localSettings, theme })}
-                                    style={{
+                                    onClick={() => setLocalSettings({ ...localSettings, theme, darkMode: theme === 'dark' ? true : localSettings.darkMode })}
+                                    style={theme !== 'high-contrast' ? {
                                         background: theme === 'gold' ? 'linear-gradient(135deg, #c68e2d, #d4a746)' :
                                             theme === 'silver' ? 'linear-gradient(135deg, #71717a, #a1a1aa)' :
                                                 theme === 'dark' ? 'linear-gradient(135deg, #0f172a, #1e293b)' :
                                                     'linear-gradient(135deg, #3b82f6, #60a5fa)'
-                                    }}
-                                    title={theme.charAt(0).toUpperCase() + theme.slice(1)}
+                                    } : undefined}
+                                    title={theme === 'high-contrast'
+                                        ? (settings.language === 'en' ? 'High Contrast (Accessibility)' : 'تباين عالي (إمكانية الوصول)')
+                                        : theme.charAt(0).toUpperCase() + theme.slice(1)}
                                 />
                             ))}
                         </div>
+                    </div>
+
+                    {/* Dark Mode Toggle */}
+                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+                        <label className="text-sm font-medium text-slate-700">{t.darkModeLabel}</label>
+                        <button
+                            onClick={() => setLocalSettings({ ...localSettings, darkMode: !localSettings.darkMode })}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${localSettings.darkMode ? 'bg-gold-500' : 'bg-slate-300'}`}
+                        >
+                            <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${localSettings.darkMode ? (settings.language === 'ar' ? '-translate-x-6' : 'translate-x-6') : (settings.language === 'ar' ? '-translate-x-1' : 'translate-x-1')}`}
+                            />
+                        </button>
                     </div>
 
                     {/* Currency Selection */}

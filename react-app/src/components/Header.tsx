@@ -50,14 +50,16 @@ const Header: React.FC<HeaderProps> = ({
 
             <div
                 onClick={onUseLivePrice}
-                className="inline-flex items-center gap-2 bg-slate-900 text-gold-400 px-4 py-2 rounded-full text-sm font-medium shadow-md cursor-pointer hover:bg-slate-800 transition-colors mb-2 active:ring-2 active:ring-gold-400"
+                className={`inline-flex items-center gap-2 bg-slate-900 text-gold-400 px-4 py-2 rounded-full text-sm font-medium shadow-md cursor-pointer hover:bg-slate-800 transition-all duration-300 mb-2 active:ring-2 active:ring-gold-400 ${loading ? 'animate-pulse' : ''}`}
                 title="Click to use this price"
             >
-                <span className="animate-pulse">●</span>
+                <span className={`${loading ? '' : 'animate-pulse'}`}>●</span>
                 <span>{settings.language === 'en' ? 'Live:' : 'مباشر:'}</span>
-                <span>
-                    {loading ? 'Loading...' : `${formatCurrency(livePrice)} ${settings.currency} (${settings.karat}K)`}
-                </span>
+                {loading ? (
+                    <span className="inline-block w-24 h-4 bg-slate-700 rounded animate-shimmer" />
+                ) : (
+                    <span className="transition-all duration-300">{`${formatCurrency(livePrice)} ${settings.currency} (${settings.karat}K)`}</span>
+                )}
             </div>
 
             <p className="text-slate-400 text-xs mt-1">
