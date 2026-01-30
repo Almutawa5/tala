@@ -1,38 +1,16 @@
-# Gold Jewelry Price Calculator ⚱️
+# React + Vite
 
-A modern, responsive web application designed to calculate and estimate gold jewelry prices with precision. Built with a focus on user experience, it features real-time calculations, interactive sliders, and bilingual support (English/Arabic).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## ✨ Features
+Currently, two official plugins are available:
 
-### 🔍 Breakdown Mode
-Analyze the cost of a jewelry piece based on its total shelf price.
-- **Inputs**: Gold Price, Item Price (with VAT), Weight.
-- **Outputs**: VAT Amount, Item Price w/o VAT, Raw Gold Cost, Total Making Charges, Making Charge per Gram.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-### ⚖️ Estimator Mode
-Estimate the total price of a piece based on market rates and labor costs.
-- **Inputs**: Gold Price, Weight, Making Charge per Gram.
-- **Outputs**: Raw Gold Cost, Total Making Charges, VAT Amount, **Total Estimated Price**.
+## React Compiler
 
-### 🎨 Key Highlights
-- **Bilingual Support**: Instant toggle between English (LTR) and Arabic (RTL).
-- **Interactive Sliders**: Fine-tune values easily with range sliders synced to input fields.
-- **Real-time Updates**: Calculations happen instantly as you type or slide.
-- **Modern UI**: Sleek "Gold" theme with glassmorphism effects and mobile-responsive layout.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## 🛠️ Technologies
-- **HTML5**: Semantic structure.
-- **Tailwind CSS**: Utility-first styling for rapid, responsive design.
-- **JavaScript (ES6+)**: Core logic for calculations, DOM manipulation, and state management.
-- **Google Fonts**: Uses the 'Outfit' typeface for a clean, modern look.
+## Expanding the ESLint configuration
 
-## 🚀 How to Use
-1. Clone this repository or download the `index.html` file.
-2. Open `index.html` in any modern web browser (Chrome, Firefox, Edge, Safari).
-3. No installation or server required!
-
-## 📄 License
-This project is open source and available under the [MIT License](LICENSE).
-
----
-*Developed with ❤️ for Gold Enthusiasts.*
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
