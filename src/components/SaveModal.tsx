@@ -53,7 +53,7 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, langu
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder={t.enterNamePlaceholder}
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-gold-500 transition-colors"
+                            className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
                             autoFocus
                         />
                     </div>
@@ -68,6 +68,7 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, langu
                         </button>
                         <button
                             type="submit"
+                            data-save-confirm
                             className="flex-1 py-3 rounded-xl font-bold text-white bg-gold-500 hover:bg-gold-600 shadow-lg shadow-gold-500/30 transition-colors"
                         >
                             {t.confirmSaveBtn}

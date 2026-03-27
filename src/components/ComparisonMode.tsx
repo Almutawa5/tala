@@ -86,25 +86,32 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
 
     return (
         <div className="p-4 space-y-4">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                    <Scale size={20} className="text-gold-500" />
-                    {settings.language === 'en' ? 'Compare Shops' : 'مقارنة المحلات'}
-                </h3>
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                    <div className="p-2.5 bg-gold-50 rounded-xl">
+                        <Scale size={20} className="text-[#D4AF37]" strokeWidth={2.5} />
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-bold text-slate-900 tracking-tight">
+                            {settings.language === 'en' ? 'Compare Shops' : 'مقارنة المحلات'}
+                        </h3>
+                        <p className="text-xs text-slate-500 font-medium">Find the best making charge deal</p>
+                    </div>
+                </div>
                 <button
                     onClick={addShop}
                     disabled={shops.length >= 5}
-                    className="flex items-center gap-1 text-sm bg-gold-500 hover:bg-gold-600 disabled:bg-slate-300 text-white px-3 py-1.5 rounded-lg transition-colors"
+                    className="flex items-center gap-2 text-sm bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white px-4 py-2 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg active:scale-95"
                 >
-                    <Plus size={16} />
-                    {settings.language === 'en' ? 'Add Shop' : 'إضافة محل'}
+                    <Plus size={16} strokeWidth={2.5} />
+                    <span className="font-bold">{settings.language === 'en' ? 'Add Shop' : 'إضافة محل'}</span>
                 </button>
             </div>
 
-            <div className="text-sm text-slate-500 mb-4 p-2 bg-slate-100 rounded-lg">
+            <div className="text-[13px] text-slate-600 mb-6 p-4 bg-slate-50/80 rounded-xl inline-block">
                 {settings.language === 'en'
-                    ? `Using gold price: ${formatCurrency(goldPrice)} ${settings.currency}/${settings.karat}K per gram`
-                    : `سعر الذهب: ${formatCurrency(goldPrice)} ${settings.currency}/${settings.karat}ك للجرام`
+                    ? <span className="flex items-center gap-2 font-medium">Using gold price: <span className="font-numbers text-slate-900 bg-white px-2 py-0.5 rounded shadow-sm">{formatCurrency(goldPrice)}</span> <span className="opacity-60">{settings.currency}/{settings.karat}K per gram</span></span>
+                    : <span className="flex items-center gap-2 font-medium">سعر الذهب: <span className="font-numbers text-slate-900 bg-white px-2 py-0.5 rounded shadow-sm">{formatCurrency(goldPrice)}</span> <span className="opacity-60">{settings.currency}/{settings.karat}ك للجرام</span></span>
                 }
             </div>
 
@@ -116,13 +123,13 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                     return (
                         <div
                             key={shop.id}
-                            className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${isBest
-                                ? 'border-emerald-400 bg-emerald-50 shadow-lg shadow-emerald-100'
-                                : 'border-slate-200 bg-white'
+                            className={`relative p-5 rounded-3xl transition-all duration-300 ${isBest
+                                ? 'bg-white shadow-xl ring-2 ring-[#D4AF37] ring-opacity-50 shadow-[#D4AF37]/10'
+                                : 'bg-slate-50/50 hover:bg-white hover:shadow-lg'
                                 }`}
                         >
                             {isBest && (
-                                <div className="absolute -top-3 left-4 bg-emerald-500 text-white text-xs px-2 py-1 rounded-full font-medium animate-bounce">
+                                <div className="absolute -top-3 left-6 bg-[#D4AF37] text-white text-[10px] sm:text-xs px-3 py-1 rounded-full font-bold shadow-lg uppercase tracking-wider">
                                     {settings.language === 'en' ? '⭐ Best Deal!' : '⭐ أفضل سعر!'}
                                 </div>
                             )}
@@ -169,7 +176,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                             onChange={(e) => updateShop(shop.id, 'itemPrice', e.target.value)}
                                             placeholder="0.00"
                                             min={0}
-                                            className="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-lg focus:border-gold-400 focus:outline-none"
+                                            className="w-full px-2 py-1.5 text-sm bg-slate-100/30 border-none rounded-lg focus:border-gold-400 focus:outline-none font-numbers"
                                         />
                                     </div>
                                     <div>
@@ -182,26 +189,26 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                             onChange={(e) => updateShop(shop.id, 'weight', e.target.value)}
                                             placeholder="0.00"
                                             min={0}
-                                            className="w-full px-2 py-1.5 text-sm border border-slate-200 rounded-lg focus:border-gold-400 focus:outline-none"
+                                            className="w-full px-2 py-1.5 text-sm bg-slate-100/30 border-none rounded-lg focus:border-gold-400 focus:outline-none font-numbers"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="pt-2 border-t border-slate-100">
+                                <div className="pt-2 mt-2">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-slate-500">{t.makingPerGram}</span>
-                                        <span className={`font-mono font-medium ${isBest ? 'text-emerald-600' : 'text-slate-800'}`}>
+                                        <span className={`font-numbers font-medium ${isBest ? 'text-emerald-600' : 'text-slate-800'}`}>
                                             {shop.itemPrice > 0 && shop.weight > 0
-                                                ? formatCurrency(results.makingPerGram)
+                                                ? <span className="font-numbers text-emerald-600">{formatCurrency(results.makingPerGram)}</span>
                                                 : '--'
                                             }
                                         </span>
                                     </div>
                                     <div className="flex justify-between text-sm mt-1">
                                         <span className="text-slate-500">{t.totalMaking}</span>
-                                        <span className="font-mono text-slate-700">
+                                        <span className="font-numbers text-slate-700">
                                             {shop.itemPrice > 0 && shop.weight > 0
-                                                ? formatCurrency(results.totalMaking)
+                                                ? <span className="font-numbers text-slate-700">{formatCurrency(results.totalMaking)}</span>
                                                 : '--'
                                             }
                                         </span>

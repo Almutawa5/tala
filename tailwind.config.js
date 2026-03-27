@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Outfit', 'sans-serif'],
+        sans: ['Outfit', '"Noto Sans Arabic"', 'sans-serif'],
       },
       colors: {
         gold: {

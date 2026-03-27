@@ -67,7 +67,7 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                         </div>
                     ) : (
                         history.map(item => (
-                            <div key={item.id} className="bg-slate-50 border border-slate-100 rounded-xl p-3 hover:border-gold-200 transition-colors">
+                            <div key={item.id} className="bg-slate-50 rounded-xl p-3 hover:bg-slate-100 transition-colors shadow-sm">
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex flex-col flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
@@ -148,22 +148,22 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                     <div className="text-slate-600">
                                         <span className="text-xs text-slate-400 block">{t.goldPrice}</span>
-                                        {formatCurrency(item.inputs.goldPrice)}
+                                        <span className="font-numbers">{formatCurrency(item.inputs.goldPrice)}</span>
                                     </div>
                                     <div className="text-slate-600">
                                         <span className="text-xs text-slate-400 block">{t.weight}</span>
-                                        {item.inputs.weight}g
+                                        <span className="font-numbers">{item.inputs.weight}g</span>
                                     </div>
                                     {item.type === 'breakdown' && (
                                         <div className="text-slate-600 col-span-2">
                                             <span className="text-xs text-slate-400 block">{t.itemPrice}</span>
-                                            {formatCurrency(item.inputs.itemPrice || 0)} {item.currency}
+                                            <span className="font-numbers">{formatCurrency(item.inputs.itemPrice || 0)} {item.currency}</span>
                                         </div>
                                     )}
                                     {item.type === 'estimator' && (
                                         <div className="text-slate-900 font-bold col-span-2">
                                             <span className="text-xs text-slate-400 block font-normal">{t.totalPrice}</span>
-                                            {formatCurrency(item.results.totalPrice || 0)} {item.currency}
+                                            <span className="font-numbers">{formatCurrency(item.results.totalPrice || 0)} {item.currency}</span>
                                         </div>
                                     )}
                                 </div>

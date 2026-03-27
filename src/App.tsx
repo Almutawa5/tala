@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Layout from './components/Layout';
 import Header from './components/Header';
-import Controls from './components/Controls';
 import BreakdownView from './components/BreakdownView';
 import EstimatorView from './components/EstimatorView';
 import ComparisonMode from './components/ComparisonMode';
@@ -13,6 +12,8 @@ import { useSettings } from './hooks/useSettings';
 import { useGoldPrice } from './hooks/useGoldPrice';
 import { useHistory } from './hooks/useHistory';
 import { recordVisitor } from './utils/analytics';
+
+import { triggerSaveAnimation } from './utils/animations';
 
 import { HistoryInput, HistoryResult, HistoryItem } from './hooks/useHistory';
 import { useEffect } from 'react';
@@ -69,6 +70,16 @@ function App() {
         name
       );
       setPendingSave(null);
+
+      // Trigger the "flying to history" animation
+      // Find the confirm button position or use center of screen
+      const confirmBtn = document.querySelector('[data-save-confirm]');
+      if (confirmBtn) {
+        const rect = confirmBtn.getBoundingClientRect();
+        triggerSaveAnimation(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      } else {
+        triggerSaveAnimation(window.innerWidth / 2, window.innerHeight / 2);
+      }
     }
   };
 
@@ -85,19 +96,17 @@ function App() {
         lastUpdated={lastUpdated}
         onUseLivePrice={handleUseLivePrice}
         loading={loading}
-      />
-
-      <Controls
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenHelp={() => setIsHelpOpen(true)}
         onOpenHistory={() => setIsHistoryOpen(true)}
         onToggleLanguage={toggleLanguage}
-        language={settings.language}
+        updateSettings={updateSettings}
+        historyCount={history.length}
       />
 
-      <div className="glass-panel rounded-2xl overflow-hidden min-h-[500px] flex flex-col animate-fade-in">
+      <div className="glass-panel rounded-3xl overflow-hidden min-h-[520px] lg:min-h-[500px] flex flex-col animate-fade-in shadow-xl">
         {activeTab === 'breakdown' ? (
           <BreakdownView
             settings={settings}

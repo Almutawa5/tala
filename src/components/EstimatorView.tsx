@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Save } from 'lucide-react';
-import InputGroup from './InputGroup';
-import ShareButton from './ShareButton';
+import { Calculator, Save, RefreshCw } from 'lucide-react';
 import { calculateEstimator, formatCurrency } from '../utils/calculations';
 import { translations } from '../utils/translations';
 import { trackEvent } from '../utils/analytics';
-
+import ShareButton from './ShareButton';
 import { Settings } from '../hooks/useSettings';
 import { HistoryItem } from '../hooks/useHistory';
 
@@ -17,31 +15,29 @@ interface EstimatorViewProps {
     restoredData: HistoryItem | null;
 }
 
-const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, setLivePriceTrigger, onSave, restoredData }) => {
-    const t = translations[settings.language];
-    const [inputs, setInputs] = useState({
-        goldPrice: 0,
-        weight: 0,
-        makingPerGram: 0
-    });
-    const [showSaved, setShowSaved] = useState(false);
+const KARAT_OPTIONS = [24, 22, 21, 18, 14, 10, 9];
 
-    // Handle restored data
+const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setLivePriceTrigger, onSave, restoredData }) => {
+    const t = translations[settings.language];
+    const isRtl = settings.language === 'ar';
+    const curr = settings.currency;
+
+    const [inputs, setInputs] = useState({ goldPrice: 0, weight: 0, makingPerGram: 0 });
+    const [selectedKarat, setSelectedKarat] = useState<number>(
+        typeof settings.karat === 'number' ? settings.karat : parseInt(settings.karat as string) || 18
+    );
+    const [showSaved, setShowSaved] = useState(false);
+    const [results, setResults] = useState({ rawGoldCost: 0, totalMaking: 0, vatAmount: 0, totalPrice: 0 });
+
     useEffect(() => {
         if (restoredData && restoredData.type === 'estimator') {
             setInputs({
                 goldPrice: restoredData.inputs.goldPrice || 0,
                 weight: restoredData.inputs.weight || 0,
-                makingPerGram: restoredData.inputs.makingPerGram || 0
+                makingPerGram: restoredData.inputs.makingPerGram || 0,
             });
         }
     }, [restoredData]);
-    const [results, setResults] = useState({
-        rawGoldCost: 0,
-        totalMaking: 0,
-        vatAmount: 0,
-        totalPrice: 0
-    });
 
     useEffect(() => {
         if (setLivePriceTrigger) {
@@ -52,17 +48,17 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, setLivePriceTri
     }, [setLivePriceTrigger]);
 
     useEffect(() => {
-        const res = calculateEstimator(
-            inputs.goldPrice,
-            inputs.weight,
-            inputs.makingPerGram,
-            settings.vatPercentage
-        );
+        const res = calculateEstimator(inputs.goldPrice, inputs.weight, inputs.makingPerGram, settings.vatPercentage);
         setResults(res);
     }, [inputs, settings.vatPercentage]);
 
-    const handleChange = (field: keyof typeof inputs, value: string | number) => {
-        setInputs(prev => ({ ...prev, [field]: parseFloat(value.toString()) || 0 }));
+    const handleChange = (field: keyof typeof inputs, value: string) => {
+        setInputs(prev => ({ ...prev, [field]: parseFloat(value) || 0 }));
+    };
+
+    const handleUseLive = () => {
+        const roundedPrice = Math.ceil(livePrice * 100) / 100;
+        setInputs(prev => ({ ...prev, goldPrice: roundedPrice }));
     };
 
     const handleSave = () => {
@@ -73,88 +69,215 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, setLivePriceTri
     };
 
     return (
-        <div id="estimator-view" className="flex flex-col h-full">
-            <div className="p-6 space-y-6 flex-grow">
-                <InputGroup
-                    id="estGoldPrice"
-                    label={t.goldPrice}
-                    subLabel={t.dailyPrice}
-                    value={inputs.goldPrice}
-                    onChange={(val) => handleChange('goldPrice', val)}
-                    max={100}
-                />
-                <InputGroup
-                    id="estWeight"
-                    label={t.weight}
-                    subLabel={t.netWeight}
-                    value={inputs.weight}
-                    onChange={(val) => handleChange('weight', val)}
-                    max={50}
-                />
-                <InputGroup
-                    id="estMakingPerGram"
-                    label={t.makingPerGramInput}
-                    subLabel={t.laborCost}
-                    value={inputs.makingPerGram}
-                    onChange={(val) => handleChange('makingPerGram', val)}
-                    max={50}
-                />
-            </div>
+        <div id="estimator-view" className={`flex flex-col lg:flex-row h-full gap-0 ${isRtl ? 'lg:flex-row-reverse' : ''}`}>
 
-            <div className="bg-slate-900 p-6 text-white border-t border-slate-800 mt-auto">
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-gold-500"></span>
-                        <span>{t.estimatedPrice}</span>
-                    </h3>
-                    <div className="flex gap-2">
-                        <ShareButton
-                            elementId="estimator-view"
-                            language={settings.language}
-                            calculationType={t.estimatedPrice}
-                        />
-                        <button
-                            onClick={handleSave}
-                            className="flex items-center gap-1 text-xs bg-slate-800 hover:bg-slate-700 text-gold-400 px-3 py-1.5 rounded-lg transition-colors"
-                        >
-                            {showSaved ? (
-                                <span className="text-emerald-400">{t.savedSuccess}</span>
-                            ) : (
-                                <>
-                                    <Save size={14} />
-                                    <span>{t.saveBtn}</span>
-                                </>
-                            )}
-                        </button>
+            {/* ── LEFT: Parameters ── */}
+            <div className="lg:w-[55%] p-7 lg:p-8 space-y-6">
+                {/* Section header */}
+                <div className="flex items-center gap-3 mb-1">
+                    <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0">
+                        <Calculator size={18} className="text-white" />
+                    </div>
+                    <div>
+                        <h2 className="text-base font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>
+                            {isRtl ? 'المدخلات' : 'Parameters'}
+                        </h2>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                            {isRtl ? 'أدخل تفاصيل المجوهرات' : 'Enter your jewelry details'}
+                        </p>
                     </div>
                 </div>
 
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
-                        <span className="text-slate-400 text-sm">{t.rawGold}</span>
-                        <span className="font-mono text-lg font-medium text-gold-400 result-value">{formatCurrency(results.rawGoldCost)}</span>
+                {/* Weight */}
+                <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--text-secondary)' }}>
+                        {t.weight}
+                    </label>
+                    <div
+                        className="flex items-center rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        style={{ background: 'var(--bg-input)' }}
+                    >
+                        <input
+                            type="number"
+                            value={inputs.weight || ''}
+                            onChange={e => handleChange('weight', e.target.value)}
+                            placeholder="0.00"
+                            className="flex-1 bg-transparent outline-none text-xl font-semibold font-numbers"
+                            style={{ color: 'var(--text-primary)' }}
+                        />
+                        <span className="ml-2 text-sm font-bold px-3 py-1 rounded-xl" style={{ background: 'var(--border)', color: 'var(--text-secondary)' }}>g</span>
+                    </div>
+                </div>
+
+                {/* Karat selector */}
+                <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--text-secondary)' }}>
+                        {isRtl ? 'العيار (قيراط)' : 'Purity (Karat)'}
+                    </label>
+                    <div className="grid grid-cols-4 gap-2">
+                        {KARAT_OPTIONS.map(k => {
+                            const isActive = selectedKarat === k;
+                            return (
+                                <button
+                                    key={k}
+                                    onClick={() => setSelectedKarat(k)}
+                                    className="py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 active:scale-95"
+                                    style={isActive ? {
+                                        background: 'rgba(212,175,55,0.1)',
+                                        border: '1.5px solid #D4AF37',
+                                        color: '#D4AF37'
+                                    } : {
+                                        background: 'var(--bg-input)',
+                                        color: 'var(--text-primary)'
+                                    }}
+                                >
+                                    {k}K
+                                </button>
+                            );
+                        })}
+                        <div />
+                    </div>
+                </div>
+
+                {/* Gold spot price */}
+                <div>
+                    <div className="flex items-center justify-between mb-2.5">
+                        <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
+                            {isRtl ? `سعر الذهب (${settings.currency}/جم)` : `Gold Spot Price (${settings.currency}/g)`}
+                        </label>
+                        <button
+                            onClick={handleUseLive}
+                            className="flex items-center gap-1 text-xs font-semibold text-[#D4AF37] hover:text-[#e8c43d] transition-colors"
+                        >
+                            <RefreshCw size={11} />
+                            {isRtl ? 'السعر المباشر' : 'Get Live Price'}
+                        </button>
+                    </div>
+                    <div
+                        className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        style={{ background: 'var(--bg-input)' }}
+                    >
+                        <span className="text-xl font-semibold font-numbers" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
+                        <input
+                            type="number"
+                            value={inputs.goldPrice || ''}
+                            onChange={e => handleChange('goldPrice', e.target.value)}
+                            placeholder="0.00"
+                            className="flex-1 bg-transparent outline-none text-xl font-semibold font-numbers"
+                            style={{ color: 'var(--text-primary)' }}
+                        />
+                    </div>
+                </div>
+
+                {/* Making per gram */}
+                <div>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--text-secondary)' }}>
+                        {t.makingPerGramInput}
+                    </label>
+                    <div
+                        className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        style={{ background: 'var(--bg-input)' }}
+                    >
+                        <span className="text-xl font-semibold font-numbers" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
+                        <input
+                            type="number"
+                            value={inputs.makingPerGram || ''}
+                            onChange={e => handleChange('makingPerGram', e.target.value)}
+                            placeholder="0.00"
+                            className="flex-1 bg-transparent outline-none text-xl font-semibold font-numbers"
+                            style={{ color: 'var(--text-primary)' }}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* ── RIGHT: Results dark panel ── */}
+            <div
+                className="lg:w-[45%] flex flex-col rounded-b-3xl lg:rounded-none lg:rounded-e-3xl overflow-hidden"
+                style={{ background: 'linear-gradient(165deg, #111318 0%, #1a1d26 100%)' }}
+            >
+                <div className="p-7 lg:p-8 flex-1">
+                    {/* Panel header */}
+                    <div className="flex items-start justify-between mb-6">
+                        <div>
+                            <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                                {isRtl ? 'القيمة التقديرية' : 'ESTIMATED VALUE'}
+                            </p>
+                            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                                {isRtl ? 'بناءً على سعر السوق الحالي' : 'Based on current market price'}
+                            </p>
+                        </div>
+                        <ShareButton elementId="estimator-view" language={settings.language} calculationType={t.estimatedPrice} />
                     </div>
 
-                    <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
-                        <span className="text-slate-400 text-sm">{t.totalMaking}</span>
-                        <span className="font-mono text-lg font-medium text-emerald-400 result-value">{formatCurrency(results.totalMaking)}</span>
+                    {/* Hero: total price */}
+                    <div className="mb-6">
+                        <div className="flex items-start gap-4">
+                            <span className="text-xl font-bold mt-3" style={{ color: '#D4AF37' }}>{curr}</span>
+                            <span className="font-numbers text-6xl font-extrabold leading-none" style={{ color: '#ffffff' }}>
+                                {results.totalPrice.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                        </div>
                     </div>
 
-                    <div className="flex justify-between items-center py-2 border-b border-slate-800/50">
-                        <span className="text-slate-400 text-sm">
-                            {settings.language === 'en' ? `VAT Amount (${settings.vatPercentage}%)` : `قيمة الضريبة (${settings.vatPercentage}%)`}
-                        </span>
-                        <span className="font-mono text-lg font-medium text-white result-value">{formatCurrency(results.vatAmount)}</span>
-                    </div>
+                    {/* Divider */}
+                    <div className="border-t mb-6" style={{ borderColor: 'rgba(255,255,255,0.06)' }} />
 
-                    <div className="flex justify-between items-center pt-2">
-                        <span className="text-slate-400 text-sm">{t.totalPriceLabel}</span>
-                        <span className="font-mono text-2xl font-bold text-white result-value">{formatCurrency(results.totalPrice)}</span>
+                    {/* Detail rows */}
+                    <div className="space-y-4">
+                        <ResultLine label={isRtl ? 'تكلفة الذهب الخام' : 'Raw Gold Cost'} value={`${curr} ${formatCurrency(results.rawGoldCost)}`} valueColor="#D4AF37" />
+                        <ResultLine label={isRtl ? 'إجمالي المصنعية' : 'Total Making'} value={`${curr} ${formatCurrency(results.totalMaking)}`} valueColor="#34d399" />
+                        <ResultLine
+                            label={isRtl ? `الضريبة (${settings.vatPercentage}%)` : `VAT (${settings.vatPercentage}%)`}
+                            value={`${curr} ${formatCurrency(results.vatAmount)}`}
+                        />
+                        <ResultLine
+                            label={isRtl ? 'حالة السوق' : 'Market Status'}
+                            badge={{ text: 'LIVE', color: '#34d399' }}
+                        />
                     </div>
+                </div>
+
+                {/* Save button */}
+                <div className="p-5 pt-0">
+                    <button
+                        onClick={handleSave}
+                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98]"
+                        style={{
+                            background: showSaved ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.07)',
+                            color: showSaved ? '#34d399' : 'rgba(255,255,255,0.7)',
+                            border: 'none'
+                        }}
+                    >
+                        <Save size={15} />
+                        {showSaved ? (isRtl ? 'تم الحفظ ✓' : 'Saved ✓') : (isRtl ? 'حفظ في السجل' : 'Save to History')}
+                    </button>
                 </div>
             </div>
         </div>
     );
 };
+
+interface ResultLineProps {
+    label: string;
+    value?: string;
+    valueColor?: string;
+    badge?: { text: string; color: string };
+}
+
+const ResultLine: React.FC<ResultLineProps> = ({ label, value, valueColor, badge }) => (
+    <div className="flex items-center justify-between">
+        <span className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</span>
+        {badge ? (
+            <span className="text-xs font-bold px-2.5 py-0.5 rounded-md" style={{ background: `${badge.color}22`, color: badge.color }}>
+                {badge.text}
+            </span>
+        ) : (
+            <span className="text-sm font-numbers font-semibold" style={{ color: valueColor || 'rgba(255,255,255,0.75)' }}>
+                {value}
+            </span>
+        )}
+    </div>
+);
 
 export default EstimatorView;
