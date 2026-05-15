@@ -72,7 +72,7 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
         <div id="estimator-view" className={`flex flex-col lg:flex-row h-full gap-0 ${isRtl ? 'lg:flex-row-reverse' : ''}`}>
 
             {/* ── LEFT: Parameters ── */}
-            <div className="lg:w-[55%] p-7 lg:p-8 space-y-6">
+            <div className="lg:w-[55%] p-8 lg:p-10 space-y-8">
                 {/* Section header */}
                 <div className="flex items-center gap-3 mb-1">
                     <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0">
@@ -90,11 +90,11 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
 
                 {/* Weight */}
                 <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--text-secondary)' }}>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
                         {t.weight}
                     </label>
                     <div
-                        className="flex items-center rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        className="flex items-center rounded-2xl px-5 py-4 transition-all duration-200"
                         style={{ background: 'var(--bg-input)' }}
                     >
                         <input
@@ -111,10 +111,10 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
 
                 {/* Karat selector */}
                 <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--text-secondary)' }}>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
                         {isRtl ? 'العيار (قيراط)' : 'Purity (Karat)'}
                     </label>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-4 gap-3">
                         {KARAT_OPTIONS.map(k => {
                             const isActive = selectedKarat === k;
                             return (
@@ -124,8 +124,8 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                                     className="py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 active:scale-95"
                                     style={isActive ? {
                                         background: 'rgba(212,175,55,0.1)',
-                                        border: '1.5px solid #D4AF37',
-                                        color: '#D4AF37'
+                                        border: '1.5px solid #F59E0B',
+                                        color: '#F59E0B'
                                     } : {
                                         background: 'var(--bg-input)',
                                         color: 'var(--text-primary)'
@@ -141,20 +141,20 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
 
                 {/* Gold spot price */}
                 <div>
-                    <div className="flex items-center justify-between mb-2.5">
+                    <div className="flex items-center justify-between mb-3">
                         <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
                             {isRtl ? `سعر الذهب (${settings.currency}/جم)` : `Gold Spot Price (${settings.currency}/g)`}
                         </label>
                         <button
                             onClick={handleUseLive}
-                            className="flex items-center gap-1 text-xs font-semibold text-[#D4AF37] hover:text-[#e8c43d] transition-colors"
+                            className="flex items-center gap-1.5 text-xs font-semibold text-[#F59E0B] hover:text-[#FBBF24] transition-colors"
                         >
-                            <RefreshCw size={11} />
+                            <RefreshCw size={12} />
                             {isRtl ? 'السعر المباشر' : 'Get Live Price'}
                         </button>
                     </div>
                     <div
-                        className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        className="flex items-center gap-3 rounded-2xl px-5 py-4 transition-all duration-200"
                         style={{ background: 'var(--bg-input)' }}
                     >
                         <span className="text-xl font-semibold font-numbers" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
@@ -171,11 +171,11 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
 
                 {/* Making per gram */}
                 <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--text-secondary)' }}>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
                         {t.makingPerGramInput}
                     </label>
                     <div
-                        className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        className="flex items-center gap-3 rounded-2xl px-5 py-4 transition-all duration-200"
                         style={{ background: 'var(--bg-input)' }}
                     >
                         <span className="text-xl font-semibold font-numbers" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
@@ -193,10 +193,10 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
 
             {/* ── RIGHT: Results dark panel ── */}
             <div
-                className="lg:w-[45%] flex flex-col rounded-b-3xl lg:rounded-none lg:rounded-e-3xl overflow-hidden"
-                style={{ background: 'linear-gradient(165deg, #111318 0%, #1a1d26 100%)' }}
+                className="lg:w-[45%] flex flex-col overflow-hidden"
+                style={{ background: 'linear-gradient(165deg, #0F172A 0%, #1E293B 100%)' }}
             >
-                <div className="p-7 lg:p-8 flex-1">
+                <div className="p-8 lg:p-10 flex-1">
                     {/* Panel header */}
                     <div className="flex items-start justify-between mb-6">
                         <div>
@@ -213,7 +213,7 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                     {/* Hero: total price */}
                     <div className="mb-6">
                         <div className="flex items-start gap-4">
-                            <span className="text-xl font-bold mt-3" style={{ color: '#D4AF37' }}>{curr}</span>
+                            <span className="text-xl font-bold mt-3" style={{ color: '#F59E0B' }}>{curr}</span>
                             <span className="font-numbers text-6xl font-extrabold leading-none" style={{ color: '#ffffff' }}>
                                 {results.totalPrice.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
@@ -221,12 +221,12 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                     </div>
 
                     {/* Divider */}
-                    <div className="border-t mb-6" style={{ borderColor: 'rgba(255,255,255,0.06)' }} />
+                    <div className="border-t mb-8" style={{ borderColor: 'rgba(255,255,255,0.06)' }} />
 
                     {/* Detail rows */}
-                    <div className="space-y-4">
-                        <ResultLine label={isRtl ? 'تكلفة الذهب الخام' : 'Raw Gold Cost'} value={`${curr} ${formatCurrency(results.rawGoldCost)}`} valueColor="#D4AF37" />
-                        <ResultLine label={isRtl ? 'إجمالي المصنعية' : 'Total Making'} value={`${curr} ${formatCurrency(results.totalMaking)}`} valueColor="#34d399" />
+                    <div className="space-y-5">
+                        <ResultLine label={isRtl ? 'تكلفة الذهب الخام' : 'Raw Gold Cost'} value={`${curr} ${formatCurrency(results.rawGoldCost)}`} valueColor="#F59E0B" />
+                        <ResultLine label={isRtl ? 'إجمالي المصنعية' : 'Total Making'} value={`${curr} ${formatCurrency(results.totalMaking)}`} valueColor="#8B5CF6" />
                         <ResultLine
                             label={isRtl ? `الضريبة (${settings.vatPercentage}%)` : `VAT (${settings.vatPercentage}%)`}
                             value={`${curr} ${formatCurrency(results.vatAmount)}`}

@@ -5,7 +5,8 @@
 @tailwind utilities;
 
 :root {
-  --font-main: 'Outfit', sans-serif;
+  --font-main: 'Montserrat', sans-serif;
+  --font-heading: 'Cormorant', serif;
 }
 
 html[lang="ar"],
@@ -37,16 +38,21 @@ html[lang="ar"] select {
     font-family: var(--font-main) !important;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading) !important;
+  }
+
   :root {
-    --primary: #D4AF37;
-    --primary-dark: #AA8B2C;
-    --primary-light: #F3E5AB;
-    --bg-main: #FAFBFC;
+    --primary: #F59E0B;
+    --primary-dark: #D97706;
+    --primary-light: #FCD34D;
+    --bg-main: #F8FAFC;
     --bg-card: rgba(255, 255, 255, 0.85);
-    --text-primary: #111827;
-    --text-secondary: #4B5563;
-    --border: #E5E7EB;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --border: #E2E8F0;
     --bg-input: #FFFFFF;
+    --cta: #8B5CF6;
   }
 
   body {
@@ -76,15 +82,16 @@ html[lang="ar"] select {
   }
 
   body.theme-dark {
-    --primary: #D4AF37;
-    --primary-dark: #AA8B2C;
-    --primary-light: #F3E5AB;
-    --bg-main: #0A0A0A;
-    --bg-card: rgba(18, 18, 18, 0.85);
-    --text-primary: #F9FAFB;
+    --primary: #F59E0B;
+    --primary-dark: #D97706;
+    --primary-light: #FCD34D;
+    --bg-main: #0F172A;
+    --bg-card: rgba(30, 41, 59, 0.85);
+    --text-primary: #F8FAFC;
     --text-secondary: #94A3B8;
-    --border: #262626;
-    --bg-input: #171717;
+    --border: #334155;
+    --bg-input: #1E293B;
+    --cta: #8B5CF6;
   }
 
   body.theme-light {
@@ -146,12 +153,13 @@ html[lang="ar"] select {
 
   /* Universal Dark Mode Overrides */
   body.dark-mode {
-    --bg-main: #0A0A0A;
-    --bg-card: rgba(20, 20, 20, 0.85);
+    --bg-main: #0F172A;
+    --bg-card: rgba(30, 41, 59, 0.85);
     --text-primary: #F8FAFC;
     --text-secondary: #94A3B8;
-    --border: #1E293B;
-    --bg-input: rgba(15, 23, 42, 0.8);
+    --border: #334155;
+    --bg-input: rgba(30, 41, 59, 0.8);
+    --cta: #8B5CF6;
   }
 
   /* Specific theme colors in dark mode */
@@ -317,8 +325,7 @@ html[lang="ar"] select {
 
   body.dark-mode input[type="text"]:focus,
   body.dark-mode input[type="number"]:focus {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(212, 167, 70, 0.2) !important;
+    outline: none !important;
   }
 
   /* Dark mode - Range slider */
@@ -410,8 +417,7 @@ html[lang="ar"] select {
   }
 
   .input-group:focus-within input[type="number"] {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(198, 142, 45, 0.1);
+    outline: none;
   }
 
   /* Range Slider Customization */
@@ -478,10 +484,10 @@ html[lang="ar"] select {
     z-index: 9999;
     width: 12px;
     height: 12px;
-    background: linear-gradient(135deg, #D4AF37, #F0CC60);
+    background: linear-gradient(135deg, #F59E0B, #FBBF24);
     border-radius: 50%;
     pointer-events: none;
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.6), 0 0 20px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), 0 0 20px rgba(245, 158, 11, 0.4);
     filter: blur(0.5px);
   }
 

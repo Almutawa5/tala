@@ -68,13 +68,13 @@ const Header: React.FC<HeaderProps> = ({
     };
 
     return (
-        <div className="mb-6 space-y-4">
+        <div className="mb-8 space-y-5">
             {/* Main Navigation Bar */}
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-4 py-4 px-2 sm:px-4 bg-white/40 backdrop-blur-md border border-slate-200/50 rounded-2xl shadow-sm">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 py-5 px-4 sm:px-6 bg-white/40 backdrop-blur-md border border-slate-200/50 rounded-2xl shadow-sm">
                 {/* Brand & Tabs Section */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 w-full lg:w-auto">
+                <div className="flex flex-col sm:flex-row items-center gap-10 w-full lg:w-auto">
                     <div className="flex items-center gap-3 shrink-0">
-                        <div className="p-2 bg-gradient-to-br from-[#D4AF37] to-[#F0CC60] rounded-xl shadow-lg ring-1 ring-white/20">
+                        <div className="p-2 bg-gradient-to-br from-[#F59E0B] to-[#FBBF24] rounded-xl shadow-lg ring-1 ring-white/20">
                             <Sparkles size={22} className="text-white drop-shadow-sm" strokeWidth={2.5} />
                         </div>
                         <h1 className="text-xl font-black tracking-tight leading-none whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
@@ -110,7 +110,7 @@ const Header: React.FC<HeaderProps> = ({
                     <div
                         onClick={onUseLivePrice}
                         className={`group inline-flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl text-xs font-bold shadow-lg cursor-pointer hover:bg-slate-800 transition-all duration-300 border border-slate-700/50 ${loading ? 'animate-pulse' : ''}`}
-                        style={{ color: '#F0CC60' }}
+                        style={{ color: '#FBBF24' }}
                         title={settings.language === 'en' ? 'Click to use this price' : 'انقر لاستخدام هذا السعر'}
                     >
                         <span className="font-bold font-numbers">{formatCurrency(livePrice)} <span className="text-[10px] opacity-70">{settings.currency}</span></span>
@@ -130,7 +130,7 @@ const Header: React.FC<HeaderProps> = ({
                             <button
                                 id="history-button"
                                 onClick={onOpenHistory}
-                                className="relative p-1.5 text-slate-400 hover:text-[#D4AF37] hover:bg-white rounded-md transition-all duration-200"
+                                className="relative p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-white rounded-md transition-all duration-200"
                                 aria-label="History"
                             >
                                 <Clock size={16} />
@@ -148,7 +148,7 @@ const Header: React.FC<HeaderProps> = ({
                                 <button
                                     key={i}
                                     onClick={btn.onClick}
-                                    className="p-1.5 text-slate-400 hover:text-[#D4AF37] hover:bg-white rounded-md transition-all duration-200"
+                                    className="p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-white rounded-md transition-all duration-200"
                                     aria-label={btn.label}
                                 >
                                     {btn.icon}

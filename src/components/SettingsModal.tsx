@@ -25,17 +25,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
     if (!isOpen) return null;
 
     const themeColors: Record<string, string> = {
-        gold: '#D4AF37',
+        gold: '#F59E0B',
         silver: '#E0E0E0',
-        dark: '#0A0A0A',
-        light: '#3b82f6',
-        'high-contrast': '#000000'
+        light: '#3b82f6'
     };
 
     const handleThemeClick = (e: React.MouseEvent, theme: string) => {
         const x = e.clientX;
         const y = e.clientY;
-        const color = themeColors[theme] || '#D4AF37';
+        const color = themeColors[theme] || '#F59E0B';
 
         triggerEclipseTransition(x, y, color, () => {
             const newSettings = {
@@ -68,14 +66,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">{t.themeLabel}</label>
                         <div className="flex gap-3 flex-wrap">
-                            {['gold', 'silver', 'dark', 'light', 'high-contrast'].map(theme => (
+                            {['gold', 'silver', 'light'].map(theme => (
                                 <div
                                     key={theme}
                                     className={`theme-swatch ${localSettings.theme === theme ? 'active' : ''} ${theme === 'high-contrast' ? 'high-contrast' : ''}`}
                                     data-theme={theme}
                                     onClick={(e) => handleThemeClick(e, theme)}
                                     style={theme !== 'high-contrast' ? {
-                                        background: theme === 'gold' ? 'linear-gradient(135deg, #c68e2d, #d4a746)' :
+                                        background: theme === 'gold' ? 'linear-gradient(135deg, #D97706, #F59E0B)' :
                                             theme === 'silver' ? 'linear-gradient(135deg, #71717a, #a1a1aa)' :
                                                 theme === 'dark' ? 'linear-gradient(135deg, #0f172a, #1e293b)' :
                                                     'linear-gradient(135deg, #3b82f6, #60a5fa)'
@@ -88,18 +86,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                         </div>
                     </div>
 
-                    {/* Dark Mode Toggle */}
-                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl shadow-sm">
-                        <label className="text-sm font-medium text-slate-700">{t.darkModeLabel}</label>
-                        <button
-                            onClick={() => setLocalSettings({ ...localSettings, darkMode: !localSettings.darkMode })}
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${localSettings.darkMode ? 'bg-gold-500' : 'bg-slate-300'}`}
-                        >
-                            <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${localSettings.darkMode ? (settings.language === 'ar' ? '-translate-x-6' : 'translate-x-6') : (settings.language === 'ar' ? '-translate-x-1' : 'translate-x-1')}`}
-                            />
-                        </button>
-                    </div>
+
 
                     {/* Currency Selection */}
                     <div>
@@ -107,7 +94,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                         <select
                             value={localSettings.currency}
                             onChange={(e) => setLocalSettings({ ...localSettings, currency: e.target.value })}
-                            className="w-full px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-gold-500 font-numbers"
+                            className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 font-numbers"
                         >
                             <option value="BHD">Bahraini Dinar (BHD)</option>
                             <option value="SAR">Saudi Riyal (SAR)</option>
@@ -123,7 +110,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                         <select
                             value={localSettings.karat}
                             onChange={(e) => setLocalSettings({ ...localSettings, karat: e.target.value })}
-                            className="w-full px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-gold-500 font-numbers"
+                            className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 font-numbers"
                         >
                             <option value="24">24K</option>
                             <option value="22">22K</option>
@@ -142,7 +129,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                             step="0.1"
                             value={localSettings.vatPercentage}
                             onChange={(e) => setLocalSettings({ ...localSettings, vatPercentage: parseFloat(e.target.value) || 0 })}
-                            className="w-full px-4 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:border-gold-500 font-numbers"
+                            className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-200 font-numbers"
                         />
                     </div>
                 </div>

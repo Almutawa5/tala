@@ -31,7 +31,7 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, langu
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl transform transition-all scale-100" onClick={e => e.stopPropagation()}>
+            <div className="bg-white rounded-2xl w-full max-w-sm p-8 shadow-2xl transform transition-all scale-100" onClick={e => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                         <Save size={20} className="text-gold-500" />
@@ -53,7 +53,7 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, langu
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder={t.enterNamePlaceholder}
-                            className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none focus:ring-2 focus:ring-gold-500/20 transition-all"
+                            className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none transition-all"
                             autoFocus
                         />
                     </div>

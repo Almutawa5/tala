@@ -82,7 +82,7 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                                         type="text"
                                                         value={editName}
                                                         onChange={(e) => setEditName(e.target.value)}
-                                                        className="h-6 text-sm px-2 rounded border border-gold-300 focus:outline-none focus:border-gold-500 w-full min-w-[100px]"
+                                                        className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none transition-all"
                                                         placeholder={t.enterNamePlaceholder}
                                                         autoFocus
                                                         onKeyDown={(e) => {

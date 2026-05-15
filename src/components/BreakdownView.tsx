@@ -67,7 +67,7 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
         <div id="breakdown-view" className={`flex flex-col lg:flex-row h-full gap-0 ${isRtl ? 'lg:flex-row-reverse' : ''}`}>
 
             {/* ── LEFT: Parameters ── */}
-            <div className="lg:w-[55%] p-7 lg:p-8 space-y-7">
+            <div className="lg:w-[55%] p-8 lg:p-10 space-y-9">
                 {/* Section header */}
                 <div className="flex items-center gap-3 mb-1">
                     <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0">
@@ -85,12 +85,12 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
 
                 {/* Gold price input */}
                 <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
                         {t.goldPrice}
                     </label>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                         <div
-                            className="flex-1 flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                            className="flex-1 flex items-center gap-3 rounded-2xl px-5 py-4 transition-all duration-200"
                             style={{ background: 'var(--bg-input)' }}
                         >
                             <span className="text-xl font-semibold font-numbers" style={{ color: 'var(--text-secondary)' }}>
@@ -107,7 +107,7 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
                         </div>
                         <button
                             onClick={handleUseLive}
-                            className="flex items-center gap-1.5 text-xs font-semibold text-[#D4AF37] hover:text-[#e8c43d] transition-colors whitespace-nowrap"
+                            className="flex items-center gap-1.5 text-xs font-semibold text-[#F59E0B] hover:text-[#FBBF24] transition-colors whitespace-nowrap"
                         >
                             <RefreshCw size={13} />
                             {isRtl ? 'السعر المباشر' : 'Get Live'}
@@ -117,11 +117,11 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
 
                 {/* Item price input */}
                 <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
                         {isRtl ? `سعر القطعة (مع ${settings.vatPercentage}% ضريبة)` : `Item Price (incl. ${settings.vatPercentage}% VAT)`}
                     </label>
                     <div
-                        className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        className="flex items-center gap-3 rounded-2xl px-5 py-4 transition-all duration-200"
                         style={{ background: 'var(--bg-input)' }}
                     >
                         <span className="text-xl font-semibold font-numbers" style={{ color: 'var(--text-secondary)' }}>
@@ -140,11 +140,11 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
 
                 {/* Weight input */}
                 <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-secondary)' }}>
+                    <label className="block text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
                         {t.weight}
                     </label>
                     <div
-                        className="flex items-center rounded-2xl px-4 py-3 transition-all duration-200 focus-within:shadow-[0_0_0_3px_rgba(212,175,55,0.12)]"
+                        className="flex items-center rounded-2xl px-5 py-4 transition-all duration-200"
                         style={{ background: 'var(--bg-input)' }}
                     >
                         <input
@@ -162,11 +162,11 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
 
             {/* ── RIGHT: Results dark panel ── */}
             <div
-                className="lg:w-[45%] flex flex-col rounded-b-3xl lg:rounded-none lg:rounded-e-3xl overflow-hidden"
-                style={{ background: 'linear-gradient(165deg, #111318 0%, #1a1d26 100%)' }}
+                className="lg:w-[45%] flex flex-col overflow-hidden"
+                style={{ background: 'linear-gradient(165deg, #0F172A 0%, #1E293B 100%)' }}
             >
                 {/* Top area: hero value */}
-                <div className="p-7 lg:p-8 flex-1">
+                <div className="p-8 lg:p-10 flex-1">
                     <div className="flex items-start justify-between mb-6">
                         <div>
                             <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>
@@ -184,7 +184,7 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
                     {/* Hero: making per gram */}
                     <div className="mb-6">
                         <div className="flex items-start gap-4">
-                            <span className="text-xl font-bold mt-3" style={{ color: '#D4AF37' }}>{curr}</span>
+                            <span className="text-xl font-bold mt-3" style={{ color: '#F59E0B' }}>{curr}</span>
                             <span className="font-numbers text-6xl font-extrabold leading-none" style={{ color: '#ffffff' }}>
                                 {results.makingPerGram.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
@@ -195,14 +195,14 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
                     </div>
 
                     {/* Divider */}
-                    <div className="border-t mb-6" style={{ borderColor: 'rgba(255,255,255,0.06)' }} />
+                    <div className="border-t mb-8" style={{ borderColor: 'rgba(255,255,255,0.06)' }} />
 
                     {/* Detail rows */}
-                    <div className="space-y-4">
+                    <div className="space-y-5">
                         <ResultLine label={isRtl ? 'سعر بدون ضريبة' : 'Price w/o VAT'} value={`${curr} ${formatCurrency(results.priceNoVat)}`} />
                         <ResultLine label={isRtl ? `الضريبة (${settings.vatPercentage}%)` : `VAT (${settings.vatPercentage}%)`} value={`${curr} ${formatCurrency(results.vatAmount)}`} />
-                        <ResultLine label={isRtl ? 'تكلفة الذهب الخام' : 'Raw Gold Cost'} value={`${curr} ${formatCurrency(results.rawGoldCost)}`} valueColor="#D4AF37" />
-                        <ResultLine label={isRtl ? 'إجمالي المصنعية' : 'Total Making'} value={`${curr} ${formatCurrency(results.totalMaking)}`} valueColor="#34d399" />
+                        <ResultLine label={isRtl ? 'تكلفة الذهب الخام' : 'Raw Gold Cost'} value={`${curr} ${formatCurrency(results.rawGoldCost)}`} valueColor="#F59E0B" />
+                        <ResultLine label={isRtl ? 'إجمالي المصنعية' : 'Total Making'} value={`${curr} ${formatCurrency(results.totalMaking)}`} valueColor="#8B5CF6" />
                     </div>
                 </div>
 

@@ -24,9 +24,9 @@ export const triggerSaveAnimation = (startX: number, startY: number) => {
     particle.addEventListener('animationend', () => {
         particle.remove();
         // Add a temporary pop effect to the history button
-        historyBtn.classList.add('scale-125', 'text-[#D4AF37]');
+        historyBtn.classList.add('scale-125', 'text-[#F59E0B]');
         setTimeout(() => {
-            historyBtn.classList.remove('scale-125', 'text-[#D4AF37]');
+            historyBtn.classList.remove('scale-125', 'text-[#F59E0B]');
         }, 300);
     });
 };

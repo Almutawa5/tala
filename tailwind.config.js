@@ -8,20 +8,22 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Outfit', '"Noto Sans Arabic"', 'sans-serif'],
+        sans: ['Montserrat', '"Noto Sans Arabic"', 'sans-serif'],
+        serif: ['Cormorant', 'serif'],
+        heading: ['Cormorant', '"Noto Sans Arabic"', 'serif'],
       },
       colors: {
         gold: {
-          50: '#fbf8eb',
-          100: '#f5eccd',
-          200: '#ebd89f',
-          300: '#dfbf6d',
-          400: '#d4a746',
-          500: '#c68e2d',
-          600: '#aa6f22',
-          700: '#88521e',
-          800: '#70411e',
-          900: '#5e361b',
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
         }
       }
     },

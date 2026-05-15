@@ -100,7 +100,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
                     className={`block w-full px-5 py-3.5 rounded-2xl border-transparent bg-white/50 backdrop-blur-sm text-slate-900 focus:outline-none focus:bg-white transition-all duration-300 font-medium font-numbers text-lg placeholder:text-slate-400 mb-2 shadow-sm hover:shadow-md ${displayError
                         ? 'border-red-400 shadow-[0_0_15px_rgba(248,113,113,0.3)]'
                         : isFocused
-                            ? 'border-primary shadow-[0_0_20px_rgba(212,175,55,0.2)] ring-1 ring-primary-light'
+                            ? 'border-transparent shadow-[0_0_20px_rgba(212,175,55,0.2)]'
                             : 'border-transparent'
                         }`}
                 />

@@ -85,11 +85,11 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
     const bestDealId = getBestDeal();
 
     return (
-        <div className="p-4 space-y-4">
+        <div className="p-8 lg:p-10 space-y-6">
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-3">
                     <div className="p-2.5 bg-gold-50 rounded-xl">
-                        <Scale size={20} className="text-[#D4AF37]" strokeWidth={2.5} />
+                        <Scale size={20} className="text-[#F59E0B]" strokeWidth={2.5} />
                     </div>
                     <div>
                         <h3 className="text-lg font-bold text-slate-900 tracking-tight">
@@ -115,7 +115,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                 }
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2">
                 {shops.map((shop) => {
                     const results = getResults(shop);
                     const isBest = shop.id === bestDealId;
@@ -123,13 +123,13 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                     return (
                         <div
                             key={shop.id}
-                            className={`relative p-5 rounded-3xl transition-all duration-300 ${isBest
-                                ? 'bg-white shadow-xl ring-2 ring-[#D4AF37] ring-opacity-50 shadow-[#D4AF37]/10'
+                            className={`relative p-6 rounded-3xl transition-all duration-300 ${isBest
+                                ? 'bg-white shadow-xl ring-2 ring-[#F59E0B] ring-opacity-50 shadow-[#F59E0B]/10'
                                 : 'bg-slate-50/50 hover:bg-white hover:shadow-lg'
                                 }`}
                         >
                             {isBest && (
-                                <div className="absolute -top-3 left-6 bg-[#D4AF37] text-white text-[10px] sm:text-xs px-3 py-1 rounded-full font-bold shadow-lg uppercase tracking-wider">
+                                <div className="absolute -top-3 left-6 bg-[#F59E0B] text-white text-[10px] sm:text-xs px-3 py-1 rounded-full font-bold shadow-lg uppercase tracking-wider">
                                     {settings.language === 'en' ? '⭐ Best Deal!' : '⭐ أفضل سعر!'}
                                 </div>
                             )}
@@ -139,7 +139,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                     type="text"
                                     value={shop.name}
                                     onChange={(e) => updateShop(shop.id, 'name', e.target.value)}
-                                    className="font-semibold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:border-gold-400 focus:outline-none transition-colors px-1"
+                                    className="font-semibold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:outline-none transition-colors px-1"
                                 />
                                 <div className="flex gap-1">
                                     <button
@@ -176,7 +176,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                             onChange={(e) => updateShop(shop.id, 'itemPrice', e.target.value)}
                                             placeholder="0.00"
                                             min={0}
-                                            className="w-full px-2 py-1.5 text-sm bg-slate-100/30 border-none rounded-lg focus:border-gold-400 focus:outline-none font-numbers"
+                                            className="w-full px-2 py-1.5 text-sm bg-slate-100/30 border-none rounded-lg focus:outline-none font-numbers"
                                         />
                                     </div>
                                     <div>
@@ -189,7 +189,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                             onChange={(e) => updateShop(shop.id, 'weight', e.target.value)}
                                             placeholder="0.00"
                                             min={0}
-                                            className="w-full px-2 py-1.5 text-sm bg-slate-100/30 border-none rounded-lg focus:border-gold-400 focus:outline-none font-numbers"
+                                            className="w-full px-2 py-1.5 text-sm bg-slate-100/30 border-none rounded-lg focus:outline-none font-numbers"
                                         />
                                     </div>
                                 </div>
