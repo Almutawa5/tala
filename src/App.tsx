@@ -42,6 +42,8 @@ function App() {
   const [pendingSave, setPendingSave] = useState<PendingSave | null>(null);
   const [restoredData, setRestoredData] = useState<HistoryItem | null>(null);
 
+  const [sharedInputs, setSharedInputs] = useState({ goldPrice: 0, itemPrice: 0, weight: 0, makingPerGram: 0 });
+
   // State to trigger price updates in child components
   const [livePriceTrigger, setLivePriceTrigger] = useState<((price: string) => void) | null>(null);
 
@@ -114,6 +116,8 @@ function App() {
             setLivePriceTrigger={setLivePriceTrigger}
             onSave={handleSave}
             restoredData={restoredData}
+            sharedInputs={sharedInputs}
+            setSharedInputs={setSharedInputs}
           />
         ) : activeTab === 'estimator' ? (
           <EstimatorView
@@ -122,6 +126,8 @@ function App() {
             setLivePriceTrigger={setLivePriceTrigger}
             onSave={handleSave}
             restoredData={restoredData}
+            sharedInputs={sharedInputs}
+            setSharedInputs={setSharedInputs}
           />
         ) : (
           <ComparisonMode

@@ -6,6 +6,8 @@ import { trackEvent } from '../utils/analytics';
 import ShareButton from './ShareButton';
 import { Settings } from '../hooks/useSettings';
 import { HistoryItem } from '../hooks/useHistory';
+import ValidationMessages from './ValidationMessages';
+import { getCommonInputWarnings, getGoldPriceWarnings, getMakingChargeWarnings, getWeightWarnings, hasErrors } from '../utils/validation';
 
 interface EstimatorViewProps {
     settings: Settings;
@@ -13,21 +15,42 @@ interface EstimatorViewProps {
     setLivePriceTrigger: React.Dispatch<React.SetStateAction<((price: string) => void) | null>>;
     onSave: (type: 'estimator', inputs: any, results: any) => void;
     restoredData: HistoryItem | null;
+    sharedInputs: { goldPrice: number; itemPrice: number; weight: number; makingPerGram: number };
+    setSharedInputs: React.Dispatch<React.SetStateAction<{ goldPrice: number; itemPrice: number; weight: number; makingPerGram: number }>>;
 }
 
-const KARAT_OPTIONS = [24, 22, 21, 18, 14, 10, 9];
-
-const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setLivePriceTrigger, onSave, restoredData }) => {
+const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setLivePriceTrigger, onSave, restoredData, sharedInputs, setSharedInputs }) => {
     const t = translations[settings.language];
     const isRtl = settings.language === 'ar';
     const curr = settings.currency;
 
-    const [inputs, setInputs] = useState({ goldPrice: 0, weight: 0, makingPerGram: 0 });
-    const [selectedKarat, setSelectedKarat] = useState<number>(
-        typeof settings.karat === 'number' ? settings.karat : parseInt(settings.karat as string) || 18
-    );
+    const inputs = sharedInputs;
+    const setInputs = setSharedInputs;
+    const [lastFilledLivePrice, setLastFilledLivePrice] = useState<number>(0);
+    const [forcePrefill, setForcePrefill] = useState(false);
     const [showSaved, setShowSaved] = useState(false);
     const [results, setResults] = useState({ rawGoldCost: 0, totalMaking: 0, vatAmount: 0, totalPrice: 0 });
+    const validationMessages = [
+        ...getCommonInputWarnings(inputs, {
+            goldPrice: isRtl ? 'سعر الذهب' : 'Gold price',
+            weight: isRtl ? 'الوزن' : 'Weight',
+            makingPerGram: isRtl ? 'المصنعية للجرام' : 'Making charge per gram'
+        }, settings.language),
+        ...getGoldPriceWarnings(inputs.goldPrice, settings.language),
+        ...getWeightWarnings(inputs.weight, settings.language),
+        ...getMakingChargeWarnings(inputs.makingPerGram, inputs.goldPrice, settings.language)
+    ];
+    const hasValidationErrors = hasErrors(validationMessages);
+
+    // Auto-prefill gold price once live price is available or updates (e.g., when karat changes)
+    useEffect(() => {
+        const roundedPrice = Math.ceil(livePrice * 100) / 100;
+        if (livePrice > 0 && (inputs.goldPrice === 0 || inputs.goldPrice === lastFilledLivePrice || forcePrefill)) {
+            setInputs(prev => ({ ...prev, goldPrice: roundedPrice }));
+            setLastFilledLivePrice(roundedPrice);
+            setForcePrefill(false);
+        }
+    }, [livePrice, inputs.goldPrice, lastFilledLivePrice, forcePrefill]);
 
     useEffect(() => {
         if (restoredData && restoredData.type === 'estimator') {
@@ -35,7 +58,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                 goldPrice: restoredData.inputs.goldPrice || 0,
                 weight: restoredData.inputs.weight || 0,
                 makingPerGram: restoredData.inputs.makingPerGram || 0,
+                itemPrice: restoredData.inputs.itemPrice || 0
             });
+            setLastFilledLivePrice(0); // reset prefill tracker
         }
     }, [restoredData]);
 
@@ -50,7 +75,11 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
     useEffect(() => {
         const res = calculateEstimator(inputs.goldPrice, inputs.weight, inputs.makingPerGram, settings.vatPercentage);
         setResults(res);
-    }, [inputs, settings.vatPercentage]);
+        const roundedTotal = Math.round(res.totalPrice * 100) / 100;
+        if (Math.abs(roundedTotal - inputs.itemPrice) > 0.001) {
+            setInputs(prev => ({ ...prev, itemPrice: roundedTotal }));
+        }
+    }, [inputs.goldPrice, inputs.weight, inputs.makingPerGram, settings.vatPercentage]);
 
     const handleChange = (field: keyof typeof inputs, value: string) => {
         setInputs(prev => ({ ...prev, [field]: parseFloat(value) || 0 }));
@@ -70,9 +99,8 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
 
     return (
         <div id="estimator-view" className={`flex flex-col lg:flex-row h-full gap-0 ${isRtl ? 'lg:flex-row-reverse' : ''}`}>
-
             {/* ── LEFT: Parameters ── */}
-            <div className="lg:w-[55%] p-8 lg:p-10 space-y-8">
+            <div className="lg:w-[55%] p-4 sm:p-8 lg:p-10 space-y-8">
                 {/* Section header */}
                 <div className="flex items-center gap-3 mb-1">
                     <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0">
@@ -87,6 +115,8 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                         </p>
                     </div>
                 </div>
+
+                <ValidationMessages messages={validationMessages} />
 
                 {/* Weight */}
                 <div>
@@ -105,39 +135,11 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                             className="flex-1 bg-transparent outline-none text-xl font-semibold font-numbers"
                             style={{ color: 'var(--text-primary)' }}
                         />
-                        <span className="ml-2 text-sm font-bold px-3 py-1 rounded-xl" style={{ background: 'var(--border)', color: 'var(--text-secondary)' }}>g</span>
+                        <span className="ms-2 text-sm font-bold px-3 py-1 rounded-xl" style={{ background: 'var(--border)', color: 'var(--text-secondary)' }}>g</span>
                     </div>
                 </div>
 
-                {/* Karat selector */}
-                <div>
-                    <label className="block text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-secondary)' }}>
-                        {isRtl ? 'العيار (قيراط)' : 'Purity (Karat)'}
-                    </label>
-                    <div className="grid grid-cols-4 gap-3">
-                        {KARAT_OPTIONS.map(k => {
-                            const isActive = selectedKarat === k;
-                            return (
-                                <button
-                                    key={k}
-                                    onClick={() => setSelectedKarat(k)}
-                                    className="py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 active:scale-95"
-                                    style={isActive ? {
-                                        background: 'rgba(212,175,55,0.1)',
-                                        border: '1.5px solid #F59E0B',
-                                        color: '#F59E0B'
-                                    } : {
-                                        background: 'var(--bg-input)',
-                                        color: 'var(--text-primary)'
-                                    }}
-                                >
-                                    {k}K
-                                </button>
-                            );
-                        })}
-                        <div />
-                    </div>
-                </div>
+
 
                 {/* Gold spot price */}
                 <div>
@@ -197,7 +199,6 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                 style={{ background: 'linear-gradient(165deg, #0F172A 0%, #1E293B 100%)' }}
             >
                 <div className="p-8 lg:p-10 flex-1">
-                    {/* Panel header */}
                     <div className="flex items-start justify-between mb-6">
                         <div>
                             <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'rgba(255,255,255,0.35)' }}>
@@ -242,10 +243,12 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, livePrice, setL
                 <div className="p-5 pt-0">
                     <button
                         onClick={handleSave}
+                        disabled={hasValidationErrors}
                         className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98]"
                         style={{
                             background: showSaved ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.07)',
-                            color: showSaved ? '#34d399' : 'rgba(255,255,255,0.7)',
+                            color: hasValidationErrors ? 'rgba(255,255,255,0.3)' : showSaved ? '#34d399' : 'rgba(255,255,255,0.7)',
+                            cursor: hasValidationErrors ? 'not-allowed' : 'pointer',
                             border: 'none'
                         }}
                     >

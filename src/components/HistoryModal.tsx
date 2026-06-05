@@ -125,9 +125,9 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                                 </div>
                                             )}
                                         </div>
-                                        <span className="text-xs text-slate-400 rtl:mr-1">{formatDate(item.timestamp)}</span>
+                                        <span className="text-xs text-slate-400 ms-1">{formatDate(item.timestamp)}</span>
                                     </div>
-                                    <div className="flex gap-1 ml-2 rtl:ml-0 rtl:mr-2">
+                                    <div className="flex gap-1 ms-2">
                                         <button
                                             onClick={() => { onRestore(item); onClose(); }}
                                             className="p-1.5 text-slate-400 hover:text-gold-600 hover:bg-gold-50 rounded-lg transition-colors"

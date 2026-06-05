@@ -70,16 +70,50 @@ const Header: React.FC<HeaderProps> = ({
     return (
         <div className="mb-8 space-y-5">
             {/* Main Navigation Bar */}
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 py-5 px-4 sm:px-6 bg-white/40 backdrop-blur-md border border-slate-200/50 rounded-2xl shadow-sm">
-                {/* Brand & Tabs Section */}
-                <div className="flex flex-col sm:flex-row items-center gap-10 w-full lg:w-auto">
-                    <div className="flex items-center gap-3 shrink-0">
-                        <div className="p-2 bg-gradient-to-br from-[#F59E0B] to-[#FBBF24] rounded-xl shadow-lg ring-1 ring-white/20">
-                            <Sparkles size={22} className="text-white drop-shadow-sm" strokeWidth={2.5} />
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 py-4 sm:py-5 px-3 sm:px-6 bg-white/40 backdrop-blur-md border border-slate-200/50 rounded-2xl shadow-sm">
+                {/* Brand & Actions (Mobile Top Row) / Brand & Tabs (Desktop Left) */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-10 w-full lg:w-auto">
+                    
+                    <div className="flex items-center justify-between w-full sm:w-auto">
+                        {/* Brand */}
+                        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-[#F59E0B] to-[#FBBF24] rounded-xl shadow-lg ring-1 ring-white/20">
+                                <Sparkles size={20} className="text-white drop-shadow-sm sm:w-[22px] sm:h-[22px]" strokeWidth={2.5} />
+                            </div>
+                            <h1 className="text-base sm:text-xl font-black tracking-tight leading-none whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
+                                {t.appTitle}
+                            </h1>
                         </div>
-                        <h1 className="text-xl font-black tracking-tight leading-none whitespace-nowrap" style={{ color: 'var(--text-primary)' }}>
-                            {t.appTitle}
-                        </h1>
+
+                        {/* Mobile Actions */}
+                        <div className="flex sm:hidden items-center gap-1.5">
+                            <button
+                                onClick={onToggleLanguage}
+                                className="bg-white hover:bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-black leading-none transition-all duration-200 shadow-sm"
+                            >
+                                {settings.language === 'en' ? 'AR' : 'EN'}
+                            </button>
+                            <div className="flex items-center gap-0.5 bg-slate-100/50 p-0.5 rounded-lg border border-slate-200/50">
+                                {[
+                                    { onClick: onOpenHistory, icon: <Clock size={15} />, count: historyCount },
+                                    { onClick: toggleDarkMode, icon: settings.darkMode ? <Sun size={15} /> : <Moon size={15} /> },
+                                    { onClick: onOpenSettings, icon: <Settings size={15} /> }
+                                ].map((btn, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={btn.onClick}
+                                        className="relative p-1.5 text-slate-500 hover:text-[#F59E0B] hover:bg-white rounded-md transition-all duration-200"
+                                    >
+                                        {btn.icon}
+                                        {(btn.count ?? 0) > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-bounce-short border-2 border-white">
+                                                {btn.count}
+                                            </span>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     {/* Desktop Tabs */}
@@ -104,12 +138,12 @@ const Header: React.FC<HeaderProps> = ({
                     </div>
                 </div>
 
-                {/* Right: Live Price & Global Actions */}
-                <div className="flex items-center justify-between sm:justify-end gap-3 w-full lg:w-auto">
+                {/* Right: Live Price & Desktop Global Actions */}
+                <div className="flex items-center justify-center sm:justify-end gap-3 w-full lg:w-auto">
                     {/* Live Price Badge */}
                     <div
                         onClick={onUseLivePrice}
-                        className={`group inline-flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl text-xs font-bold shadow-lg cursor-pointer hover:bg-slate-800 transition-all duration-300 border border-slate-700/50 ${loading ? 'animate-pulse' : ''}`}
+                        className={`w-full sm:w-auto group inline-flex items-center justify-center gap-2 bg-slate-900 px-4 py-2 sm:px-3 sm:py-1.5 rounded-xl text-sm sm:text-xs font-bold shadow-lg cursor-pointer hover:bg-slate-800 transition-all duration-300 border border-slate-700/50 ${loading ? 'animate-pulse' : ''}`}
                         style={{ color: '#FBBF24' }}
                         title={settings.language === 'en' ? 'Click to use this price' : 'انقر لاستخدام هذا السعر'}
                     >
@@ -118,7 +152,8 @@ const Header: React.FC<HeaderProps> = ({
 
                     <div className="w-[1px] h-6 bg-slate-200 hidden sm:block" />
 
-                    <div className="flex items-center gap-2">
+                    {/* Desktop Global Actions */}
+                    <div className="hidden sm:flex items-center gap-2">
                         <button
                             onClick={onToggleLanguage}
                             className="bg-white hover:bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-[10px] font-black leading-none transition-all duration-200 hover:shadow-sm"
@@ -128,7 +163,7 @@ const Header: React.FC<HeaderProps> = ({
 
                         <div className="flex items-center gap-1 bg-slate-100/40 p-1 rounded-lg">
                             <button
-                                id="history-button"
+                                id="history-button-desktop"
                                 onClick={onOpenHistory}
                                 className="relative p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-white rounded-md transition-all duration-200"
                                 aria-label="History"

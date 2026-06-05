@@ -64,8 +64,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                 <div className="space-y-4">
                     {/* Theme Selection */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">{t.themeLabel}</label>
-                        <div className="flex gap-3 flex-wrap">
+                        <label className="block text-sm font-medium text-slate-700 mb-2 text-center">{t.themeLabel}</label>
+                        <div className="flex justify-center gap-3 flex-wrap">
                             {['gold', 'silver', 'light'].map(theme => (
                                 <div
                                     key={theme}

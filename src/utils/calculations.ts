@@ -13,8 +13,8 @@ export const calculateBreakdown = (
     vatPercentage: number
 ): BreakdownResult => {
     if (goldPrice > 0 && itemPrice > 0 && weight > 0) {
-        const vatAmount = itemPrice * (vatPercentage / 100);
-        const priceNoVat = itemPrice - vatAmount;
+        const priceNoVat = itemPrice / (1 + vatPercentage / 100);
+        const vatAmount = itemPrice - priceNoVat;
         const rawGoldCost = weight * goldPrice;
         const totalMaking = priceNoVat - rawGoldCost;
         const makingPerGram = totalMaking / weight;

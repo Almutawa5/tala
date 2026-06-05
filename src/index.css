@@ -6,7 +6,7 @@
 
 :root {
   --font-main: 'Montserrat', sans-serif;
-  --font-heading: 'Cormorant', serif;
+  --font-heading: 'Montserrat', sans-serif;
 }
 
 html[lang="ar"],
@@ -26,7 +26,6 @@ html[lang="ar"] select {
 }
 
 .font-numbers {
-  font-family: 'JetBrains Mono', monospace !important;
   font-variant-numeric: slashed-zero tabular-nums;
 }
 

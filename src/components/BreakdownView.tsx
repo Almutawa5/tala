@@ -6,6 +6,8 @@ import { trackEvent } from '../utils/analytics';
 import ShareButton from './ShareButton';
 import { Settings } from '../hooks/useSettings';
 import { HistoryItem } from '../hooks/useHistory';
+import ValidationMessages from './ValidationMessages';
+import { getCommonInputWarnings, getGoldPriceWarnings, getMakingChargeWarnings, getWeightWarnings, hasErrors } from '../utils/validation';
 
 interface BreakdownViewProps {
     settings: Settings;
@@ -13,16 +15,45 @@ interface BreakdownViewProps {
     setLivePriceTrigger: React.Dispatch<React.SetStateAction<((price: string) => void) | null>>;
     onSave: (type: 'breakdown', inputs: any, results: any) => void;
     restoredData: HistoryItem | null;
+    sharedInputs: { goldPrice: number; itemPrice: number; weight: number; makingPerGram: number };
+    setSharedInputs: React.Dispatch<React.SetStateAction<{ goldPrice: number; itemPrice: number; weight: number; makingPerGram: number }>>;
 }
 
-const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setLivePriceTrigger, onSave, restoredData }) => {
+const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setLivePriceTrigger, onSave, restoredData, sharedInputs, setSharedInputs }) => {
     const t = translations[settings.language];
     const curr = settings.currency;
 
-    const [inputs, setInputs] = useState({ goldPrice: 0, itemPrice: 0, weight: 0 });
+    const inputs = sharedInputs;
+    const setInputs = setSharedInputs;
+    const [hasPrefilled, setHasPrefilled] = useState(false);
     const [showSaved, setShowSaved] = useState(false);
     const [results, setResults] = useState({ vatAmount: 0, priceNoVat: 0, rawGoldCost: 0, totalMaking: 0, makingPerGram: 0 });
     const isRtl = settings.language === 'ar';
+    const validationMessages = [
+        ...getCommonInputWarnings(inputs, {
+            goldPrice: isRtl ? 'سعر الذهب' : 'Gold price',
+            itemPrice: isRtl ? 'سعر القطعة' : 'Item price',
+            weight: isRtl ? 'الوزن' : 'Weight'
+        }, settings.language),
+        ...getGoldPriceWarnings(inputs.goldPrice, settings.language),
+        ...getWeightWarnings(inputs.weight, settings.language),
+        ...(inputs.itemPrice <= 0 ? [{
+            id: 'item-price-missing',
+            level: 'info' as const,
+            text: isRtl
+                ? 'أدخل سعر القطعة لحساب المصنعية.'
+                : 'Enter the item price to calculate making charges.'
+        }] : []),
+        ...getMakingChargeWarnings(results.makingPerGram, inputs.goldPrice, settings.language)
+    ];
+
+    useEffect(() => {
+        if (!hasPrefilled && livePrice > 0) {
+            const roundedPrice = Math.ceil(livePrice * 100) / 100;
+            setInputs(prev => ({ ...prev, goldPrice: roundedPrice }));
+            setHasPrefilled(true);
+        }
+    }, [livePrice, hasPrefilled]);
 
     useEffect(() => {
         if (restoredData && restoredData.type === 'breakdown') {
@@ -30,7 +61,9 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
                 goldPrice: restoredData.inputs.goldPrice || 0,
                 itemPrice: restoredData.inputs.itemPrice || 0,
                 weight: restoredData.inputs.weight || 0,
+                makingPerGram: 0,
             });
+            setHasPrefilled(true);
         }
     }, [restoredData]);
 
@@ -45,11 +78,17 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
     useEffect(() => {
         const res = calculateBreakdown(inputs.goldPrice, inputs.itemPrice, inputs.weight, settings.vatPercentage);
         setResults(res);
-    }, [inputs, settings.vatPercentage]);
+        const roundedMaking = Math.round(res.makingPerGram * 100) / 100;
+        if (Math.abs(roundedMaking - inputs.makingPerGram) > 0.001) {
+            setInputs(prev => ({ ...prev, makingPerGram: roundedMaking }));
+        }
+    }, [inputs.goldPrice, inputs.itemPrice, inputs.weight, settings.vatPercentage]);
 
     const handleChange = (field: keyof typeof inputs, value: string) => {
         setInputs(prev => ({ ...prev, [field]: parseFloat(value) || 0 }));
     };
+
+    const hasValidationErrors = hasErrors(validationMessages);
 
     const handleSave = () => {
         onSave('breakdown', inputs, results);
@@ -65,8 +104,6 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
 
     return (
         <div id="breakdown-view" className={`flex flex-col lg:flex-row h-full gap-0 ${isRtl ? 'lg:flex-row-reverse' : ''}`}>
-
-            {/* ── LEFT: Parameters ── */}
             <div className="lg:w-[55%] p-8 lg:p-10 space-y-9">
                 {/* Section header */}
                 <div className="flex items-center gap-3 mb-1">
@@ -82,6 +119,8 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
                         </p>
                     </div>
                 </div>
+
+                <ValidationMessages messages={validationMessages} />
 
                 {/* Gold price input */}
                 <div>
@@ -155,7 +194,7 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
                             className="flex-1 bg-transparent outline-none text-xl font-semibold font-numbers"
                             style={{ color: 'var(--text-primary)' }}
                         />
-                        <span className="text-sm font-bold ml-2" style={{ color: 'var(--text-secondary)' }}>g</span>
+                        <span className="text-sm font-bold ms-2" style={{ color: 'var(--text-secondary)' }}>g</span>
                     </div>
                 </div>
             </div>
@@ -210,10 +249,12 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, livePrice, setL
                 <div className="p-5 pt-0">
                     <button
                         onClick={handleSave}
+                        disabled={hasValidationErrors}
                         className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-200 active:scale-[0.98]"
                         style={{
                             background: showSaved ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.07)',
-                            color: showSaved ? '#34d399' : 'rgba(255,255,255,0.7)',
+                            color: hasValidationErrors ? 'rgba(255,255,255,0.3)' : showSaved ? '#34d399' : 'rgba(255,255,255,0.7)',
+                            cursor: hasValidationErrors ? 'not-allowed' : 'pointer'
                         }}
                     >
                         <Save size={15} />

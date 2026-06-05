@@ -3,6 +3,8 @@ import { Scale, Plus, Trash2, Copy } from 'lucide-react';
 import { calculateBreakdown, formatCurrency } from '../utils/calculations';
 import { translations } from '../utils/translations';
 import { Settings } from '../hooks/useSettings';
+import ValidationMessages from './ValidationMessages';
+import { getCommonInputWarnings, getGoldPriceWarnings, getMakingChargeWarnings, getWeightWarnings } from '../utils/validation';
 
 interface ShopEntry {
     id: string;
@@ -52,6 +54,30 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
         return calculateBreakdown(goldPrice, shop.itemPrice, shop.weight, settings.vatPercentage);
     };
 
+    const getShopWarnings = (shop: ShopEntry) => {
+        const results = getResults(shop);
+        const isRtl = settings.language === 'ar';
+
+        return [
+            ...getCommonInputWarnings({
+                itemPrice: shop.itemPrice,
+                weight: shop.weight
+            }, {
+                itemPrice: isRtl ? 'سعر القطعة' : 'Item price',
+                weight: isRtl ? 'الوزن' : 'Weight'
+            }, settings.language),
+            ...getWeightWarnings(shop.weight, settings.language),
+            ...(shop.itemPrice <= 0 ? [{
+                id: `${shop.id}-item-price-missing`,
+                level: 'info' as const,
+                text: isRtl
+                    ? 'أدخل سعر القطعة لإظهار المقارنة.'
+                    : 'Enter an item price to include this shop in comparison.'
+            }] : []),
+            ...getMakingChargeWarnings(results.makingPerGram, goldPrice, settings.language)
+        ];
+    };
+
     const getBestDeal = () => {
         const validShops = shops.filter(s => s.itemPrice > 0 && s.weight > 0);
         if (validShops.length < 2) return null;
@@ -83,6 +109,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
     };
 
     const bestDealId = getBestDeal();
+    const globalWarnings = getGoldPriceWarnings(goldPrice, settings.language);
 
     return (
         <div className="p-8 lg:p-10 space-y-6">
@@ -108,24 +135,27 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                 </button>
             </div>
 
-            <div className="text-[13px] text-slate-600 mb-6 p-4 bg-slate-50/80 rounded-xl inline-block">
+            <div className="text-[13px] text-slate-600 mb-6 p-4 bg-slate-100/50 rounded-xl inline-block">
                 {settings.language === 'en'
                     ? <span className="flex items-center gap-2 font-medium">Using gold price: <span className="font-numbers text-slate-900 bg-white px-2 py-0.5 rounded shadow-sm">{formatCurrency(goldPrice)}</span> <span className="opacity-60">{settings.currency}/{settings.karat}K per gram</span></span>
                     : <span className="flex items-center gap-2 font-medium">سعر الذهب: <span className="font-numbers text-slate-900 bg-white px-2 py-0.5 rounded shadow-sm">{formatCurrency(goldPrice)}</span> <span className="opacity-60">{settings.currency}/{settings.karat}ك للجرام</span></span>
                 }
             </div>
 
+            <ValidationMessages messages={globalWarnings} />
+
             <div className="grid gap-6 md:grid-cols-2">
                 {shops.map((shop) => {
                     const results = getResults(shop);
                     const isBest = shop.id === bestDealId;
+                    const shopWarnings = getShopWarnings(shop);
 
                     return (
                         <div
                             key={shop.id}
                             className={`relative p-6 rounded-3xl transition-all duration-300 ${isBest
                                 ? 'bg-white shadow-xl ring-2 ring-[#F59E0B] ring-opacity-50 shadow-[#F59E0B]/10'
-                                : 'bg-slate-50/50 hover:bg-white hover:shadow-lg'
+                                : 'bg-slate-100/40 hover:bg-white hover:shadow-lg'
                                 }`}
                         >
                             {isBest && (
@@ -139,7 +169,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                     type="text"
                                     value={shop.name}
                                     onChange={(e) => updateShop(shop.id, 'name', e.target.value)}
-                                    className="font-semibold text-slate-800 bg-transparent border-b border-transparent hover:border-slate-300 focus:outline-none transition-colors px-1"
+                                    className="font-semibold text-slate-800 !bg-transparent border-b border-transparent hover:border-slate-300 focus:outline-none transition-colors px-1"
                                 />
                                 <div className="flex gap-1">
                                     <button
@@ -165,6 +195,8 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                             </div>
 
                             <div className="space-y-3">
+                                <ValidationMessages messages={shopWarnings} />
+
                                 <div className="grid grid-cols-2 gap-2">
                                     <div>
                                         <label className="text-xs text-slate-500">
