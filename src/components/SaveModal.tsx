@@ -44,7 +44,7 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, langu
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-5 sm:p-6 pb-[max(1.25rem,env(safe-area-inset-bottom,1.25rem))]">
+            <form onSubmit={handleSubmit} className="p-5 sm:p-6 pb-[max(1.25rem,env(safe-area-inset-bottom,1.25rem))] overflow-y-auto custom-scrollbar">
                 <div className="mb-5 input-field-group">
                     <label htmlFor="recordName" className="input-field-label block text-xs font-bold uppercase tracking-wider mb-2 transition-colors" style={{ color: 'var(--text-secondary)' }}>
                         {t.recordNameLabel}

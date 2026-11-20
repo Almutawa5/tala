@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface BottomSheetProps {
     isOpen: boolean;
@@ -15,20 +15,46 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     maxWidthClass = 'sm:max-w-md',
     ariaLabel,
 }) => {
+    const [viewportRect, setViewportRect] = useState<{ top: number; height: number } | null>(null);
+
     useEffect(() => {
-        if (!isOpen) return;
+        if (!isOpen) {
+            setViewportRect(null);
+            return;
+        }
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
         };
 
+        const updateViewport = () => {
+            const vv = window.visualViewport;
+            if (!vv) {
+                setViewportRect(null);
+                return;
+            }
+            setViewportRect({
+                top: Math.max(0, vv.offsetTop),
+                height: vv.height,
+            });
+        };
+
+        updateViewport();
+
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('resize', updateViewport);
+        const vv = window.visualViewport;
+        vv?.addEventListener('resize', updateViewport);
+        vv?.addEventListener('scroll', updateViewport);
 
         return () => {
             document.body.style.overflow = previousOverflow;
             window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('resize', updateViewport);
+            vv?.removeEventListener('resize', updateViewport);
+            vv?.removeEventListener('scroll', updateViewport);
         };
     }, [isOpen, onClose]);
 
@@ -36,14 +62,15 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
 
     return (
         <div
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4"
+            className="fixed inset-x-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center sm:p-4"
+            style={viewportRect ? { top: `${viewportRect.top}px`, height: `${viewportRect.height}px` } : { top: 0, bottom: 0 }}
             onClick={onClose}
             role="dialog"
             aria-modal="true"
             aria-label={ariaLabel}
         >
             <div
-                className={`w-full ${maxWidthClass} rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[88dvh] sm:max-h-[85vh] flex flex-col overflow-hidden animate-sheet-up sm:animate-fade-in-scale border`}
+                className={`w-full ${maxWidthClass} rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[92%] sm:max-h-[85%] flex flex-col overflow-hidden animate-sheet-up sm:animate-fade-in-scale border`}
                 style={{
                     background: 'var(--bg-card)',
                     borderColor: 'var(--border)',
