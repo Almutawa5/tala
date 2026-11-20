@@ -14,7 +14,6 @@ import OfflineIndicator from './components/OfflineIndicator';
 import { useSettings } from './hooks/useSettings';
 import { useGoldPrice } from './hooks/useGoldPrice';
 import { useHistory, HistoryInput, HistoryResult, HistoryItem } from './hooks/useHistory';
-import { useMobileKeyboard } from './hooks/useMobileKeyboard';
 import { recordVisitor } from './utils/analytics';
 import { triggerSaveAnimation } from './utils/animations';
 
@@ -22,7 +21,6 @@ function App() {
   const { settings, updateSettings } = useSettings();
   const { price, loading, lastUpdated, isCached, refresh } = useGoldPrice(settings.currency, settings.karat);
   const { history, saveCalculation, deleteCalculation, clearHistory, renameCalculation } = useHistory();
-  const isKeyboardOpen = useMobileKeyboard();
 
   useEffect(() => {
     recordVisitor();
@@ -211,7 +209,6 @@ function App() {
         onOpenHistory={() => setIsHistoryOpen(true)}
         historyCount={history.length}
         language={settings.language}
-        isKeyboardOpen={isKeyboardOpen}
       />
 
       <OfflineIndicator language={settings.language} />

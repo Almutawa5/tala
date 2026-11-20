@@ -52,7 +52,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
 
     const isRtl = settings.language === 'ar';
 
-    const inputClass = "w-full min-h-[46px] px-4 py-3 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 transition-all duration-200 cursor-pointer";
+    const inputClass = "w-full min-h-[46px] px-4 py-3 rounded-xl text-base sm:text-sm font-medium input-control cursor-pointer";
 
     return (
         <BottomSheet isOpen={isOpen} onClose={onClose} maxWidthClass="sm:max-w-sm" ariaLabel={t.settingsTitle}>
@@ -139,11 +139,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                         value={localSettings.currency}
                         onChange={(e) => setLocalSettings({ ...localSettings, currency: e.target.value })}
                         className={inputClass}
-                        style={{
-                            background: 'var(--bg-input)',
-                            color: 'var(--text-primary)',
-                            border: '1.5px solid var(--border)'
-                        }}
+                        style={{ color: 'var(--text-primary)' }}
                     >
                         <option value="BHD">{isRtl ? 'دينار بحريني (BHD)' : 'Bahraini Dinar (BHD)'}</option>
                         <option value="SAR">{isRtl ? 'ريال سعودي (SAR)' : 'Saudi Riyal (SAR)'}</option>
@@ -162,11 +158,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                         value={localSettings.karat}
                         onChange={(e) => setLocalSettings({ ...localSettings, karat: e.target.value })}
                         className={inputClass}
-                        style={{
-                            background: 'var(--bg-input)',
-                            color: 'var(--text-primary)',
-                            border: '1.5px solid var(--border)'
-                        }}
+                        style={{ color: 'var(--text-primary)' }}
                     >
                         <option value="24">{isRtl ? 'عيار ٢٤ — ذهب صافي' : '24K — Pure Gold'}</option>
                         <option value="22">{isRtl ? 'عيار ٢٢' : '22K'}</option>
@@ -190,12 +182,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings
                         step="0.1"
                         value={localSettings.vatPercentage}
                         onChange={(e) => setLocalSettings({ ...localSettings, vatPercentage: parseFloat(e.target.value) || 0 })}
-                        className={inputClass + ' font-numbers'}
-                        style={{
-                            background: 'var(--bg-input)',
-                            color: 'var(--text-primary)',
-                            border: '1.5px solid var(--border)'
-                        }}
+                        className={inputClass + ' font-numbers cursor-text'}
+                        style={{ color: 'var(--text-primary)' }}
                     />
                 </div>
 

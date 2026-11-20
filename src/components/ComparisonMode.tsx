@@ -226,19 +226,16 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                 {/* Inputs grid */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {/* Item Price */}
-                                    <div>
+                                    <div className="input-field-group">
                                         <div className="flex items-baseline justify-between mb-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
+                                            <label htmlFor={`shop-price-${shop.id}`} className="input-field-label text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                                                 {isRtl ? 'السعر' : 'Price'}
                                             </label>
                                             <span className="text-[10px] opacity-65" style={{ color: 'var(--text-secondary)' }}>
                                                 {isRtl ? 'شامل الضريبة' : `Incl. VAT (${curr})`}
                                             </span>
                                         </div>
-                                        <div
-                                            className="flex items-center rounded-xl p-1 gap-1 border"
-                                            style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                                        >
+                                        <div className="flex items-center rounded-xl p-1 gap-1 input-field-box">
                                             <button
                                                 type="button"
                                                 onClick={() => handleShopStep(shop.id, 'itemPrice', -10)}
@@ -247,6 +244,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                                 aria-label="Decrease price"
                                             >−</button>
                                             <input
+                                                id={`shop-price-${shop.id}`}
                                                 type="number"
                                                 inputMode="decimal"
                                                 enterKeyHint="done"
@@ -268,19 +266,16 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                     </div>
 
                                     {/* Weight */}
-                                    <div>
+                                    <div className="input-field-group">
                                         <div className="flex items-baseline justify-between mb-1.5">
-                                            <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
+                                            <label htmlFor={`shop-weight-${shop.id}`} className="input-field-label text-xs font-bold uppercase tracking-widest transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                                                 {isRtl ? 'الوزن' : 'Weight'}
                                             </label>
                                             <span className="text-[10px] opacity-65" style={{ color: 'var(--text-secondary)' }}>
                                                 {isRtl ? 'بالجرام' : 'In grams (g)'}
                                             </span>
                                         </div>
-                                        <div
-                                            className="flex items-center rounded-xl p-1 gap-1 border"
-                                            style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                                        >
+                                        <div className="flex items-center rounded-xl p-1 gap-1 input-field-box">
                                             <button
                                                 type="button"
                                                 onClick={() => handleShopStep(shop.id, 'weight', -1)}
@@ -289,6 +284,7 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                                 aria-label="Decrease weight"
                                             >−</button>
                                             <input
+                                                id={`shop-weight-${shop.id}`}
                                                 type="number"
                                                 inputMode="decimal"
                                                 enterKeyHint="done"

@@ -45,8 +45,8 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, langu
             </div>
 
             <form onSubmit={handleSubmit} className="p-5 sm:p-6 pb-[max(1.25rem,env(safe-area-inset-bottom,1.25rem))]">
-                <div className="mb-5">
-                    <label htmlFor="recordName" className="block text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-secondary)' }}>
+                <div className="mb-5 input-field-group">
+                    <label htmlFor="recordName" className="input-field-label block text-xs font-bold uppercase tracking-wider mb-2 transition-colors" style={{ color: 'var(--text-secondary)' }}>
                         {t.recordNameLabel}
                     </label>
                     <input
@@ -56,12 +56,8 @@ const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onConfirm, langu
                         onChange={(e) => setName(e.target.value)}
                         placeholder={t.enterNamePlaceholder}
                         enterKeyHint="done"
-                        className="w-full min-h-[46px] px-4 py-3 rounded-xl text-sm font-medium border focus:outline-none transition-all"
-                        style={{
-                            background: 'var(--bg-input)',
-                            borderColor: 'var(--border)',
-                            color: 'var(--text-primary)'
-                        }}
+                        className="w-full min-h-[46px] px-4 py-3 rounded-xl text-base sm:text-sm font-medium input-control"
+                        style={{ color: 'var(--text-primary)' }}
                         autoFocus
                     />
                 </div>

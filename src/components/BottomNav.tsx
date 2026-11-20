@@ -8,7 +8,6 @@ interface BottomNavProps {
     onOpenHistory: () => void;
     historyCount: number;
     language: Language;
-    isKeyboardOpen?: boolean;
 }
 
 const BottomNav: React.FC<BottomNavProps> = ({
@@ -17,7 +16,6 @@ const BottomNav: React.FC<BottomNavProps> = ({
     onOpenHistory,
     historyCount,
     language,
-    isKeyboardOpen = false,
 }) => {
     const t = translations[language];
 
@@ -30,10 +28,7 @@ const BottomNav: React.FC<BottomNavProps> = ({
     return (
         <nav
             aria-label="Mobile Navigation"
-            aria-hidden={isKeyboardOpen}
-            className={`sm:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl border-t transition-all duration-200 pb-[max(0.25rem,env(safe-area-inset-bottom,0.25rem))] ${
-                isKeyboardOpen ? 'translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
-            }`}
+            className="sm:hidden fixed bottom-0 left-0 right-0 z-40 backdrop-blur-xl border-t transition-colors duration-200 pb-[max(0.25rem,env(safe-area-inset-bottom,0.25rem))]"
             style={{
                 background: 'var(--bg-card)',
                 borderColor: 'var(--border)',

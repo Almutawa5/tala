@@ -127,6 +127,57 @@ html[lang="ar"] body {
     outline-offset: 2px;
   }
 
+  .input-field-group:focus-within .input-field-label {
+    color: var(--primary) !important;
+    opacity: 1;
+  }
+
+  .input-field-box {
+    background: var(--bg-input);
+    border: 1.5px solid var(--border);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  }
+
+  .input-field-box:hover {
+    border-color: var(--border-strong);
+  }
+
+  .input-field-box:focus-within {
+    background: var(--bg-surface);
+    border-color: var(--primary-vivid);
+    box-shadow: 0 0 0 4px var(--primary-soft), 0 8px 20px -8px rgba(229, 169, 59, 0.35);
+  }
+
+  .input-field-box input {
+    scroll-margin-block: 5.5rem;
+  }
+
+  .input-field-box:focus-within .input-field-prefix {
+    color: var(--primary) !important;
+  }
+
+  .input-field-box:focus-within .input-field-unit {
+    background: var(--primary-soft) !important;
+    color: var(--primary) !important;
+  }
+
+  .input-control {
+    background: var(--bg-input);
+    border: 1.5px solid var(--border);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  }
+
+  .input-control:hover {
+    border-color: var(--border-strong);
+  }
+
+  .input-control:focus {
+    outline: none;
+    background: var(--bg-surface);
+    border-color: var(--primary-vivid);
+    box-shadow: 0 0 0 4px var(--primary-soft), 0 6px 16px -6px rgba(229, 169, 59, 0.28);
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
     height: 6px;

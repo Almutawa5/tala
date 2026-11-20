@@ -108,12 +108,8 @@ const QuickParamBar: React.FC<QuickParamBarProps> = ({
                             value={settings.currency}
                             onChange={(e) => updateSettings({ currency: e.target.value })}
                             aria-label={t.currencyLabel}
-                            className="w-full sm:w-auto min-h-[44px] sm:min-h-[40px] appearance-none ps-3.5 pe-8 rounded-xl text-xs font-bold font-numbers cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/25 transition-all"
-                            style={{
-                                background: 'var(--bg-input)',
-                                color: 'var(--text-primary)',
-                                border: '1px solid var(--border)',
-                            }}
+                            className="w-full sm:w-auto min-h-[44px] sm:min-h-[40px] appearance-none ps-3.5 pe-8 rounded-xl text-xs font-bold font-numbers cursor-pointer input-control"
+                            style={{ color: 'var(--text-primary)' }}
                         >
                             {CURRENCIES.map((c) => (
                                 <option key={c} value={c}>

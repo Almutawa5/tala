@@ -578,10 +578,10 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
 
                 {/* ── Detailed Mode: Gold Price Input ── */}
                 {mode === 'detailed' && (
-                    <div className="space-y-1.5">
+                    <div className="space-y-1.5 input-field-group">
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                             <div className="flex items-center gap-2">
-                                <label className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                                <label htmlFor="estimator-gold-price" className="input-field-label text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                                     {isRtl ? `سعر جرام الذهب (${curr})` : `Gold Spot Price (${curr}/g)`}
                                 </label>
                                 {livePrice > 0 && inputs.goldPrice > 0 && (
@@ -612,12 +612,10 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                             )}
                         </div>
 
-                        <div
-                            className="relative flex items-center rounded-2xl border transition-all focus-within:ring-2 focus-within:ring-[#E5A93B]/25"
-                            style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                        >
-                            <span className="ps-4 font-numbers text-sm font-bold select-none" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
+                        <div className="relative flex items-center rounded-2xl input-field-box">
+                            <span className="input-field-prefix ps-4 font-numbers text-sm font-bold select-none pointer-events-none transition-colors" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
                             <input
+                                id="estimator-gold-price"
                                 type="number"
                                 inputMode="decimal"
                                 enterKeyHint="done"
@@ -644,9 +642,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                 )}
 
                 {/* ── Weight Input ── */}
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 input-field-group">
                     <div className="flex items-center justify-between">
-                        <label className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                        <label htmlFor="estimator-weight" className="input-field-label text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                             {isRtl ? 'وزن القطعة (بالجرام)' : 'Item Weight (grams)'}
                         </label>
                         <span className="text-[11px] opacity-65" style={{ color: 'var(--text-secondary)' }}>
@@ -654,11 +652,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                         </span>
                     </div>
 
-                    <div
-                        className="relative flex items-center rounded-2xl border transition-all focus-within:ring-2 focus-within:ring-[#E5A93B]/25"
-                        style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                    >
+                    <div className="relative flex items-center rounded-2xl input-field-box">
                         <input
+                            id="estimator-weight"
                             type="number"
                             inputMode="decimal"
                             enterKeyHint="done"
@@ -669,7 +665,7 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                             className="w-full min-h-[54px] bg-transparent py-3.5 px-4 text-xl sm:text-2xl font-bold font-numbers outline-none"
                             style={{ color: 'var(--text-primary)' }}
                         />
-                        <span className="me-1 text-xs font-bold px-2.5 py-1 rounded-lg uppercase select-none" style={{ background: 'var(--bg-muted)', color: 'var(--text-secondary)' }}>
+                        <span className="input-field-unit me-1 text-xs font-bold px-2.5 py-1 rounded-lg uppercase select-none pointer-events-none transition-colors" style={{ background: 'var(--bg-muted)', color: 'var(--text-secondary)' }}>
                             g
                         </span>
                         {inputs.weight > 0 && (
@@ -688,9 +684,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
 
                 {/* ── Detailed Mode: Stone / Non-Gold Weight Deduction ── */}
                 {mode === 'detailed' && (
-                    <div className="space-y-1.5">
+                    <div className="space-y-1.5 input-field-group">
                         <div className="flex items-center justify-between gap-2">
-                            <label className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                            <label htmlFor="estimator-stone-weight" className="input-field-label text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                                 {t.stoneWeight}
                             </label>
                             {inputs.stoneWeight > 0 && inputs.weight > inputs.stoneWeight ? (
@@ -704,11 +700,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                             )}
                         </div>
 
-                        <div
-                            className="relative flex items-center rounded-2xl border transition-all focus-within:ring-2 focus-within:ring-[#E5A93B]/25"
-                            style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                        >
+                        <div className="relative flex items-center rounded-2xl input-field-box">
                             <input
+                                id="estimator-stone-weight"
                                 type="number"
                                 inputMode="decimal"
                                 enterKeyHint="done"
@@ -719,7 +713,7 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                                 className="w-full min-h-[48px] bg-transparent py-2.5 px-4 text-lg font-bold font-numbers outline-none"
                                 style={{ color: 'var(--text-primary)' }}
                             />
-                            <span className="me-1 text-xs font-bold px-2.5 py-1 rounded-lg uppercase select-none" style={{ background: 'var(--bg-muted)', color: 'var(--text-secondary)' }}>
+                            <span className="input-field-unit me-1 text-xs font-bold px-2.5 py-1 rounded-lg uppercase select-none pointer-events-none transition-colors" style={{ background: 'var(--bg-muted)', color: 'var(--text-secondary)' }}>
                                 g
                             </span>
                             {inputs.stoneWeight > 0 && (
@@ -738,9 +732,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                 )}
 
                 {/* ── Making Charge per Gram Input ── */}
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 input-field-group">
                     <div className="flex items-center justify-between gap-2">
-                        <label className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                        <label htmlFor="estimator-making" className="input-field-label text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                             {isRtl ? `المصنعية للجرام (${curr})` : `Making Charge per gram (${curr})`}
                         </label>
                         <button
@@ -754,12 +748,10 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                         </button>
                     </div>
 
-                    <div
-                        className="relative flex items-center rounded-2xl border transition-all focus-within:ring-2 focus-within:ring-[#E5A93B]/25"
-                        style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                    >
-                        <span className="ps-4 font-numbers text-sm font-bold select-none" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
+                    <div className="relative flex items-center rounded-2xl input-field-box">
+                        <span className="input-field-prefix ps-4 font-numbers text-sm font-bold select-none pointer-events-none transition-colors" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
                         <input
+                            id="estimator-making"
                             type="number"
                             inputMode="decimal"
                             enterKeyHint="done"
@@ -869,9 +861,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                 )}
 
                 {/* ── Seller's Price Input (Compare against Estimate & see Discount %) ── */}
-                <div className="space-y-1.5 pt-1">
+                <div className="space-y-1.5 pt-1 input-field-group">
                     <div className="flex items-center justify-between gap-2">
-                        <label className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
+                        <label htmlFor="estimator-seller-price" className="input-field-label text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                             {t.sellerPrice}
                         </label>
                         <span className="text-[11px] opacity-65" style={{ color: 'var(--text-secondary)' }}>
@@ -879,12 +871,10 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                         </span>
                     </div>
 
-                    <div
-                        className="relative flex items-center rounded-2xl border transition-all focus-within:ring-2 focus-within:ring-[#E5A93B]/25"
-                        style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                    >
-                        <span className="ps-4 font-numbers text-sm font-bold select-none" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
+                    <div className="relative flex items-center rounded-2xl input-field-box">
+                        <span className="input-field-prefix ps-4 font-numbers text-sm font-bold select-none pointer-events-none transition-colors" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
                         <input
+                            id="estimator-seller-price"
                             type="number"
                             inputMode="decimal"
                             enterKeyHint="done"
