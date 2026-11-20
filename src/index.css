@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 :root {
-  --font-main: 'Montserrat', sans-serif;
-  --font-heading: 'Montserrat', sans-serif;
+  --font-main: 'IBM Plex Sans', sans-serif;
+  --font-heading: 'IBM Plex Sans', sans-serif;
 }
 
 html[lang="ar"],
@@ -62,30 +62,12 @@ html[lang="ar"] select {
     -moz-osx-font-smoothing: grayscale;
   }
 
-  body.theme-silver {
-    --primary: #E0E0E0;
-    --primary-dark: #9E9E9E;
-    --primary-light: #F5F5F5;
-  }
-
-  body.theme-silver.dark-mode {
-    --primary: #E0E0E0;
-    --primary-dark: #9E9E9E;
-    --primary-light: #F5F5F5;
-    --bg-main: #121212;
-    --bg-card: rgba(24, 24, 24, 0.85);
-    --text-primary: #F3F4F6;
-    --text-secondary: #94A3B8;
-    --border: #27272A;
-    --bg-input: #1F2937;
-  }
-
   body.theme-dark {
     --primary: #F59E0B;
     --primary-dark: #D97706;
     --primary-light: #FCD34D;
     --bg-main: #0F172A;
-    --bg-card: rgba(30, 41, 59, 0.85);
+    --bg-card: rgba(30, 41, 59, 0.88);
     --text-primary: #F8FAFC;
     --text-secondary: #94A3B8;
     --border: #334155;
@@ -93,62 +75,7 @@ html[lang="ar"] select {
     --cta: #8B5CF6;
   }
 
-  body.theme-light {
-    --primary: #3b82f6;
-    --primary-dark: #2563eb;
-    --primary-light: #60a5fa;
-  }
 
-  body.theme-light.dark-mode {
-    --primary: #60a5fa;
-    --primary-dark: #3b82f6;
-    --primary-light: #93c5fd;
-    --bg-main: #0c1222;
-    --bg-card: rgba(30, 41, 59, 0.95);
-    --text-primary: #f1f5f9;
-    --text-secondary: #94A3B8;
-    --border: #1E293B;
-    --bg-input: #0F172A;
-  }
-
-  /* High Contrast Theme for Accessibility */
-  body.theme-high-contrast {
-    --primary: #000000;
-    --primary-dark: #000000;
-    --primary-light: #333333;
-    --bg-main: #ffffff;
-    --bg-card: #ffffff;
-    --text-primary: #000000;
-    --text-secondary: #000000;
-    --border: #000000;
-  }
-
-  body.theme-high-contrast .glass-panel {
-    border: 2px solid #000000;
-    box-shadow: none;
-  }
-
-  body.theme-high-contrast input,
-  body.theme-high-contrast button {
-    border: 2px solid #000000;
-  }
-
-  body.theme-high-contrast .text-gold-400,
-  body.theme-high-contrast .text-gold-500,
-  body.theme-high-contrast .text-gold-600 {
-    color: #000000 !important;
-  }
-
-  body.theme-high-contrast .bg-gold-100,
-  body.theme-high-contrast .bg-gold-500 {
-    background-color: #e5e5e5 !important;
-  }
-
-  body.theme-high-contrast .text-emerald-400,
-  body.theme-high-contrast .text-emerald-500 {
-    color: #000000 !important;
-    font-weight: bold;
-  }
 
   /* Universal Dark Mode Overrides */
   body.dark-mode {
@@ -161,31 +88,9 @@ html[lang="ar"] select {
     --cta: #8B5CF6;
   }
 
-  /* Specific theme colors in dark mode */
-  body.theme-silver.dark-mode {
-    --primary: #a1a1aa;
-    --primary-dark: #71717a;
-    --primary-light: #d4d4d8;
-    --bg-main: #18181b;
-    --bg-card: rgba(39, 39, 42, 0.95);
-    --border: #3f3f46;
-  }
 
-  body.theme-light.dark-mode {
-    --primary: #60a5fa;
-    --primary-dark: #3b82f6;
-    --primary-light: #93c5fd;
-    --bg-main: #0c1222;
-  }
 
-  body.theme-high-contrast.dark-mode {
-    --bg-main: #000000;
-    --bg-card: #000000;
-    --text-primary: #ffffff;
-    --text-secondary: #ffffff;
-    --border: #ffffff;
-    --primary: #ffffff;
-  }
+
 
   /* Dark mode component overrides (Universal) */
   body.dark-mode .bg-white,
@@ -219,6 +124,18 @@ html[lang="ar"] select {
     background-color: rgba(30, 41, 59, 0.8) !important;
     color: var(--text-primary) !important;
     border-color: var(--border) !important;
+  }
+
+  body.dark-mode input.bg-transparent,
+  body.dark-mode div > input.bg-transparent {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  body.dark-mode button[aria-label="Clear"] {
+    background-color: transparent !important;
+    border: none !important;
   }
 
   body.dark-mode .glass-panel {
@@ -303,13 +220,13 @@ html[lang="ar"] select {
   }
 
   /* Dark mode - Inactive tab text */
-  body.dark-mode button.text-slate-500,
-  body.dark-mode button.text-slate-400 {
+  body.dark-mode button[class*="text-slate-500"],
+  body.dark-mode button[class*="text-slate-400"] {
     color: #94A3B8 !important;
   }
 
-  body.dark-mode button.text-slate-500:hover,
-  body.dark-mode button.text-slate-400:hover {
+  body.dark-mode button[class*="text-slate-500"]:hover,
+  body.dark-mode button[class*="text-slate-400"]:hover {
     color: #F8FAFC !important;
   }
 
@@ -344,9 +261,9 @@ html[lang="ar"] select {
 
   /* Dark mode - Glass panel improvements */
   body.dark-mode .glass-panel {
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98)) !important;
-    border: none !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6) !important;
   }
 
   /* Dark mode - Result section */
@@ -398,11 +315,17 @@ html[lang="ar"] select {
 @layer utilities {
   .glass-panel {
     background: var(--bg-card);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.05), 0 0 1px 0 rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.08), 0 0 1px 0 rgba(0, 0, 0, 0.06);
     border-radius: 1.5rem;
+  }
+
+  /* Focus ring utility for accessibility */
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
 
   body.dark-mode .glass-panel {
@@ -442,12 +365,21 @@ html[lang="ar"] select {
     width: 100%;
     height: 4px;
     cursor: pointer;
-    background: #e2e8f0;
+    background: var(--border);
     border-radius: 2px;
   }
 
   input[type=range]:focus::-webkit-slider-runnable-track {
-    background: #cbd5e1;
+    background: var(--text-secondary);
+  }
+
+  /* Reduced motion accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   /* Custom Scrollbar */
@@ -621,11 +553,7 @@ html[lang="ar"] select {
   box-shadow: 0 0 0 3px rgba(198, 142, 45, 0.2);
 }
 
-/* High contrast swatch */
-.theme-swatch.high-contrast {
-  background: linear-gradient(135deg, #000000 50%, #ffffff 50%);
-  border: 2px solid #000000;
-}
+
 
 @keyframes flyToHistory {
   0% {

@@ -29,15 +29,10 @@ export const useSettings = () => {
         localStorage.setItem('goldCalc_settings', JSON.stringify(settings));
 
         // Apply theme and dark mode to body
-        const themes = ['theme-silver', 'theme-dark', 'theme-light', 'theme-high-contrast'];
-        document.body.classList.remove(...themes, 'dark-mode');
+        document.body.classList.remove('theme-dark', 'dark-mode');
 
-        if (settings.theme !== 'gold') {
-            document.body.classList.add(`theme-${settings.theme}`);
-        }
-
-        if (settings.darkMode || settings.theme === 'dark') {
-            document.body.classList.add('dark-mode');
+        if (settings.theme === 'dark' || settings.darkMode) {
+            document.body.classList.add('theme-dark', 'dark-mode');
         }
 
         // Apply language direction

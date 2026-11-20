@@ -9,6 +9,13 @@ export interface ValidationMessage {
 export const hasErrors = (messages: ValidationMessage[]) =>
     messages.some(message => message.level === 'error');
 
+const DEFAULT_LABELS: Record<string, Record<'en' | 'ar', string>> = {
+    goldPrice: { en: 'Gold price', ar: 'سعر الذهب' },
+    itemPrice: { en: 'Item price', ar: 'سعر القطعة' },
+    weight: { en: 'Weight', ar: 'الوزن' },
+    makingPerGram: { en: 'Making charge per gram', ar: 'المصنعية للجرام' }
+};
+
 export const getCommonInputWarnings = (
     values: Record<string, number>,
     labels: Record<string, string>,
@@ -17,7 +24,7 @@ export const getCommonInputWarnings = (
     const messages: ValidationMessage[] = [];
 
     Object.entries(values).forEach(([key, value]) => {
-        const label = labels[key] || key;
+        const label = labels[key] || DEFAULT_LABELS[key]?.[language] || key;
 
         if (value < 0) {
             messages.push({

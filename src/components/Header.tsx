@@ -47,6 +47,7 @@ const Header: React.FC<HeaderProps> = ({
         triggerEclipseTransition(x, y, color, () => {
             const nextDarkMode = !isCurrentlyDark;
             const nextTheme = nextDarkMode ? 'dark' : 'gold';
+
             updateSettings({ theme: nextTheme, darkMode: nextDarkMode });
         });
     };
@@ -68,9 +69,9 @@ const Header: React.FC<HeaderProps> = ({
     };
 
     return (
-        <div className="mb-8 space-y-5">
+        <div className="mb-4 sm:mb-8 space-y-2 sm:space-y-4">
             {/* Main Navigation Bar */}
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 py-4 sm:py-5 px-3 sm:px-6 bg-white/40 backdrop-blur-md border border-slate-200/50 rounded-2xl shadow-sm">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-4 sm:gap-6 py-4 sm:py-5 px-3 sm:px-6 backdrop-blur-md rounded-2xl shadow-sm" style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                 {/* Brand & Actions (Mobile Top Row) / Brand & Tabs (Desktop Left) */}
                 <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-10 w-full lg:w-auto">
                     
@@ -89,11 +90,12 @@ const Header: React.FC<HeaderProps> = ({
                         <div className="flex sm:hidden items-center gap-1.5">
                             <button
                                 onClick={onToggleLanguage}
-                                className="bg-white hover:bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-black leading-none transition-all duration-200 shadow-sm"
+                                className="rounded-lg px-2 py-1 text-[10px] font-black leading-none transition-all duration-200 shadow-sm"
+                                style={{ background: 'var(--bg-input)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                             >
                                 {settings.language === 'en' ? 'AR' : 'EN'}
                             </button>
-                            <div className="flex items-center gap-0.5 bg-slate-100/50 p-0.5 rounded-lg border border-slate-200/50">
+                            <div className="flex items-center gap-0.5 p-0.5 rounded-lg" style={{ background: 'var(--border)' }}>
                                 {[
                                     { onClick: onOpenHistory, icon: <Clock size={15} />, count: historyCount },
                                     { onClick: toggleDarkMode, icon: settings.darkMode ? <Sun size={15} /> : <Moon size={15} /> },
@@ -102,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({
                                     <button
                                         key={i}
                                         onClick={btn.onClick}
-                                        className="relative p-1.5 text-slate-500 hover:text-[#F59E0B] hover:bg-white rounded-md transition-all duration-200"
+                                        className="relative p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-[var(--bg-card)] rounded-md transition-all duration-200"
                                     >
                                         {btn.icon}
                                         {(btn.count ?? 0) > 0 && (
@@ -117,7 +119,7 @@ const Header: React.FC<HeaderProps> = ({
                     </div>
 
                     {/* Desktop Tabs */}
-                    <div className="hidden sm:flex items-center gap-1 bg-slate-100/50 p-1 rounded-xl">
+                    <div className="hidden sm:flex items-center gap-1 p-1 rounded-xl" style={{ background: 'var(--border)' }}>
                         {[
                             { id: 'breakdown', label: t.tabBreakdown, icon: <PieChart size={17} /> },
                             { id: 'estimator', label: t.tabEstimator, icon: <Calculator size={17} /> },
@@ -126,10 +128,14 @@ const Header: React.FC<HeaderProps> = ({
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`relative flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all duration-300 rounded-lg ${activeTab === tab.id
-                                    ? 'text-slate-900 bg-white shadow-sm'
-                                    : 'text-slate-500 hover:text-slate-900'
+                                className={`relative flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all duration-200 rounded-lg cursor-pointer ${activeTab === tab.id
+                                    ? 'shadow-sm'
+                                    : 'hover:opacity-80'
                                     }`}
+                                style={activeTab === tab.id
+                                    ? { background: 'var(--bg-card)', color: 'var(--primary)' }
+                                    : { color: 'var(--text-secondary)' }
+                                }
                             >
                                 {tab.icon}
                                 <span>{tab.label}</span>
@@ -150,23 +156,24 @@ const Header: React.FC<HeaderProps> = ({
                         <span className="font-bold font-numbers">{formatCurrency(livePrice)} <span className="text-[10px] opacity-70">{settings.currency}</span></span>
                     </div>
 
-                    <div className="w-[1px] h-6 bg-slate-200 hidden sm:block" />
+                    <div className="w-[1px] h-6 hidden sm:block" style={{ background: 'var(--border)' }} />
 
                     {/* Desktop Global Actions */}
                     <div className="hidden sm:flex items-center gap-2">
                         <button
                             onClick={onToggleLanguage}
-                            className="bg-white hover:bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-[10px] font-black leading-none transition-all duration-200 hover:shadow-sm"
+                            className="rounded-lg px-2.5 py-1.5 text-[10px] font-black leading-none transition-all duration-200 hover:shadow-sm"
+                            style={{ background: 'var(--bg-input)', color: 'var(--text-primary)', border: '1px solid var(--border)' }}
                         >
                             {settings.language === 'en' ? 'AR' : 'EN'}
                         </button>
 
-                        <div className="flex items-center gap-1 bg-slate-100/40 p-1 rounded-lg">
+                        <div className="flex items-center gap-1 p-1 rounded-lg" style={{ background: 'var(--border)' }}>
                             <button
                                 id="history-button-desktop"
                                 onClick={onOpenHistory}
-                                className="relative p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-white rounded-md transition-all duration-200"
-                                aria-label="History"
+                                className="relative p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-[var(--bg-card)] rounded-md transition-all duration-200"
+                                aria-label={settings.language === 'ar' ? 'السجل' : 'History'}
                             >
                                 <Clock size={16} />
                                 {historyCount > 0 && (
@@ -176,14 +183,14 @@ const Header: React.FC<HeaderProps> = ({
                                 )}
                             </button>
                             {[
-                                { onClick: toggleDarkMode, icon: settings.darkMode ? <Sun size={16} /> : <Moon size={16} />, label: 'Toggle Theme' },
-                                { onClick: onOpenSettings, icon: <Settings size={16} />, label: 'Settings' },
-                                { onClick: onOpenHelp, icon: <HelpCircle size={16} />, label: 'Help' }
+                                { onClick: toggleDarkMode, icon: settings.darkMode ? <Sun size={16} /> : <Moon size={16} />, label: settings.language === 'ar' ? 'تغيير المظهر' : 'Toggle Theme' },
+                                { onClick: onOpenSettings, icon: <Settings size={16} />, label: t.settingsTitle },
+                                { onClick: onOpenHelp, icon: <HelpCircle size={16} />, label: t.helpTitle }
                             ].map((btn, i) => (
                                 <button
                                     key={i}
                                     onClick={btn.onClick}
-                                    className="p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-white rounded-md transition-all duration-200"
+                                    className="p-1.5 text-slate-400 hover:text-[#F59E0B] hover:bg-[var(--bg-card)] rounded-md transition-all duration-200"
                                     aria-label={btn.label}
                                 >
                                     {btn.icon}
@@ -194,27 +201,7 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
             </div>
 
-            {/* Mobile Tabs Wrapper */}
-            <div className="sm:hidden flex items-center justify-center gap-1 bg-slate-100/50 p-1 rounded-xl">
-                {[
-                    { id: 'breakdown', label: t.tabBreakdown, icon: <PieChart size={17} /> },
-                    { id: 'estimator', label: t.tabEstimator, icon: <Calculator size={17} /> },
-                    { id: 'compare', label: t.tabCompare, icon: <ArrowLeftRight size={17} /> }
-                ].map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 text-[10px] font-black transition-all duration-300 rounded-lg ${activeTab === tab.id
-                            ? 'text-slate-900 bg-white shadow-sm'
-                            : 'text-slate-500'
-                            }`}
-                    >
-                        {tab.icon}
-                        <span>{tab.label}</span>
-                    </button>
-                ))}
-            </div>
-
+            {/* Timestamp */}
             <p className="text-[10px] text-center sm:text-right opacity-40 px-2 leading-none" style={{ color: 'var(--text-secondary)' }}>
                 {settings.language === 'en' ? 'Updated ' : 'آخر تحديث '}
                 <span className="font-semibold">{formatTimestamp(lastUpdated)}</span>

@@ -47,32 +47,55 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all scale-100 max-h-[80vh] flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-4 flex-shrink-0">
-                    <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <Clock size={20} className="text-gold-500" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+            <div
+                className="rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-all scale-100 max-h-[85vh] flex flex-col overflow-hidden animate-fade-in-scale border"
+                style={{
+                    background: 'var(--bg-card)',
+                    borderColor: 'var(--border)',
+                    color: 'var(--text-primary)'
+                }}
+                onClick={e => e.stopPropagation()}
+            >
+                <div className="flex justify-between items-center mb-4 flex-shrink-0" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
+                    <h3 className="text-lg font-bold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+                        <Clock size={20} className="text-amber-500" />
                         {t.historyTitle}
                     </h3>
-                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
-                        <X size={24} />
+                    <button
+                        onClick={onClose}
+                        className="p-1.5 rounded-xl transition-all duration-200 hover:scale-105 active:scale-95"
+                        style={{ background: 'var(--border)', color: 'var(--text-secondary)' }}
+                        aria-label="Close"
+                    >
+                        <X size={18} />
                     </button>
                 </div>
 
                 <div className="flex-grow overflow-y-auto space-y-3 pr-1 custom-scrollbar">
                     {history.length === 0 ? (
-                        <div className="text-center py-8 text-slate-400">
+                        <div className="text-center py-8" style={{ color: 'var(--text-secondary)' }}>
                             <Clock size={48} className="mx-auto mb-3 opacity-20" />
                             <p>{t.noHistory}</p>
                         </div>
                     ) : (
                         history.map(item => (
-                            <div key={item.id} className="bg-slate-50 rounded-xl p-3 hover:bg-slate-100 transition-colors shadow-sm">
+                            <div
+                                key={item.id}
+                                className="rounded-xl p-3 transition-colors shadow-sm border"
+                                style={{
+                                    background: 'var(--bg-input)',
+                                    borderColor: 'var(--border)'
+                                }}
+                            >
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex flex-col flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${item.type === 'breakdown' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
-                                                }`}>
+                                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${
+                                                item.type === 'breakdown'
+                                                    ? 'bg-blue-500/15 text-blue-500 border border-blue-500/30'
+                                                    : 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
+                                            }`}>
                                                 {item.type === 'breakdown' ? t.breakdownType : t.estimatorType}
                                             </span>
 
@@ -82,7 +105,12 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                                         type="text"
                                                         value={editName}
                                                         onChange={(e) => setEditName(e.target.value)}
-                                                        className="w-full px-4 py-3 rounded-xl border-none bg-slate-100 text-slate-900 focus:outline-none transition-all"
+                                                        className="w-full px-3 py-1.5 rounded-lg border text-sm font-medium focus:outline-none"
+                                                        style={{
+                                                            background: 'var(--bg-card)',
+                                                            borderColor: 'var(--primary)',
+                                                            color: 'var(--text-primary)'
+                                                        }}
                                                         placeholder={t.enterNamePlaceholder}
                                                         autoFocus
                                                         onKeyDown={(e) => {
@@ -93,13 +121,13 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                                     />
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); saveEditing(item.id); }}
-                                                        className="p-1 text-emerald-600 hover:bg-emerald-50 rounded"
+                                                        className="p-1 text-emerald-500 hover:bg-emerald-500/10 rounded"
                                                     >
                                                         <Check size={14} />
                                                     </button>
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); cancelEditing(); }}
-                                                        className="p-1 text-red-500 hover:bg-red-50 rounded"
+                                                        className="p-1 text-red-500 hover:bg-red-500/10 rounded"
                                                     >
                                                         <X size={14} />
                                                     </button>
@@ -107,17 +135,17 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                             ) : (
                                                 <div className="flex items-center gap-2 min-w-0 group">
                                                     {item.name ? (
-                                                        <span className="text-sm font-semibold text-slate-800 truncate">
+                                                        <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>
                                                             {item.name}
                                                         </span>
                                                     ) : (
-                                                        <span className="text-sm text-slate-400 italic truncate">
+                                                        <span className="text-sm italic truncate" style={{ color: 'var(--text-secondary)' }}>
                                                             {t.untitledRecord}
                                                         </span>
                                                     )}
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); startEditing(item); }}
-                                                        className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-gold-500 transition-opacity"
+                                                        className="opacity-0 group-hover:opacity-100 p-1 transition-opacity text-slate-400 hover:text-amber-500"
                                                         title={t.editNameBtn || "Edit Name"}
                                                     >
                                                         <Edit2 size={12} />
@@ -125,19 +153,23 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                                 </div>
                                             )}
                                         </div>
-                                        <span className="text-xs text-slate-400 ms-1">{formatDate(item.timestamp)}</span>
+                                        <span className="text-xs ms-1" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>
+                                            {formatDate(item.timestamp)}
+                                        </span>
                                     </div>
                                     <div className="flex gap-1 ms-2">
                                         <button
                                             onClick={() => { onRestore(item); onClose(); }}
-                                            className="p-1.5 text-slate-400 hover:text-gold-600 hover:bg-gold-50 rounded-lg transition-colors"
+                                            className="p-1.5 rounded-lg transition-colors hover:text-amber-500 hover:bg-amber-500/10"
+                                            style={{ color: 'var(--text-secondary)' }}
                                             title={t.restoreBtn}
                                         >
                                             <RotateCcw size={16} />
                                         </button>
                                         <button
                                             onClick={() => onDelete(item.id)}
-                                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            className="p-1.5 rounded-lg transition-colors hover:text-red-500 hover:bg-red-500/10"
+                                            style={{ color: 'var(--text-secondary)' }}
                                             title={t.deleteBtn}
                                         >
                                             <Trash2 size={16} />
@@ -145,25 +177,25 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2 text-sm">
-                                    <div className="text-slate-600">
-                                        <span className="text-xs text-slate-400 block">{t.goldPrice}</span>
-                                        <span className="font-numbers">{formatCurrency(item.inputs.goldPrice)}</span>
+                                <div className="grid grid-cols-2 gap-2 text-sm pt-1">
+                                    <div>
+                                        <span className="text-xs block" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>{t.goldPrice}</span>
+                                        <span className="font-numbers font-medium" style={{ color: 'var(--text-primary)' }}>{formatCurrency(item.inputs.goldPrice)}</span>
                                     </div>
-                                    <div className="text-slate-600">
-                                        <span className="text-xs text-slate-400 block">{t.weight}</span>
-                                        <span className="font-numbers">{item.inputs.weight}g</span>
+                                    <div>
+                                        <span className="text-xs block" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>{t.weight}</span>
+                                        <span className="font-numbers font-medium" style={{ color: 'var(--text-primary)' }}>{item.inputs.weight}g</span>
                                     </div>
                                     {item.type === 'breakdown' && (
-                                        <div className="text-slate-600 col-span-2">
-                                            <span className="text-xs text-slate-400 block">{t.itemPrice}</span>
-                                            <span className="font-numbers">{formatCurrency(item.inputs.itemPrice || 0)} {item.currency}</span>
+                                        <div className="col-span-2">
+                                            <span className="text-xs block" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>{t.itemPrice}</span>
+                                            <span className="font-numbers font-bold" style={{ color: 'var(--text-primary)' }}>{formatCurrency(item.inputs.itemPrice || 0)} {item.currency}</span>
                                         </div>
                                     )}
                                     {item.type === 'estimator' && (
-                                        <div className="text-slate-900 font-bold col-span-2">
-                                            <span className="text-xs text-slate-400 block font-normal">{t.totalPrice}</span>
-                                            <span className="font-numbers">{formatCurrency(item.results.totalPrice || 0)} {item.currency}</span>
+                                        <div className="col-span-2 font-bold">
+                                            <span className="text-xs block font-normal" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>{t.totalPrice}</span>
+                                            <span className="font-numbers" style={{ color: 'var(--primary)' }}>{formatCurrency(item.results.totalPrice || 0)} {item.currency}</span>
                                         </div>
                                     )}
                                 </div>
@@ -175,7 +207,7 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                 {history.length > 0 && (
                     <button
                         onClick={onClear}
-                        className="w-full mt-4 py-2 text-sm text-red-500 hover:bg-red-50 rounded-xl transition-colors flex items-center justify-center gap-2"
+                        className="w-full mt-4 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-500/10 rounded-xl transition-colors flex items-center justify-center gap-2 border border-red-500/20"
                     >
                         <Trash2 size={16} />
                         {t.clearHistory}

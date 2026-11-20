@@ -8,6 +8,7 @@ import SettingsModal from './components/SettingsModal';
 import HelpModal from './components/HelpModal';
 import HistoryModal from './components/HistoryModal';
 import SaveModal from './components/SaveModal';
+import BottomNav from './components/BottomNav';
 import { useSettings } from './hooks/useSettings';
 import { useGoldPrice } from './hooks/useGoldPrice';
 import { useHistory } from './hooks/useHistory';
@@ -91,7 +92,7 @@ function App() {
   };
 
   return (
-    <Layout>
+    <Layout language={settings.language}>
       <Header
         settings={settings}
         livePrice={price}
@@ -165,6 +166,14 @@ function App() {
         isOpen={isSaveModalOpen}
         onClose={() => setIsSaveModalOpen(false)}
         onConfirm={handleConfirmSave}
+        language={settings.language}
+      />
+
+      <BottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenHistory={() => setIsHistoryOpen(true)}
+        historyCount={history.length}
         language={settings.language}
       />
     </Layout>
