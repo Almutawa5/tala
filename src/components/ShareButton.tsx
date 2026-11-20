@@ -47,71 +47,72 @@ function buildWhatsAppSummary(data: ShareCardData, language: Language): string {
 
     if (data.type === 'breakdown') {
         const lines = [
-            isAr ? `*حاسبة الذهب — تحليل سعر القطعة*` : `*Gold Calculator — Price Breakdown*`,
+            isAr ? `💎 *حاسبة الذهب — تحليل سعر القطعة*` : `💎 *Gold Calculator — Price Breakdown*`,
             isAr
-                ? `• العيار: ${karat} | سعر الذهب: ${curr} ${fmtSmall(goldPrice)}/${unit}`
-                : `• Karat: ${karat} | Gold Spot: ${curr} ${fmtSmall(goldPrice)}/${unit}`,
+                ? `✨ العيار: ${karat} | سعر الذهب: ${curr} ${fmtSmall(goldPrice)}/${unit}`
+                : `✨ Karat: ${karat} | Gold Spot: ${curr} ${fmtSmall(goldPrice)}/${unit}`,
             stoneWeight && stoneWeight > 0
                 ? (isAr
-                    ? `• صافي وزن الذهب: ${fmtSmall(weight)} ${unit} (بعد خصم ${fmtSmall(stoneWeight)} ${unit} فصوص)`
-                    : `• Net Gold Weight: ${fmtSmall(weight)} ${unit} (${fmtSmall(stoneWeight)} ${unit} stones deducted)`)
+                    ? `⚖️ صافي وزن الذهب: ${fmtSmall(weight)} ${unit} (بعد خصم ${fmtSmall(stoneWeight)} ${unit} فصوص)`
+                    : `⚖️ Net Gold Weight: ${fmtSmall(weight)} ${unit} (${fmtSmall(stoneWeight)} ${unit} stones deducted)`)
                 : (isAr
-                    ? `• الوزن: ${fmtSmall(weight)} ${unit}`
-                    : `• Weight: ${fmtSmall(weight)} ${unit}`),
+                    ? `⚖️ الوزن: ${fmtSmall(weight)} ${unit}`
+                    : `⚖️ Weight: ${fmtSmall(weight)} ${unit}`),
             isAr
-                ? `• سعر البائع (شامل ${vatPercentage}% ضريبة): ${curr} ${fmt(data.itemPrice ?? 0)}`
-                : `• Seller Price (incl. ${vatPercentage}% VAT): ${curr} ${fmt(data.itemPrice ?? 0)}`,
+                ? `🏷️ سعر البائع (شامل ${vatPercentage}% ضريبة): ${curr} ${fmt(data.itemPrice ?? 0)}`
+                : `🏷️ Seller Price (incl. ${vatPercentage}% VAT): ${curr} ${fmt(data.itemPrice ?? 0)}`,
             `─────────────`,
             isAr
-                ? `*مصنعية الجرام:* ${curr} ${fmt(data.makingPerGram ?? 0)}/${unit}`
-                : `*Making Charge / g:* ${curr} ${fmt(data.makingPerGram ?? 0)}/${unit}`,
+                ? `🔨 *مصنعية الجرام:* ${curr} ${fmt(data.makingPerGram ?? 0)}/${unit}`
+                : `🔨 *Making Charge / g:* ${curr} ${fmt(data.makingPerGram ?? 0)}/${unit}`,
         ];
 
         if (data.dealLabel) {
-            lines.push(isAr ? `• التقييم: ${data.dealLabel}` : `• Verdict: ${data.dealLabel}`);
+            lines.push(isAr ? `✅ التقييم: ${data.dealLabel}` : `✅ Verdict: ${data.dealLabel}`);
         }
         lines.push(
-            isAr ? `• السعر قبل الضريبة: ${curr} ${fmt(data.priceNoVat ?? 0)}` : `• Price ex-VAT: ${curr} ${fmt(data.priceNoVat ?? 0)}`,
-            isAr ? `• قيمة الذهب الخام: ${curr} ${fmt(data.rawGoldCost ?? 0)}` : `• Raw Gold Value: ${curr} ${fmt(data.rawGoldCost ?? 0)}`,
-            isAr ? `• إجمالي المصنعية: ${curr} ${fmt(data.totalMaking ?? 0)}` : `• Total Making: ${curr} ${fmt(data.totalMaking ?? 0)}`,
-            isAr ? `• الضريبة (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}` : `• VAT (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}`
+            isAr ? `🧾 السعر قبل الضريبة: ${curr} ${fmt(data.priceNoVat ?? 0)}` : `🧾 Price ex-VAT: ${curr} ${fmt(data.priceNoVat ?? 0)}`,
+            isAr ? `🪙 قيمة الذهب الخام: ${curr} ${fmt(data.rawGoldCost ?? 0)}` : `🪙 Raw Gold Value: ${curr} ${fmt(data.rawGoldCost ?? 0)}`,
+            isAr ? `🛠️ إجمالي المصنعية: ${curr} ${fmt(data.totalMaking ?? 0)}` : `🛠️ Total Making: ${curr} ${fmt(data.totalMaking ?? 0)}`,
+            isAr ? `🏛️ الضريبة (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}` : `🏛️ VAT (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}`
         );
 
         return lines.join('\n');
     }
 
     const lines = [
-        isAr ? `*حاسبة الذهب — تقدير السعر العادل*` : `*Gold Calculator — Price Estimator*`,
+        isAr ? `💎 *حاسبة الذهب — تقدير السعر العادل*` : `💎 *Gold Calculator — Price Estimator*`,
         isAr
-            ? `• العيار: ${karat} | سعر الذهب: ${curr} ${fmtSmall(goldPrice)}/${unit}`
-            : `• Karat: ${karat} | Gold Spot: ${curr} ${fmtSmall(goldPrice)}/${unit}`,
+            ? `✨ العيار: ${karat} | سعر الذهب: ${curr} ${fmtSmall(goldPrice)}/${unit}`
+            : `✨ Karat: ${karat} | Gold Spot: ${curr} ${fmtSmall(goldPrice)}/${unit}`,
         stoneWeight && stoneWeight > 0
             ? (isAr
-                ? `• صافي الوزن: ${fmtSmall(weight)} ${unit} (فصوص: ${fmtSmall(stoneWeight)} ${unit}) | المصنعية: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`
-                : `• Net Weight: ${fmtSmall(weight)} ${unit} (${fmtSmall(stoneWeight)} ${unit} stones) | Making: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`)
+                ? `⚖️ صافي الوزن: ${fmtSmall(weight)} ${unit} (فصوص: ${fmtSmall(stoneWeight)} ${unit}) | 🛠️ المصنعية: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`
+                : `⚖️ Net Weight: ${fmtSmall(weight)} ${unit} (${fmtSmall(stoneWeight)} ${unit} stones) | 🛠️ Making: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`)
             : (isAr
-                ? `• الوزن: ${fmtSmall(weight)} ${unit} | المصنعية: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`
-                : `• Weight: ${fmtSmall(weight)} ${unit} | Making: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`),
+                ? `⚖️ الوزن: ${fmtSmall(weight)} ${unit} | 🛠️ المصنعية: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`
+                : `⚖️ Weight: ${fmtSmall(weight)} ${unit} | 🛠️ Making: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`),
         `─────────────`,
         isAr
-            ? `*الإجمالي التقديري (شامل ${vatPercentage}% ضريبة):* ${curr} ${fmt(data.totalPrice ?? 0)}`
-            : `*Estimated Total (incl. ${vatPercentage}% VAT):* ${curr} ${fmt(data.totalPrice ?? 0)}`,
+            ? `💰 *الإجمالي التقديري (شامل ${vatPercentage}% ضريبة):* ${curr} ${fmt(data.totalPrice ?? 0)}`
+            : `💰 *Estimated Total (incl. ${vatPercentage}% VAT):* ${curr} ${fmt(data.totalPrice ?? 0)}`,
     ];
 
     if (data.dealLabel) {
-        lines.push(isAr ? `• التقييم: ${data.dealLabel}` : `• Verdict: ${data.dealLabel}`);
+        lines.push(isAr ? `✅ التقييم: ${data.dealLabel}` : `✅ Verdict: ${data.dealLabel}`);
     }
     lines.push(
-        isAr ? `• قيمة الذهب الخام: ${curr} ${fmt(data.rawGoldCost ?? 0)}` : `• Raw Gold Value: ${curr} ${fmt(data.rawGoldCost ?? 0)}`,
-        isAr ? `• إجمالي المصنعية: ${curr} ${fmt(data.totalMaking ?? 0)}` : `• Total Making: ${curr} ${fmt(data.totalMaking ?? 0)}`,
-        isAr ? `• الضريبة (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}` : `• VAT (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}`
+        isAr ? `🪙 قيمة الذهب الخام: ${curr} ${fmt(data.rawGoldCost ?? 0)}` : `🪙 Raw Gold Value: ${curr} ${fmt(data.rawGoldCost ?? 0)}`,
+        isAr ? `🔨 إجمالي المصنعية: ${curr} ${fmt(data.totalMaking ?? 0)}` : `🔨 Total Making: ${curr} ${fmt(data.totalMaking ?? 0)}`,
+        isAr ? `🏛️ الضريبة (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}` : `🏛️ VAT (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}`
     );
 
     if (data.sellerPrice && data.sellerPrice > 0 && data.discountPct !== undefined && data.discountStatusText) {
+        const diffEmoji = (data.priceDiff ?? 0) < -0.005 ? '🎉' : (data.priceDiff ?? 0) > 0.005 ? '📉' : '🎯';
         lines.push(
             `─────────────`,
-            isAr ? `*سعر البائع:* ${curr} ${fmt(data.sellerPrice)}` : `*Seller's Price:* ${curr} ${fmt(data.sellerPrice)}`,
-            `• ${data.discountStatusText}: ${data.discountPct.toFixed(1)}% (${curr} ${fmt(Math.abs(data.priceDiff ?? 0))})`
+            isAr ? `🏷️ *سعر البائع:* ${curr} ${fmt(data.sellerPrice)}` : `🏷️ *Seller's Price:* ${curr} ${fmt(data.sellerPrice)}`,
+            `${diffEmoji} ${data.discountStatusText}: ${data.discountPct.toFixed(1)}% (${curr} ${fmt(Math.abs(data.priceDiff ?? 0))})`
         );
     }
 

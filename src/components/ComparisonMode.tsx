@@ -98,8 +98,15 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
 
     const copyResults = (shop: ShopEntry) => {
         const results = getResults(shop);
-        const text = `${shop.name}\n${t.weight}: ${shop.weight}g\n${t.itemPrice}: ${formatCurrency(shop.itemPrice)}\n${t.makingPerGram}: ${formatCurrency(results.makingPerGram)}`;
-        navigator.clipboard.writeText(text);
+        const unit = isRtl ? 'جم' : 'g';
+        const lines = [
+            `🏪 *${shop.name}*`,
+            `✨ ${isRtl ? `عيار ${settings.karat}` : `${settings.karat}K`} | ⚖️ ${t.weight}: ${shop.weight} ${unit}`,
+            `🏷️ ${t.itemPrice}: ${curr} ${formatCurrency(shop.itemPrice)}`,
+            `🔨 ${t.makingPerGram}: ${curr} ${formatCurrency(results.makingPerGram)}/${unit}`,
+            `🛠️ ${t.totalMaking}: ${curr} ${formatCurrency(results.totalMaking)}`
+        ];
+        navigator.clipboard.writeText(lines.join('\n'));
         setCopied(shop.id);
         setTimeout(() => setCopied(null), 2000);
     };
