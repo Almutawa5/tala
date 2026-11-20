@@ -148,141 +148,164 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
     const isAr = language === 'ar';
     const { currency: curr, karat, goldPrice, weight, stoneWeight, vatPercentage } = data;
     const isBreakdown = data.type === 'breakdown';
+    const unit = isAr ? 'جم' : 'g';
 
-    // ── colours ────────────────────────────────────────────────────────────────
-    const bg        = '#0A0C10';
-    const surface   = '#141824';
+    // Wait for web fonts to finish loading before rasterizing
+    if (document.fonts && document.fonts.ready) {
+        try {
+            await document.fonts.ready;
+        } catch {
+            // Proceed even if font readiness rejects
+        }
+    }
+
+    // ── colours (Obsidian, Satin Bullion Gold, Emerald-Teal) ──────────────────
+    const canvasBg  = '#0A0C10';
+    const cardBg    = '#12151E';
+    const surface   = '#171B26';
     const gold      = '#E5A93B';
     const craft     = '#2DD4BF';
     const muted     = '#9B988F';
     const textLight = '#F6F5F1';
-    const divider   = 'rgba(255,255,255,0.09)';
+    const divider   = 'rgba(255,255,255,0.08)';
 
-    // ── helpers ────────────────────────────────────────────────────────────────
-    const row = (labelText: string, valueText: string, valueColor = textLight) => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid ${divider};">
-            <span style="color:${muted};font-size:13px;">${labelText}</span>
-            <span style="color:${valueColor};font-size:14px;font-weight:700;font-family:monospace;">${valueText}</span>
+    const mainFont = isAr
+        ? "'IBM Plex Sans Arabic', 'Plus Jakarta Sans', Tahoma, Arial, sans-serif"
+        : "'Plus Jakarta Sans', 'IBM Plex Sans Arabic', Arial, sans-serif";
+    const monoFont = "'IBM Plex Mono', monospace";
+    const marginEnd = isAr ? 'margin-left' : 'margin-right';
+
+    // ── helpers (avoid CSS flex `gap` & `inline-flex` due to html2canvas bugs) ─
+    const row = (labelText: string, valueText: string, valueColor = textLight, isLast = false) => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;${isLast ? '' : `border-bottom:1px solid ${divider};`}">
+            <span style="color:${muted};font-size:12.5px;line-height:1.5;">${labelText}</span>
+            <span dir="ltr" style="color:${valueColor};font-size:13px;font-weight:700;font-family:${monoFont};line-height:1.4;white-space:nowrap;">${valueText}</span>
+        </div>`;
+
+    const chip = (label: string, val: string, valColor = textLight) => `
+        <div style="display:inline-block;background:${surface};border:1px solid ${divider};border-radius:10px;padding:6px 11px;font-size:11.5px;line-height:1.4;color:${muted};${marginEnd}:7px;margin-bottom:7px;">
+            <span>${label} </span><strong dir="ltr" style="color:${valColor};font-family:${monoFont};font-weight:700;">${val}</strong>
         </div>`;
 
     const heroValue = isBreakdown
-        ? fmtSmall(data.makingPerGram ?? 0)
+        ? fmt(data.makingPerGram ?? 0)
         : fmt(data.totalPrice ?? 0);
     const heroLabel = isBreakdown
-        ? (isAr ? 'مصنعية الجرام' : 'Making Charge / g')
-        : (isAr ? 'السعر التقديري' : 'Estimated Price');
-    const heroSuffix = isBreakdown ? `${curr}/g` : '';
+        ? (isAr ? 'مصنعية الجرام الواحد' : 'Making Charge per Gram')
+        : (isAr ? `الإجمالي التقديري (شامل ${vatPercentage}% ضريبة)` : `Estimated Total (incl. ${vatPercentage}% VAT)`);
+    const heroSuffix = isBreakdown ? `/${unit}` : '';
 
     const dealBadge = data.dealLabel ? `
-        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:12px;border:1px solid ${data.dealColor ?? gold}44;background:${data.dealColor ?? gold}18;margin-top:10px;">
-            <span style="width:8px;height:8px;border-radius:50%;background:${data.dealColor ?? gold};display:inline-block;"></span>
-            <span style="color:${data.dealColor ?? gold};font-size:12px;font-weight:700;">${data.dealLabel}</span>
+        <div style="margin-top:12px;">
+            <span style="display:inline-block;padding:5px 12px;border-radius:10px;border:1px solid ${data.dealColor ?? gold}44;background:${data.dealColor ?? gold}1A;color:${data.dealColor ?? gold};font-size:11.5px;font-weight:700;line-height:1.45;">
+                <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${data.dealColor ?? gold};vertical-align:middle;${marginEnd}:6px;"></span><span style="vertical-align:middle;">${data.dealLabel}</span>
+            </span>
         </div>` : '';
+
+    const hasSellerBlock = !isBreakdown && data.sellerPrice && data.sellerPrice > 0 && data.discountPct !== undefined && data.discountStatusText;
 
     const detailRows = isBreakdown ? `
         ${row(isAr ? 'سعر البائع (شامل الضريبة)' : 'Seller Price (incl. VAT)', `${curr} ${fmt(data.itemPrice ?? 0)}`)}
         ${row(isAr ? 'السعر قبل الضريبة' : 'Price ex-VAT', `${curr} ${fmt(data.priceNoVat ?? 0)}`)}
         ${row(isAr ? `الضريبة (${vatPercentage}%)` : `VAT (${vatPercentage}%)`, `${curr} ${fmt(data.vatAmount ?? 0)}`, muted)}
         ${row(isAr ? 'قيمة الذهب الخام' : 'Raw Gold Value', `${curr} ${fmt(data.rawGoldCost ?? 0)}`, gold)}
-        ${row(isAr ? 'إجمالي المصنعية' : 'Total Making', `${curr} ${fmt(data.totalMaking ?? 0)}`, craft)}
-        ${row(isAr ? 'مصنعية الجرام' : 'Making / gram', `${curr} ${fmtSmall(data.makingPerGram ?? 0)}`, gold)}
+        ${row(isAr ? 'إجمالي المصنعية' : 'Total Making Charge', `${curr} ${fmt(data.totalMaking ?? 0)}`, craft, true)}
     ` : `
         ${row(isAr ? 'قيمة الذهب الخام' : 'Raw Gold Value', `${curr} ${fmt(data.rawGoldCost ?? 0)}`, gold)}
-        ${row(isAr ? 'إجمالي المصنعية' : 'Total Making', `${curr} ${fmt(data.totalMaking ?? 0)}`, craft)}
-        ${row(isAr ? `الضريبة (${vatPercentage}%)` : `VAT (${vatPercentage}%)`, `${curr} ${fmt(data.vatAmount ?? 0)}`, muted)}
-        ${row(isAr ? 'الإجمالي شامل الضريبة' : 'Total incl. VAT', `${curr} ${fmt(data.totalPrice ?? 0)}`, textLight)}
-        ${data.sellerPrice && data.sellerPrice > 0 && data.discountPct !== undefined && data.discountStatusText
-            ? row(isAr ? 'سعر البائع' : "Seller's Price", `${curr} ${fmt(data.sellerPrice)}`)
-              + row(data.discountStatusText, `${data.discountPct.toFixed(1)}% (${curr} ${fmt(Math.abs(data.priceDiff ?? 0))})`, '#34D399')
+        ${row(isAr ? 'إجمالي المصنعية' : 'Total Making Charge', `${curr} ${fmt(data.totalMaking ?? 0)}`, craft)}
+        ${row(isAr ? `الضريبة (${vatPercentage}%)` : `VAT (${vatPercentage}%)`, `${curr} ${fmt(data.vatAmount ?? 0)}`, muted, !hasSellerBlock)}
+        ${hasSellerBlock
+            ? row(isAr ? 'سعر البائع' : "Seller's Price", `${curr} ${fmt(data.sellerPrice!)}`)
+              + row(data.discountStatusText!, `${data.discountPct!.toFixed(1)}% (${curr} ${fmt(Math.abs(data.priceDiff ?? 0))})`, '#34D399', true)
             : ''}
     `;
 
+    const formattedDate = new Date().toLocaleDateString(isAr ? 'ar-SA' : 'en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+
     const html = `
     <div style="
-        width:420px;
-        background:${bg};
-        border-radius:24px;
-        font-family:'Segoe UI',Tahoma,Arial,sans-serif;
-        overflow:hidden;
-        box-shadow:0 25px 60px rgba(0,0,0,0.6);
+        width:440px;
+        background:${canvasBg};
+        padding:16px;
+        box-sizing:border-box;
+        font-family:${mainFont};
         direction:${isAr ? 'rtl' : 'ltr'};
+        text-align:${isAr ? 'right' : 'left'};
     ">
-        <div style="height:4px;background:linear-gradient(90deg,${gold},${craft});"></div>
+        <div style="
+            background:${cardBg};
+            border:1px solid rgba(229,169,59,0.28);
+            border-radius:20px;
+            overflow:hidden;
+        ">
+            <div style="height:4px;background:linear-gradient(90deg,${gold},${craft});"></div>
 
-        <div style="padding:28px 28px 20px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-                <div>
-                    <div style="font-size:11px;font-weight:700;letter-spacing:2px;color:${muted};text-transform:uppercase;">
-                        ${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}
+            <div style="padding:22px 22px 14px;">
+                <!-- Header -->
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                    <div>
+                        <div style="font-size:15px;font-weight:800;color:${textLight};line-height:1.3;${isAr ? '' : 'letter-spacing:0.2px;'}">
+                            ${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}
+                        </div>
+                        <div style="font-size:11px;color:${muted};margin-top:2px;line-height:1.4;">
+                            ${isBreakdown
+                                ? (isAr ? 'تحليل سعر القطعة' : 'Price Breakdown')
+                                : (isAr ? 'تقدير السعر العادل' : 'Price Estimator')
+                            } · ${formattedDate}
+                        </div>
                     </div>
-                    <div style="font-size:11px;color:${muted};opacity:0.6;margin-top:2px;">
-                        ${new Date().toLocaleDateString(isAr ? 'ar-SA' : 'en-US', { year:'numeric', month:'long', day:'numeric' })}
+                    <div style="background:rgba(229,169,59,0.14);border:1px solid rgba(229,169,59,0.35);border-radius:10px;padding:5px 12px;line-height:1.3;">
+                        <span dir="ltr" style="color:${gold};font-size:12px;font-weight:800;font-family:${monoFont};">${karat}</span>
                     </div>
                 </div>
-                <div style="background:${gold}22;border:1px solid ${gold}44;border-radius:10px;padding:5px 12px;">
-                    <span style="color:${gold};font-size:12px;font-weight:700;">${karat}</span>
+
+                <!-- Summary Pills -->
+                <div style="margin-bottom:10px;">
+                    ${chip(isAr ? 'سعر الذهب:' : 'Gold:', `${curr} ${fmtSmall(goldPrice)}/${unit}`, gold)}
+                    ${chip(isAr ? (stoneWeight && stoneWeight > 0 ? 'صافي الوزن:' : 'الوزن:') : (stoneWeight && stoneWeight > 0 ? 'Net Weight:' : 'Weight:'), `${fmtSmall(weight)} ${unit}`, textLight)}
+                    ${stoneWeight && stoneWeight > 0 ? chip(isAr ? 'الفصوص:' : 'Stones:', `-${fmtSmall(stoneWeight)} ${unit}`, textLight) : ''}
+                    ${!isBreakdown && data.makingPerGram ? chip(isAr ? 'المصنعية:' : 'Making:', `${curr} ${fmtSmall(data.makingPerGram)}/${unit}`, craft) : ''}
+                </div>
+
+                <!-- Hero Verdict Box -->
+                <div style="background:${surface};border:1px solid ${divider};border-radius:16px;padding:18px;">
+                    <div style="font-size:11.5px;font-weight:600;color:${muted};margin-bottom:8px;line-height:1.4;">${heroLabel}</div>
+                    <div style="line-height:1.15;">
+                        <span style="font-size:15px;font-weight:700;color:${gold};vertical-align:baseline;${marginEnd}:7px;">${curr}</span><span dir="ltr" style="font-size:40px;font-weight:800;color:${textLight};font-family:${monoFont};vertical-align:baseline;">${heroValue}</span>${heroSuffix ? `<span style="font-size:13px;color:${muted};font-weight:600;vertical-align:baseline;${isAr ? 'margin-right:6px;' : 'margin-left:6px;'}">${heroSuffix}</span>` : ''}
+                    </div>
+                    ${dealBadge}
                 </div>
             </div>
 
-            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:${muted};text-transform:uppercase;margin-bottom:14px;">
-                ${isBreakdown
-                    ? (isAr ? 'تحليل سعر القطعة' : 'Price Breakdown')
-                    : (isAr ? 'تقدير السعر' : 'Price Estimator')
-                }
+            <div style="height:1px;background:${divider};margin:0 22px;"></div>
+
+            <!-- Breakdown Details -->
+            <div style="padding:6px 22px 14px;">
+                ${detailRows}
             </div>
 
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;">
-                <div style="background:${surface};border:1px solid ${divider};border-radius:10px;padding:5px 12px;font-size:12px;color:${textLight};">
-                    ${isAr ? 'سعر الذهب:' : 'Gold:'} <strong style="color:${gold};font-family:monospace;">${curr} ${fmtSmall(goldPrice)}/g</strong>
+            <!-- Footer -->
+            <div style="background:${surface};padding:11px 22px;border-top:1px solid ${divider};display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:11px;font-weight:600;color:${muted};line-height:1.4;">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</span>
+                <div style="line-height:1;">
+                    <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${gold};${marginEnd}:5px;"></span><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${craft};opacity:0.8;"></span>
                 </div>
-                <div style="background:${surface};border:1px solid ${divider};border-radius:10px;padding:5px 12px;font-size:12px;color:${textLight};">
-                    ${isAr ? 'صافي الوزن:' : 'Net Weight:'} <strong style="font-family:monospace;">${fmtSmall(weight)} g</strong>
-                </div>
-                ${stoneWeight && stoneWeight > 0 ? `
-                <div style="background:${surface};border:1px solid ${divider};border-radius:10px;padding:5px 12px;font-size:12px;color:${textLight};">
-                    ${isAr ? 'الفصوص:' : 'Stones:'} <strong style="font-family:monospace;">-${fmtSmall(stoneWeight)} g</strong>
-                </div>` : ''}
-                ${isBreakdown && data.itemPrice ? `
-                <div style="background:${surface};border:1px solid ${divider};border-radius:10px;padding:5px 12px;font-size:12px;color:${textLight};">
-                    ${isAr ? 'سعر البائع:' : 'Price:'} <strong style="font-family:monospace;">${curr} ${fmt(data.itemPrice)}</strong>
-                </div>` : ''}
-            </div>
-
-            <div style="background:${surface};border-radius:18px;padding:20px;margin-bottom:4px;">
-                <div style="font-size:11px;color:${muted};margin-bottom:6px;">${heroLabel}</div>
-                <div style="display:flex;align-items:baseline;gap:8px;">
-                    <span style="font-size:16px;font-weight:700;color:${gold};">${curr}</span>
-                    <span style="font-size:52px;font-weight:900;color:${textLight};font-family:monospace;line-height:1;">${heroValue}</span>
-                    ${heroSuffix ? `<span style="font-size:14px;color:${muted};font-weight:600;">${heroSuffix}</span>` : ''}
-                </div>
-                ${dealBadge}
-            </div>
-        </div>
-
-        <div style="height:1px;background:${divider};margin:0 28px;"></div>
-
-        <div style="padding:8px 28px 20px;">
-            ${detailRows}
-        </div>
-
-        <div style="background:${surface};padding:12px 28px;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:10px;color:${muted};opacity:0.6;">${isAr ? 'حاسبة الذهب' : 'Gold Calculator'}</span>
-            <div style="display:flex;gap:4px;">
-                <div style="width:6px;height:6px;border-radius:50%;background:${gold};"></div>
-                <div style="width:6px;height:6px;border-radius:50%;background:${craft};opacity:0.7;"></div>
-                <div style="width:6px;height:6px;border-radius:50%;background:${muted};opacity:0.3;"></div>
             </div>
         </div>
     </div>`;
 
     const container = document.createElement('div');
-    container.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;';
+    container.style.cssText = 'position:fixed;top:-9999px;left:0;width:440px;pointer-events:none;z-index:-1;';
     container.innerHTML = html;
     document.body.appendChild(container);
 
     const cardEl = container.firstElementChild as HTMLElement;
     const canvas = await html2canvas(cardEl, {
-        backgroundColor: null,
+        backgroundColor: canvasBg,
         scale: 2.5,
         logging: false,
         useCORS: true,
@@ -309,6 +332,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ elementId, language, calculat
     };
 
     const handleShare = async () => {
+        if (!shareData) return;
         setIsSharing(true);
         trackEvent('share_clicked', { type: 'whatsapp', calculationType });
 
@@ -393,8 +417,8 @@ const ShareButton: React.FC<ShareButtonProps> = ({ elementId, language, calculat
             <button
                 type="button"
                 onClick={handleShare}
-                disabled={isSharing}
-                className="flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[38px] px-2.5 sm:px-3.5 rounded-xl text-xs font-semibold transition-all active:scale-95 disabled:opacity-50 whitespace-nowrap"
+                disabled={isSharing || !shareData}
+                className="flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[38px] px-2.5 sm:px-3.5 rounded-xl text-xs font-semibold transition-all active:scale-95 disabled:opacity-40 whitespace-nowrap"
                 style={{ background: 'rgba(45, 212, 191, 0.14)', color: '#2DD4BF', border: '1px solid rgba(45, 212, 191, 0.3)' }}
                 title={isAr ? 'مشاركة صورة عبر واتساب' : 'Share image via WhatsApp'}
             >

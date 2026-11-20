@@ -38,6 +38,12 @@ export const useSettings = () => {
         document.body.classList.toggle('theme-dark', isDark);
         document.body.classList.toggle('dark-mode', isDark);
 
+        // Sync theme-color meta tag for iOS/Android status bar
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMeta) {
+            themeColorMeta.setAttribute('content', isDark ? '#0A0C10' : '#F7F6F2');
+        }
+
         // Apply language direction
         document.documentElement.dir = settings.language === 'ar' ? 'rtl' : 'ltr';
         document.documentElement.lang = settings.language;
