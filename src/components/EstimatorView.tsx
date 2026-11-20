@@ -562,89 +562,68 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
 
                 <ValidationMessages messages={validationMessages} />
 
-                {/* ── Quick Mode: Compact Live Rate Indicator ── */}
-                {mode === 'quick' && inputs.goldPrice > 0 && (
-                    <button
-                        type="button"
-                        onClick={() => setMode('detailed')}
-                        className="w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border text-xs transition-all active:scale-[0.99]"
-                        style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
-                    >
-                        <span className="flex items-center gap-1.5 font-medium" style={{ color: 'var(--text-secondary)' }}>
-                            <Sparkles size={13} className="shrink-0" style={{ color: 'var(--primary)' }} />
-                            <span>{t.usingLiveSpot}:</span>
-                            <strong className="font-numbers font-bold" style={{ color: 'var(--text-primary)' }}>
-                                {curr} {formatCurrency(inputs.goldPrice)}/{isRtl ? 'جم' : 'g'}
-                            </strong>
-                        </span>
-                        <span className="text-[11px] font-bold shrink-0" style={{ color: 'var(--primary)' }}>{t.editSpot}</span>
-                    </button>
-                )}
-
-                {/* ── Detailed Mode: Gold Price Input ── */}
-                {mode === 'detailed' && (
-                    <div className="space-y-1.5 input-field-group">
-                        <div className="flex items-center justify-between gap-2 flex-wrap">
-                            <div className="flex items-center gap-2">
-                                <label htmlFor="estimator-gold-price" className="input-field-label text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
-                                    {isRtl ? `سعر جرام الذهب (${curr})` : `Gold Spot Price (${curr}/g)`}
-                                </label>
-                                {livePrice > 0 && inputs.goldPrice > 0 && (
-                                    <span
-                                        className="text-[10px] font-numbers font-bold px-2 py-0.5 rounded-md"
-                                        style={{
-                                            background: Math.abs(spotDiffPct) < 0.25 ? 'var(--craft-soft)' : 'var(--primary-soft)',
-                                            color: Math.abs(spotDiffPct) < 0.25 ? 'var(--craft-accent)' : 'var(--primary)'
-                                        }}
-                                    >
-                                        {Math.abs(spotDiffPct) < 0.25
-                                            ? t.matchesLiveSpot
-                                            : `${spotDiffPct > 0 ? '+' : ''}${spotDiffPct.toFixed(1)}% ${t.diffFromLiveSpot}`
-                                        }
-                                    </span>
-                                )}
-                            </div>
-                            {livePrice > 0 && (
-                                <button
-                                    type="button"
-                                    onClick={handleUseLive}
-                                    className="flex items-center gap-1 min-h-[36px] px-2 text-xs font-semibold hover:underline"
-                                    style={{ color: 'var(--primary)' }}
+                {/* ── Gold Price Input (Editable in both Quick & Detailed modes) ── */}
+                <div className="space-y-1.5 input-field-group">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                            <label htmlFor="estimator-gold-price" className="input-field-label text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
+                                {isRtl ? `سعر جرام الذهب (${curr})` : `Gold Spot Price (${curr}/g)`}
+                            </label>
+                            {livePrice > 0 && inputs.goldPrice > 0 && (
+                                <span
+                                    className="text-[10px] font-numbers font-bold px-2 py-0.5 rounded-md"
+                                    style={{
+                                        background: Math.abs(spotDiffPct) < 0.25 ? 'var(--craft-soft)' : 'var(--primary-soft)',
+                                        color: Math.abs(spotDiffPct) < 0.25 ? 'var(--craft-accent)' : 'var(--primary)'
+                                    }}
                                 >
-                                    <Sparkles size={12} />
-                                    <span>{isRtl ? 'تطبيق السعر المباشر' : 'Use Live Spot'}</span>
-                                </button>
+                                    {Math.abs(spotDiffPct) < 0.25
+                                        ? t.matchesLiveSpot
+                                        : `${spotDiffPct > 0 ? '+' : ''}${spotDiffPct.toFixed(1)}% ${t.diffFromLiveSpot}`
+                                    }
+                                </span>
                             )}
                         </div>
-
-                        <div className="relative flex items-center rounded-2xl input-field-box">
-                            <span className="input-field-prefix ps-4 font-numbers text-sm font-bold select-none pointer-events-none transition-colors" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
-                            <input
-                                id="estimator-gold-price"
-                                type="number"
-                                inputMode="decimal"
-                                enterKeyHint="done"
-                                onFocus={e => e.target.select()}
-                                value={inputs.goldPrice || ''}
-                                onChange={e => handleChange('goldPrice', e.target.value)}
-                                placeholder="0.00"
-                                className="w-full min-h-[52px] bg-transparent py-3 px-3 text-lg sm:text-xl font-bold font-numbers outline-none"
-                                style={{ color: 'var(--text-primary)' }}
-                            />
-                            {inputs.goldPrice > 0 && (
-                                <button
-                                    type="button"
-                                    onClick={() => handleClear('goldPrice')}
-                                    className="min-w-[44px] min-h-[44px] flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity"
-                                    style={{ color: 'var(--text-secondary)' }}
-                                    aria-label="Clear"
-                                >
-                                    <X size={18} />
-                                </button>
-                            )}
-                        </div>
+                        {livePrice > 0 && (
+                            <button
+                                type="button"
+                                onClick={handleUseLive}
+                                className="flex items-center gap-1 min-h-[36px] px-2 text-xs font-semibold hover:underline"
+                                style={{ color: 'var(--primary)' }}
+                            >
+                                <Sparkles size={12} />
+                                <span>{isRtl ? 'تطبيق السعر المباشر' : 'Use Live Spot'}</span>
+                            </button>
+                        )}
                     </div>
-                )}
+
+                    <div className="relative flex items-center rounded-2xl input-field-box">
+                        <span className="input-field-prefix ps-4 font-numbers text-sm font-bold select-none pointer-events-none transition-colors" style={{ color: 'var(--text-secondary)' }}>{curr}</span>
+                        <input
+                            id="estimator-gold-price"
+                            type="number"
+                            inputMode="decimal"
+                            enterKeyHint="done"
+                            onFocus={e => e.target.select()}
+                            value={inputs.goldPrice || ''}
+                            onChange={e => handleChange('goldPrice', e.target.value)}
+                            placeholder="0.00"
+                            className="w-full min-h-[52px] bg-transparent py-3 px-3 text-lg sm:text-xl font-bold font-numbers outline-none"
+                            style={{ color: 'var(--text-primary)' }}
+                        />
+                        {inputs.goldPrice > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => handleClear('goldPrice')}
+                                className="min-w-[44px] min-h-[44px] flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity"
+                                style={{ color: 'var(--text-secondary)' }}
+                                aria-label="Clear"
+                            >
+                                <X size={18} />
+                            </button>
+                        )}
+                    </div>
+                </div>
 
                 {/* ── Weight Input ── */}
                 <div className="space-y-1.5 input-field-group">
