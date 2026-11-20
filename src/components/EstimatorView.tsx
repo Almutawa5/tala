@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Calculator, Save, X, Gem, Layers, TrendingUp, Activity, RotateCcw, Sparkles, ChevronDown, ChevronUp, Percent } from 'lucide-react';
 import { calculateEstimator, formatCurrency, getDealRating, getMakingTiers, getMarketBenchmark } from '../utils/calculations';
 import { translations } from '../utils/translations';
@@ -24,11 +24,12 @@ interface EstimatorViewProps {
     setLivePriceTrigger: React.Dispatch<React.SetStateAction<((price: string) => void) | null>>;
     onSave: (type: 'estimator', inputs: any, results: any) => void;
     restoredData: HistoryItem | null;
+    onClearRestored?: () => void;
     sharedInputs: SharedInputs;
     setSharedInputs: React.Dispatch<React.SetStateAction<SharedInputs>>;
 }
 
-const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings, livePrice, setLivePriceTrigger, onSave, restoredData, sharedInputs, setSharedInputs }) => {
+const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings, livePrice, setLivePriceTrigger, onSave, restoredData, onClearRestored, sharedInputs, setSharedInputs }) => {
     const t = translations[settings.language];
     const isRtl = settings.language === 'ar';
     const curr = settings.currency;
@@ -71,8 +72,11 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
     ];
     const hasValidationErrors = hasErrors(validationMessages);
 
+    const appliedRestoredRef = useRef<HistoryItem | null>(null);
+
     useEffect(() => {
-        if (restoredData && restoredData.type === 'estimator') {
+        if (restoredData && restoredData.type === 'estimator' && appliedRestoredRef.current !== restoredData) {
+            appliedRestoredRef.current = restoredData;
             const restoredStone = restoredData.inputs.stoneWeight || 0;
             if (restoredStone > 0) {
                 updateSettings({ calcMode: 'detailed' });
@@ -85,8 +89,9 @@ const EstimatorView: React.FC<EstimatorViewProps> = ({ settings, updateSettings,
                 itemPrice: restoredData.inputs.itemPrice ?? restoredData.inputs.sellerPrice ?? 0,
                 stoneWeight: restoredStone
             }));
+            onClearRestored?.();
         }
-    }, [restoredData, setInputs, updateSettings]);
+    }, [restoredData, onClearRestored, setInputs, updateSettings]);
 
     useEffect(() => {
         if (setLivePriceTrigger) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Calculator, Save, X, TrendingDown, Layers, ReceiptText, Gem, RotateCcw, Sparkles, ChevronDown, ChevronUp, Percent } from 'lucide-react';
 import { calculateBreakdown, formatCurrency, getDealRating, getMarketBenchmark } from '../utils/calculations';
 import { translations } from '../utils/translations';
@@ -24,11 +24,12 @@ interface BreakdownViewProps {
     setLivePriceTrigger: React.Dispatch<React.SetStateAction<((price: string) => void) | null>>;
     onSave: (type: 'breakdown', inputs: any, results: any) => void;
     restoredData: HistoryItem | null;
+    onClearRestored?: () => void;
     sharedInputs: SharedInputs;
     setSharedInputs: React.Dispatch<React.SetStateAction<SharedInputs>>;
 }
 
-const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, updateSettings, livePrice, setLivePriceTrigger, onSave, restoredData, sharedInputs, setSharedInputs }) => {
+const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, updateSettings, livePrice, setLivePriceTrigger, onSave, restoredData, onClearRestored, sharedInputs, setSharedInputs }) => {
     const t = translations[settings.language];
     const curr = settings.currency;
 
@@ -69,8 +70,11 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, updateSettings,
         ...getMakingChargeWarnings(results.makingPerGram, inputs.goldPrice, settings.language)
     ];
 
+    const appliedRestoredRef = useRef<HistoryItem | null>(null);
+
     useEffect(() => {
-        if (restoredData && restoredData.type === 'breakdown') {
+        if (restoredData && restoredData.type === 'breakdown' && appliedRestoredRef.current !== restoredData) {
+            appliedRestoredRef.current = restoredData;
             const restoredStone = restoredData.inputs.stoneWeight || 0;
             if (restoredStone > 0) {
                 updateSettings({ calcMode: 'detailed' });
@@ -83,8 +87,9 @@ const BreakdownView: React.FC<BreakdownViewProps> = ({ settings, updateSettings,
                 stoneWeight: restoredStone,
                 makingPerGram: 0,
             }));
+            onClearRestored?.();
         }
-    }, [restoredData, setInputs, updateSettings]);
+    }, [restoredData, onClearRestored, setInputs, updateSettings]);
 
     useEffect(() => {
         if (setLivePriceTrigger) {

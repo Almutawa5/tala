@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Language } from '../utils/translations';
 
 export type CalcMode = 'quick' | 'detailed';
@@ -50,9 +50,9 @@ export const useSettings = () => {
 
     }, [settings]);
 
-    const updateSettings = (newSettings: Partial<Settings>) => {
+    const updateSettings = useCallback((newSettings: Partial<Settings>) => {
         setSettings(prev => ({ ...prev, ...newSettings }));
-    };
+    }, []);
 
     return { settings, updateSettings };
 };

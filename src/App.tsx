@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Layout from './components/Layout';
 import Header from './components/Header';
 import QuickParamBar from './components/QuickParamBar';
@@ -113,6 +113,10 @@ function App() {
     setRestoredData(item);
   };
 
+  const handleClearRestored = useCallback(() => {
+    setRestoredData(null);
+  }, []);
+
   return (
     <Layout>
       <Header
@@ -150,6 +154,7 @@ function App() {
             setLivePriceTrigger={setLivePriceTrigger}
             onSave={handleSave}
             restoredData={restoredData}
+            onClearRestored={handleClearRestored}
             sharedInputs={sharedInputs}
             setSharedInputs={setSharedInputs}
           />
@@ -161,6 +166,7 @@ function App() {
             setLivePriceTrigger={setLivePriceTrigger}
             onSave={handleSave}
             restoredData={restoredData}
+            onClearRestored={handleClearRestored}
             sharedInputs={sharedInputs}
             setSharedInputs={setSharedInputs}
           />
