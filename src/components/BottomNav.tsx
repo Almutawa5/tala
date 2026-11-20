@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Calculator, ArrowLeftRight, Clock } from 'lucide-react';
+import { PieChart, Calculator, Wallet, Clock } from 'lucide-react';
 import { translations, Language } from '../utils/translations';
 
 interface BottomNavProps {
@@ -22,7 +22,7 @@ const BottomNav: React.FC<BottomNavProps> = ({
     const tabs = [
         { id: 'breakdown', label: t.tabBreakdown, icon: PieChart },
         { id: 'estimator', label: t.tabEstimator, icon: Calculator },
-        { id: 'compare', label: t.tabCompare, icon: ArrowLeftRight },
+        { id: 'budget', label: t.tabBudget, icon: Wallet },
     ];
 
     return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { formatCurrency } from '../utils/calculations';
 import { translations } from '../utils/translations';
 import { Settings as SettingsType } from '../hooks/useSettings';
-import { Settings, HelpCircle, Clock, PieChart, Calculator, ArrowLeftRight, Gem, Moon, Sun } from 'lucide-react';
+import { Settings, HelpCircle, Clock, PieChart, Calculator, Wallet, Gem, Moon, Sun } from 'lucide-react';
 import { triggerEclipseTransition } from '../utils/themeTransition';
 import PWAInstallButton from './PWAInstallButton';
 
@@ -88,7 +88,7 @@ const Header: React.FC<HeaderProps> = ({
                     {[
                         { id: 'breakdown', label: t.tabBreakdown, icon: <PieChart size={15} /> },
                         { id: 'estimator', label: t.tabEstimator, icon: <Calculator size={15} /> },
-                        { id: 'compare', label: t.tabCompare, icon: <ArrowLeftRight size={15} /> }
+                        { id: 'budget', label: t.tabBudget, icon: <Wallet size={15} /> }
                     ].map((tab) => {
                         const isActive = activeTab === tab.id;
                         return (

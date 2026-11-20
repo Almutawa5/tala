@@ -9,6 +9,7 @@ export interface HistoryInput {
     makingPerGram?: number;
     sellerPrice?: number;
     stoneWeight?: number;
+    budget?: number;
 }
 
 export interface HistoryResult {
@@ -18,12 +19,14 @@ export interface HistoryResult {
     totalMaking: number;
     makingPerGram?: number;
     totalPrice?: number;
+    maxWeight?: number;
+    costPerGramInclVat?: number;
 }
 
 export interface HistoryItem {
     id: number;
     timestamp: string;
-    type: 'breakdown' | 'estimator';
+    type: 'breakdown' | 'estimator' | 'budget';
     inputs: HistoryInput;
     results: HistoryResult;
     currency: string;
@@ -41,7 +44,7 @@ export const useHistory = () => {
     }, [history]);
 
     const saveCalculation = (
-        type: 'breakdown' | 'estimator',
+        type: 'breakdown' | 'estimator' | 'budget',
         inputs: HistoryInput,
         results: HistoryResult,
         currency: string,

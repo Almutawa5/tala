@@ -83,9 +83,9 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                     <div className="flex items-center gap-2 mb-1">
                                         <span
                                             className="text-xs font-bold whitespace-nowrap"
-                                            style={{ color: item.type === 'breakdown' ? 'var(--primary)' : 'var(--craft-accent)' }}
+                                            style={{ color: item.type === 'breakdown' ? 'var(--primary)' : item.type === 'estimator' ? 'var(--craft-accent)' : '#38BDF8' }}
                                         >
-                                            {item.type === 'breakdown' ? t.breakdownType : t.estimatorType}
+                                            {item.type === 'breakdown' ? t.breakdownType : item.type === 'estimator' ? t.estimatorType : t.budgetType}
                                         </span>
                                         <span aria-hidden="true" className="text-xs opacity-40">·</span>
 
@@ -193,6 +193,12 @@ const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, history, o
                                     <div className="col-span-2 font-bold">
                                         <span className="text-xs block font-normal" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>{t.totalPrice}</span>
                                         <span className="font-numbers" style={{ color: 'var(--primary)' }}>{formatCurrency(item.results.totalPrice || 0)} {item.currency}</span>
+                                    </div>
+                                )}
+                                {item.type === 'budget' && (
+                                    <div className="col-span-2 font-bold">
+                                        <span className="text-xs block font-normal" style={{ color: 'var(--text-secondary)', opacity: 0.7 }}>{t.availableBudget}</span>
+                                        <span className="font-numbers" style={{ color: 'var(--primary)' }}>{formatCurrency(item.inputs.budget || 0)} {item.currency}</span>
                                     </div>
                                 )}
                             </div>

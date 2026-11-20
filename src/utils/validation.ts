@@ -14,7 +14,8 @@ const DEFAULT_LABELS: Record<string, Record<'en' | 'ar', string>> = {
     itemPrice: { en: 'Item price', ar: 'سعر القطعة' },
     weight: { en: 'Weight', ar: 'الوزن' },
     stoneWeight: { en: 'Stone weight', ar: 'وزن الفصوص' },
-    makingPerGram: { en: 'Making charge per gram', ar: 'المصنعية للجرام' }
+    makingPerGram: { en: 'Making charge per gram', ar: 'المصنعية للجرام' },
+    budget: { en: 'Budget', ar: 'الميزانية' }
 };
 
 export const getCommonInputWarnings = (

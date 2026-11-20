@@ -15,6 +15,7 @@ interface SharedInputs {
     weight: number;
     makingPerGram: number;
     stoneWeight: number;
+    budget: number;
 }
 
 interface EstimatorViewProps {

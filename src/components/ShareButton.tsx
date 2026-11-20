@@ -13,7 +13,7 @@ interface ShareButtonProps {
 }
 
 export interface ShareCardData {
-    type: 'breakdown' | 'estimator';
+    type: 'breakdown' | 'estimator' | 'budget';
     currency: string;
     karat: string;
     goldPrice: number;
@@ -33,6 +33,10 @@ export interface ShareCardData {
     discountPct?: number;
     priceDiff?: number;
     discountStatusText?: string;
+    // budget
+    budget?: number;
+    maxWeight?: number;
+    costPerGramInclVat?: number;
     dealLabel?: string;
     dealColor?: string;
 }
@@ -74,6 +78,37 @@ function buildWhatsAppSummary(data: ShareCardData, language: Language): string {
             isAr ? `🧾 السعر قبل الضريبة: ${curr} ${fmt(data.priceNoVat ?? 0)}` : `🧾 Price ex-VAT: ${curr} ${fmt(data.priceNoVat ?? 0)}`,
             isAr ? `🪙 قيمة الذهب الخام: ${curr} ${fmt(data.rawGoldCost ?? 0)}` : `🪙 Raw Gold Value: ${curr} ${fmt(data.rawGoldCost ?? 0)}`,
             isAr ? `🛠️ إجمالي المصنعية: ${curr} ${fmt(data.totalMaking ?? 0)}` : `🛠️ Total Making: ${curr} ${fmt(data.totalMaking ?? 0)}`,
+            isAr ? `🏛️ الضريبة (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}` : `🏛️ VAT (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}`
+        );
+
+        return lines.join('\n');
+    }
+
+    if (data.type === 'budget') {
+        const lines = [
+            isAr ? `💎 *حاسبة الذهب — حاسبة الميزانية*` : `💎 *Gold Calculator — Budget Calculator*`,
+            isAr
+                ? `✨ العيار: ${karat} | سعر الذهب: ${curr} ${fmtSmall(goldPrice)}/${unit}`
+                : `✨ Karat: ${karat} | Gold Spot: ${curr} ${fmtSmall(goldPrice)}/${unit}`,
+            isAr
+                ? `💰 الميزانية (شامل ${vatPercentage}% ضريبة): ${curr} ${fmt(data.budget ?? 0)}`
+                : `💰 Budget (incl. ${vatPercentage}% VAT): ${curr} ${fmt(data.budget ?? 0)}`,
+            isAr
+                ? `🛠️ المصنعية: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`
+                : `🛠️ Making Charge: ${curr} ${fmtSmall(data.makingPerGram ?? 0)}/${unit}`,
+            `─────────────`,
+            isAr
+                ? `⚖️ *أقصى وزن للشراء:* ${fmt(data.maxWeight ?? weight)} ${unit}`
+                : `⚖️ *Max Purchasable Weight:* ${fmt(data.maxWeight ?? weight)} ${unit}`,
+        ];
+
+        if (data.dealLabel) {
+            lines.push(isAr ? `✅ التقييم: ${data.dealLabel}` : `✅ Verdict: ${data.dealLabel}`);
+        }
+        lines.push(
+            isAr ? `🧾 السعر قبل الضريبة: ${curr} ${fmt(data.priceNoVat ?? 0)}` : `🧾 Price ex-VAT: ${curr} ${fmt(data.priceNoVat ?? 0)}`,
+            isAr ? `🪙 قيمة الذهب الخام: ${curr} ${fmt(data.rawGoldCost ?? 0)}` : `🪙 Raw Gold Value: ${curr} ${fmt(data.rawGoldCost ?? 0)}`,
+            isAr ? `🔨 إجمالي المصنعية: ${curr} ${fmt(data.totalMaking ?? 0)}` : `🔨 Total Making: ${curr} ${fmt(data.totalMaking ?? 0)}`,
             isAr ? `🏛️ الضريبة (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}` : `🏛️ VAT (${vatPercentage}%): ${curr} ${fmt(data.vatAmount ?? 0)}`
         );
 
@@ -149,6 +184,7 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
     const isAr = language === 'ar';
     const { currency: curr, karat, goldPrice, weight, stoneWeight, vatPercentage } = data;
     const isBreakdown = data.type === 'breakdown';
+    const isBudget = data.type === 'budget';
     const unit = isAr ? 'جم' : 'g';
 
     // Wait for web fonts to finish loading before rasterizing
@@ -190,10 +226,14 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
 
     const heroValue = isBreakdown
         ? fmt(data.makingPerGram ?? 0)
-        : fmt(data.totalPrice ?? 0);
+        : isBudget
+            ? fmt(data.maxWeight ?? weight)
+            : fmt(data.totalPrice ?? 0);
     const heroLabel = isBreakdown
         ? (isAr ? 'مصنعية الجرام الواحد' : 'Making Charge per Gram')
-        : (isAr ? `الإجمالي التقديري (شامل ${vatPercentage}% ضريبة)` : `Estimated Total (incl. ${vatPercentage}% VAT)`);
+        : isBudget
+            ? (isAr ? 'أقصى وزن متاح بميزانيتك' : 'Maximum Purchasable Weight')
+            : (isAr ? `الإجمالي التقديري (شامل ${vatPercentage}% ضريبة)` : `Estimated Total (incl. ${vatPercentage}% VAT)`);
     const heroSuffix = isBreakdown ? `/${unit}` : '';
 
     const dealBadge = data.dealLabel ? `
@@ -203,7 +243,7 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
             </span>
         </div>` : '';
 
-    const hasSellerBlock = !isBreakdown && data.sellerPrice && data.sellerPrice > 0 && data.discountPct !== undefined && data.discountStatusText;
+    const hasSellerBlock = !isBreakdown && !isBudget && data.sellerPrice && data.sellerPrice > 0 && data.discountPct !== undefined && data.discountStatusText;
 
     const detailRows = isBreakdown ? `
         ${row(isAr ? 'سعر البائع (شامل الضريبة)' : 'Seller Price (incl. VAT)', `${curr} ${fmt(data.itemPrice ?? 0)}`)}
@@ -211,6 +251,12 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
         ${row(isAr ? `الضريبة (${vatPercentage}%)` : `VAT (${vatPercentage}%)`, `${curr} ${fmt(data.vatAmount ?? 0)}`, muted)}
         ${row(isAr ? 'قيمة الذهب الخام' : 'Raw Gold Value', `${curr} ${fmt(data.rawGoldCost ?? 0)}`, gold)}
         ${row(isAr ? 'إجمالي المصنعية' : 'Total Making Charge', `${curr} ${fmt(data.totalMaking ?? 0)}`, craft, true)}
+    ` : isBudget ? `
+        ${row(isAr ? 'الميزانية المتوفرة' : 'Available Budget', `${curr} ${fmt(data.budget ?? 0)}`)}
+        ${row(isAr ? 'السعر قبل الضريبة' : 'Price ex-VAT', `${curr} ${fmt(data.priceNoVat ?? 0)}`)}
+        ${row(isAr ? 'قيمة الذهب الخام' : 'Raw Gold Value', `${curr} ${fmt(data.rawGoldCost ?? 0)}`, gold)}
+        ${row(isAr ? 'إجمالي المصنعية' : 'Total Making Charge', `${curr} ${fmt(data.totalMaking ?? 0)}`, craft)}
+        ${row(isAr ? `الضريبة (${vatPercentage}%)` : `VAT (${vatPercentage}%)`, `${curr} ${fmt(data.vatAmount ?? 0)}`, muted, true)}
     ` : `
         ${row(isAr ? 'قيمة الذهب الخام' : 'Raw Gold Value', `${curr} ${fmt(data.rawGoldCost ?? 0)}`, gold)}
         ${row(isAr ? 'إجمالي المصنعية' : 'Total Making Charge', `${curr} ${fmt(data.totalMaking ?? 0)}`, craft)}
@@ -255,7 +301,9 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
                         <div style="font-size:11px;color:${muted};margin-top:2px;line-height:1.4;">
                             ${isBreakdown
                                 ? (isAr ? 'تحليل سعر القطعة' : 'Price Breakdown')
-                                : (isAr ? 'تقدير السعر العادل' : 'Price Estimator')
+                                : isBudget
+                                    ? (isAr ? 'حاسبة الميزانية' : 'Budget Calculator')
+                                    : (isAr ? 'تقدير السعر العادل' : 'Price Estimator')
                             } · ${formattedDate}
                         </div>
                     </div>
@@ -267,8 +315,11 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
                 <!-- Summary Pills -->
                 <div style="margin-bottom:10px;">
                     ${chip(isAr ? 'سعر الذهب:' : 'Gold:', `${curr} ${fmtSmall(goldPrice)}/${unit}`, gold)}
-                    ${chip(isAr ? (stoneWeight && stoneWeight > 0 ? 'صافي الوزن:' : 'الوزن:') : (stoneWeight && stoneWeight > 0 ? 'Net Weight:' : 'Weight:'), `${fmtSmall(weight)} ${unit}`, textLight)}
-                    ${stoneWeight && stoneWeight > 0 ? chip(isAr ? 'الفصوص:' : 'Stones:', `-${fmtSmall(stoneWeight)} ${unit}`, textLight) : ''}
+                    ${isBudget
+                        ? chip(isAr ? 'الميزانية:' : 'Budget:', `${curr} ${fmt(data.budget ?? 0)}`, textLight)
+                        : chip(isAr ? (stoneWeight && stoneWeight > 0 ? 'صافي الوزن:' : 'الوزن:') : (stoneWeight && stoneWeight > 0 ? 'Net Weight:' : 'Weight:'), `${fmtSmall(weight)} ${unit}`, textLight)
+                    }
+                    ${!isBudget && stoneWeight && stoneWeight > 0 ? chip(isAr ? 'الفصوص:' : 'Stones:', `-${fmtSmall(stoneWeight)} ${unit}`, textLight) : ''}
                     ${!isBreakdown && data.makingPerGram ? chip(isAr ? 'المصنعية:' : 'Making:', `${curr} ${fmtSmall(data.makingPerGram)}/${unit}`, craft) : ''}
                 </div>
 
@@ -276,7 +327,10 @@ async function buildShareCard(data: ShareCardData, language: Language): Promise<
                 <div style="background:${surface};border:1px solid ${divider};border-radius:16px;padding:18px;">
                     <div style="font-size:11.5px;font-weight:600;color:${muted};margin-bottom:8px;line-height:1.4;">${heroLabel}</div>
                     <div style="line-height:1.15;">
-                        <span style="font-size:15px;font-weight:700;color:${gold};vertical-align:baseline;${marginEnd}:7px;">${curr}</span><span dir="ltr" style="font-size:40px;font-weight:800;color:${textLight};font-family:${monoFont};vertical-align:baseline;">${heroValue}</span>${heroSuffix ? `<span style="font-size:13px;color:${muted};font-weight:600;vertical-align:baseline;${isAr ? 'margin-right:6px;' : 'margin-left:6px;'}">${heroSuffix}</span>` : ''}
+                        ${isBudget
+                            ? `<span dir="ltr" style="font-size:40px;font-weight:800;color:${textLight};font-family:${monoFont};vertical-align:baseline;">${heroValue}</span><span style="font-size:15px;font-weight:700;color:${gold};vertical-align:baseline;${isAr ? 'margin-right:7px;' : 'margin-left:7px;'}">${unit}</span>`
+                            : `<span style="font-size:15px;font-weight:700;color:${gold};vertical-align:baseline;${marginEnd}:7px;">${curr}</span><span dir="ltr" style="font-size:40px;font-weight:800;color:${textLight};font-family:${monoFont};vertical-align:baseline;">${heroValue}</span>${heroSuffix ? `<span style="font-size:13px;color:${muted};font-weight:600;vertical-align:baseline;${isAr ? 'margin-right:6px;' : 'margin-left:6px;'}">${heroSuffix}</span>` : ''}`
+                        }
                     </div>
                     ${dealBadge}
                 </div>

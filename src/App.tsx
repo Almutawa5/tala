@@ -4,7 +4,7 @@ import Header from './components/Header';
 import QuickParamBar from './components/QuickParamBar';
 import BreakdownView from './components/BreakdownView';
 import EstimatorView from './components/EstimatorView';
-import ComparisonMode from './components/ComparisonMode';
+import BudgetView from './components/BudgetView';
 import SettingsModal from './components/SettingsModal';
 import HelpModal from './components/HelpModal';
 import HistoryModal from './components/HistoryModal';
@@ -33,7 +33,7 @@ function App() {
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
 
   interface PendingSave {
-    type: 'breakdown' | 'estimator';
+    type: 'breakdown' | 'estimator' | 'budget';
     inputs: HistoryInput;
     results: HistoryResult;
   }
@@ -41,7 +41,7 @@ function App() {
   const [pendingSave, setPendingSave] = useState<PendingSave | null>(null);
   const [restoredData, setRestoredData] = useState<HistoryItem | null>(null);
 
-  const [sharedInputs, setSharedInputs] = useState({ goldPrice: 0, itemPrice: 0, weight: 0, makingPerGram: 0, stoneWeight: 0 });
+  const [sharedInputs, setSharedInputs] = useState({ goldPrice: 0, itemPrice: 0, weight: 0, makingPerGram: 0, stoneWeight: 0, budget: 0 });
   const lastAutoLivePriceRef = useRef<number>(0);
 
   // State to trigger price updates in child components
@@ -82,7 +82,7 @@ function App() {
     updateSettings({ language: settings.language === 'en' ? 'ar' : 'en' });
   };
 
-  const handleSave = (type: 'breakdown' | 'estimator', inputs: HistoryInput, results: HistoryResult) => {
+  const handleSave = (type: 'breakdown' | 'estimator' | 'budget', inputs: HistoryInput, results: HistoryResult) => {
     setPendingSave({ type, inputs, results });
     setIsSaveModalOpen(true);
   };
@@ -171,9 +171,16 @@ function App() {
             setSharedInputs={setSharedInputs}
           />
         ) : (
-          <ComparisonMode
+          <BudgetView
             settings={settings}
-            goldPrice={sharedInputs.goldPrice > 0 ? sharedInputs.goldPrice : price}
+            updateSettings={updateSettings}
+            livePrice={price}
+            setLivePriceTrigger={setLivePriceTrigger}
+            onSave={handleSave}
+            restoredData={restoredData}
+            onClearRestored={handleClearRestored}
+            sharedInputs={sharedInputs}
+            setSharedInputs={setSharedInputs}
           />
         )}
       </div>

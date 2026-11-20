@@ -71,6 +71,53 @@ export const calculateEstimator = (
     };
 };
 
+export interface BudgetResult {
+    maxWeight: number;
+    priceNoVat: number;
+    vatAmount: number;
+    rawGoldCost: number;
+    totalMaking: number;
+    costPerGramInclVat: number;
+}
+
+export const calculateBudget = (
+    goldPrice: number,
+    budget: number,
+    makingPerGram: number,
+    vatPercentage: number
+): BudgetResult => {
+    const safeMaking = Math.max(0, makingPerGram);
+    const basePerGram = goldPrice + safeMaking;
+    const vatMultiplier = 1 + Math.max(0, vatPercentage) / 100;
+    const costPerGramInclVat = basePerGram * vatMultiplier;
+
+    if (goldPrice > 0 && budget > 0 && costPerGramInclVat > 0) {
+        const maxWeight = budget / costPerGramInclVat;
+        const priceNoVat = budget / vatMultiplier;
+        const vatAmount = budget - priceNoVat;
+        const rawGoldCost = maxWeight * goldPrice;
+        const totalMaking = maxWeight * safeMaking;
+
+        return {
+            maxWeight,
+            priceNoVat,
+            vatAmount,
+            rawGoldCost,
+            totalMaking,
+            costPerGramInclVat
+        };
+    }
+
+    return {
+        maxWeight: 0,
+        priceNoVat: 0,
+        vatAmount: 0,
+        rawGoldCost: 0,
+        totalMaking: 0,
+        costPerGramInclVat
+    };
+};
+
 export const formatCurrency = (num: number): string => {
     return num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 };
