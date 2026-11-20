@@ -1,5 +1,9 @@
 export const triggerSaveAnimation = (startX: number, startY: number) => {
-    const historyBtn = document.getElementById('history-button');
+    const mobileBtn = document.getElementById('history-button-mobile');
+    const desktopBtn = document.getElementById('history-button-desktop');
+    const historyBtn = (mobileBtn && mobileBtn.offsetParent !== null)
+        ? mobileBtn
+        : desktopBtn || document.getElementById('history-button');
     if (!historyBtn) return;
 
     const rect = historyBtn.getBoundingClientRect();

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Language } from '../utils/translations';
 
+export type CalcMode = 'quick' | 'detailed';
+
 export interface Settings {
     currency: string;
     karat: string;
@@ -8,6 +10,7 @@ export interface Settings {
     theme: string;
     darkMode: boolean;
     language: Language;
+    calcMode: CalcMode;
 }
 
 const DEFAULT_SETTINGS: Settings = {
@@ -16,7 +19,8 @@ const DEFAULT_SETTINGS: Settings = {
     vatPercentage: 10,
     theme: 'gold',
     darkMode: false,
-    language: 'en'
+    language: 'en',
+    calcMode: 'quick'
 };
 
 export const useSettings = () => {
@@ -28,12 +32,11 @@ export const useSettings = () => {
     useEffect(() => {
         localStorage.setItem('goldCalc_settings', JSON.stringify(settings));
 
-        // Apply theme and dark mode to body
-        document.body.classList.remove('theme-dark', 'dark-mode');
-
-        if (settings.theme === 'dark' || settings.darkMode) {
-            document.body.classList.add('theme-dark', 'dark-mode');
-        }
+        // Apply theme and dark mode to html and body
+        const isDark = settings.theme === 'dark' || settings.darkMode;
+        document.documentElement.classList.toggle('dark', isDark);
+        document.body.classList.toggle('theme-dark', isDark);
+        document.body.classList.toggle('dark-mode', isDark);
 
         // Apply language direction
         document.documentElement.dir = settings.language === 'ar' ? 'rtl' : 'ltr';

@@ -108,29 +108,30 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
     const globalWarnings = getGoldPriceWarnings(goldPrice, settings.language);
 
     return (
-        <div className="p-4 sm:p-8 lg:p-10 pb-28 lg:pb-10 space-y-6">
+        <div className="p-4 sm:p-8 lg:p-10 pb-8 lg:pb-10 space-y-5 sm:space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                     <div
                         className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                        style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B' }}
+                        style={{ background: 'var(--primary-soft)', color: 'var(--primary)' }}
                     >
-                        <Scale size={18} className="text-amber-500" />
+                        <Scale size={18} />
                     </div>
                     <div>
                         <h3 className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>
                             {isRtl ? 'مقارنة المحلات' : 'Compare Shops'}
                         </h3>
                         <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-                            {isRtl ? 'اكتشف أفضل سعر مصنعية' : 'Find the best making charge deal'}
+                            {isRtl ? 'قارن الأسعار واختر أقل مصنعية' : 'Find the best making charge deal'}
                         </p>
                     </div>
                 </div>
                 <button
+                    type="button"
                     onClick={addShop}
                     disabled={shops.length >= 5}
-                    className="flex items-center gap-2 text-sm px-4 py-2.5 rounded-xl font-bold transition-all duration-200 active:scale-95 disabled:opacity-40 cursor-pointer"
+                    className="flex items-center gap-2 min-h-[44px] text-sm px-4 py-2 rounded-xl font-bold transition-all duration-150 active:scale-95 disabled:opacity-40 cursor-pointer whitespace-nowrap"
                     style={{ background: 'var(--text-primary)', color: 'var(--bg-main)' }}
                 >
                     <Plus size={16} strokeWidth={2.5} />
@@ -143,17 +144,19 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border"
                 style={{ background: 'var(--bg-input)', borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
             >
-                <span>{isRtl ? 'سعر الذهب المستخدم:' : 'Using gold price:'}</span>
+                <span>{isRtl ? 'سعر الذهب المعتمد:' : 'Using gold price:'}</span>
                 <span className="font-numbers font-bold" style={{ color: 'var(--text-primary)' }}>
                     {formatCurrency(goldPrice)}
                 </span>
-                <span className="opacity-60 text-xs">{curr}/{settings.karat}K {isRtl ? 'لكل جرام' : 'per g'}</span>
+                <span className="opacity-65 text-xs">
+                    {isRtl ? `${curr} · عيار ${settings.karat} / جم` : `${curr}/${settings.karat}K per g`}
+                </span>
             </div>
 
             <ValidationMessages messages={globalWarnings} />
 
             {/* Shop cards */}
-            <div className="grid gap-5 md:grid-cols-2">
+            <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
                 {shops.map((shop) => {
                     const results = getResults(shop);
                     const isBest = shop.id === bestDealId;
@@ -165,51 +168,54 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                             key={shop.id}
                             className="relative rounded-3xl overflow-hidden transition-all duration-300"
                             style={{
-                                background: 'var(--bg-card)',
-                                border: isBest ? '2px solid var(--primary)' : '1.5px solid var(--border)',
-                                boxShadow: isBest ? '0 0 0 3px rgba(245,158,11,0.12), 0 8px 32px rgba(0,0,0,0.08)' : '0 2px 12px rgba(0,0,0,0.04)'
+                                background: 'var(--bg-surface)',
+                                border: isBest ? '1.5px solid var(--primary-vivid)' : '1px solid var(--border)',
+                                boxShadow: isBest ? '0 0 0 3px var(--primary-soft), var(--shadow-card)' : 'var(--shadow-card)'
                             }}
                         >
                             {/* Best deal badge */}
                             {isBest && (
                                 <div
                                     className="absolute top-0 left-0 right-0 py-1.5 text-center text-[11px] font-black uppercase tracking-widest"
-                                    style={{ background: 'var(--primary)', color: '#0F172A' }}
+                                    style={{ background: 'var(--primary-vivid)', color: 'var(--primary-ink)' }}
                                 >
-                                    {isRtl ? '★ أفضل سعر!' : '★ Best Deal!'}
+                                    {isRtl ? '★ الأفضل سعراً' : '★ Best Deal!'}
                                 </div>
                             )}
 
-                            <div className={`p-5 space-y-4 ${isBest ? 'pt-10' : ''}`}>
+                            <div className={`p-4 sm:p-5 space-y-4 ${isBest ? 'pt-10' : ''}`}>
                                 {/* Shop name + actions */}
-                                <div className="flex items-center justify-between">
+                                <div className="flex items-center justify-between gap-2">
                                     <input
                                         type="text"
                                         value={shop.name}
+                                        enterKeyHint="done"
                                         onChange={(e) => updateShop(shop.id, 'name', e.target.value)}
-                                        className="font-bold text-base bg-transparent border-b-2 border-transparent hover:border-current focus:outline-none focus:border-current transition-colors px-1 min-w-0"
+                                        className="font-bold text-base min-h-[44px] bg-transparent border-b-2 border-transparent hover:border-current focus:outline-none focus:border-current transition-colors px-1 min-w-0 flex-1"
                                         style={{ color: 'var(--text-primary)', borderColor: 'transparent' }}
                                         onFocus={e => (e.target.style.borderColor = 'var(--primary)')}
                                         onBlur={e => (e.target.style.borderColor = 'transparent')}
                                     />
-                                    <div className="flex gap-1 shrink-0">
+                                    <div className="flex gap-1.5 shrink-0">
                                         <button
+                                            type="button"
                                             onClick={() => copyResults(shop)}
-                                            className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                                            style={{ color: copied === shop.id ? '#34d399' : 'var(--text-secondary)', background: 'var(--border)' }}
+                                            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl transition-all duration-150 active:scale-95"
+                                            style={{ color: copied === shop.id ? 'var(--craft-accent)' : 'var(--text-secondary)', background: 'var(--bg-muted)' }}
                                             title={isRtl ? 'نسخ النتائج' : 'Copy results'}
                                             aria-label="Copy"
                                         >
-                                            {copied === shop.id ? <Check size={14} /> : <Copy size={14} />}
+                                            {copied === shop.id ? <Check size={16} /> : <Copy size={16} />}
                                         </button>
                                         {shops.length > 2 && (
                                             <button
+                                                type="button"
                                                 onClick={() => removeShop(shop.id)}
-                                                className="p-2 rounded-lg transition-all duration-200 hover:scale-105"
-                                                style={{ color: 'var(--text-secondary)', background: 'var(--border)' }}
+                                                className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl transition-all duration-150 active:scale-95"
+                                                style={{ color: 'var(--text-secondary)', background: 'var(--bg-muted)' }}
                                                 aria-label="Remove shop"
                                             >
-                                                <Trash2 size={14} />
+                                                <Trash2 size={16} />
                                             </button>
                                         )}
                                     </div>
@@ -218,77 +224,87 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
                                 <ValidationMessages messages={shopWarnings} />
 
                                 {/* Inputs grid */}
-                                <div className="grid grid-cols-2 gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {/* Item Price */}
                                     <div>
-                                        <label className="text-xs font-bold uppercase tracking-widest block mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                                            {isRtl ? 'السعر' : 'Price'}
-                                        </label>
-                                        <p className="text-[10px] mb-2 opacity-60" style={{ color: 'var(--text-secondary)' }}>
-                                            {isRtl ? 'شامل الضريبة' : `Incl. VAT (${curr})`}
-                                        </p>
+                                        <div className="flex items-baseline justify-between mb-1.5">
+                                            <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
+                                                {isRtl ? 'السعر' : 'Price'}
+                                            </label>
+                                            <span className="text-[10px] opacity-65" style={{ color: 'var(--text-secondary)' }}>
+                                                {isRtl ? 'شامل الضريبة' : `Incl. VAT (${curr})`}
+                                            </span>
+                                        </div>
                                         <div
-                                            className="flex items-center rounded-xl p-1 gap-1"
-                                            style={{ background: 'var(--bg-input)', border: '1.5px solid var(--border)' }}
+                                            className="flex items-center rounded-xl p-1 gap-1 border"
+                                            style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
                                         >
                                             <button
                                                 type="button"
                                                 onClick={() => handleShopStep(shop.id, 'itemPrice', -10)}
-                                                className="w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all select-none active:scale-90 shrink-0"
-                                                style={{ background: 'var(--border)', color: 'var(--text-primary)' }}
+                                                className="w-11 h-11 rounded-lg flex items-center justify-center font-bold text-base transition-all select-none active:scale-90 shrink-0"
+                                                style={{ background: 'var(--bg-muted)', color: 'var(--text-primary)' }}
+                                                aria-label="Decrease price"
                                             >−</button>
                                             <input
                                                 type="number"
                                                 inputMode="decimal"
+                                                enterKeyHint="done"
                                                 onFocus={e => e.target.select()}
                                                 value={shop.itemPrice || ''}
                                                 onChange={e => updateShop(shop.id, 'itemPrice', e.target.value)}
                                                 placeholder="0"
-                                                className="flex-1 bg-transparent border-none text-center focus:outline-none font-numbers text-sm font-bold min-w-0"
+                                                className="flex-1 min-h-[44px] bg-transparent border-none text-center focus:outline-none font-numbers text-base font-bold min-w-0"
                                                 style={{ color: 'var(--text-primary)' }}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => handleShopStep(shop.id, 'itemPrice', 10)}
-                                                className="w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all select-none active:scale-90 shrink-0"
-                                                style={{ background: 'var(--border)', color: 'var(--text-primary)' }}
+                                                className="w-11 h-11 rounded-lg flex items-center justify-center font-bold text-base transition-all select-none active:scale-90 shrink-0"
+                                                style={{ background: 'var(--bg-muted)', color: 'var(--text-primary)' }}
+                                                aria-label="Increase price"
                                             >+</button>
                                         </div>
                                     </div>
 
                                     {/* Weight */}
                                     <div>
-                                        <label className="text-xs font-bold uppercase tracking-widest block mb-1.5" style={{ color: 'var(--text-secondary)' }}>
-                                            {isRtl ? 'الوزن' : 'Weight'}
-                                        </label>
-                                        <p className="text-[10px] mb-2 opacity-60" style={{ color: 'var(--text-secondary)' }}>
-                                            {isRtl ? 'بالجرام' : 'In grams (g)'}
-                                        </p>
+                                        <div className="flex items-baseline justify-between mb-1.5">
+                                            <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-secondary)' }}>
+                                                {isRtl ? 'الوزن' : 'Weight'}
+                                            </label>
+                                            <span className="text-[10px] opacity-65" style={{ color: 'var(--text-secondary)' }}>
+                                                {isRtl ? 'بالجرام' : 'In grams (g)'}
+                                            </span>
+                                        </div>
                                         <div
-                                            className="flex items-center rounded-xl p-1 gap-1"
-                                            style={{ background: 'var(--bg-input)', border: '1.5px solid var(--border)' }}
+                                            className="flex items-center rounded-xl p-1 gap-1 border"
+                                            style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
                                         >
                                             <button
                                                 type="button"
                                                 onClick={() => handleShopStep(shop.id, 'weight', -1)}
-                                                className="w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all select-none active:scale-90 shrink-0"
-                                                style={{ background: 'var(--border)', color: 'var(--text-primary)' }}
+                                                className="w-11 h-11 rounded-lg flex items-center justify-center font-bold text-base transition-all select-none active:scale-90 shrink-0"
+                                                style={{ background: 'var(--bg-muted)', color: 'var(--text-primary)' }}
+                                                aria-label="Decrease weight"
                                             >−</button>
                                             <input
                                                 type="number"
                                                 inputMode="decimal"
+                                                enterKeyHint="done"
                                                 onFocus={e => e.target.select()}
                                                 value={shop.weight || ''}
                                                 onChange={e => updateShop(shop.id, 'weight', e.target.value)}
                                                 placeholder="0"
-                                                className="flex-1 bg-transparent border-none text-center focus:outline-none font-numbers text-sm font-bold min-w-0"
+                                                className="flex-1 min-h-[44px] bg-transparent border-none text-center focus:outline-none font-numbers text-base font-bold min-w-0"
                                                 style={{ color: 'var(--text-primary)' }}
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => handleShopStep(shop.id, 'weight', 1)}
-                                                className="w-9 h-9 rounded-lg flex items-center justify-center font-bold transition-all select-none active:scale-90 shrink-0"
-                                                style={{ background: 'var(--border)', color: 'var(--text-primary)' }}
+                                                className="w-11 h-11 rounded-lg flex items-center justify-center font-bold text-base transition-all select-none active:scale-90 shrink-0"
+                                                style={{ background: 'var(--bg-muted)', color: 'var(--text-primary)' }}
+                                                aria-label="Increase weight"
                                             >+</button>
                                         </div>
                                     </div>
@@ -296,21 +312,21 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
 
                                 {/* Results */}
                                 <div
-                                    className="rounded-2xl p-4 space-y-2.5"
-                                    style={{ background: 'var(--border)' }}
+                                    className="rounded-2xl p-4 space-y-2.5 border"
+                                    style={{ background: 'var(--bg-input)', borderColor: 'var(--border)' }}
                                 >
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
-                                            {isRtl ? 'مصنعية/جرام' : 'Making/gram'}
+                                            {isRtl ? 'مصنعية الجرام' : 'Making/gram'}
                                         </span>
                                         <span
                                             className="font-numbers text-base font-extrabold"
-                                            style={{ color: hasData ? (isBest ? '#34d399' : 'var(--primary)') : 'var(--text-secondary)' }}
+                                            style={{ color: hasData ? (isBest ? 'var(--craft-accent)' : 'var(--primary)') : 'var(--text-secondary)' }}
                                         >
                                             {hasData ? `${curr} ${formatCurrency(results.makingPerGram)}` : '—'}
                                         </span>
                                     </div>
-                                    <div className="h-px" style={{ background: 'var(--border)', opacity: 0.5 }} />
+                                    <div className="h-px" style={{ background: 'var(--border)' }} />
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
                                             {isRtl ? 'إجمالي المصنعية' : 'Total making'}
@@ -330,10 +346,10 @@ const ComparisonMode: React.FC<ComparisonModeProps> = ({ settings, goldPrice }) 
             {bestDealId && (
                 <div
                     className="p-4 rounded-2xl text-center text-sm font-semibold animate-fade-in"
-                    style={{ background: 'rgba(52,211,153,0.12)', color: '#34d399', border: '1px solid rgba(52,211,153,0.2)' }}
+                    style={{ background: 'var(--craft-soft)', color: 'var(--craft-accent)', border: '1px solid rgba(13, 148, 136, 0.25)' }}
                 >
                     {isRtl
-                        ? `${shops.find(s => s.id === bestDealId)?.name} لديه أقل مصنعية للجرام!`
+                        ? `${shops.find(s => s.id === bestDealId)?.name} يقدم أقل مصنعية للجرام!`
                         : `${shops.find(s => s.id === bestDealId)?.name} has the lowest making charge per gram!`
                     }
                 </div>

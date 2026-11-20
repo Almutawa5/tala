@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <rect width="64" height="64" rx="16" fill="#0F172A"/>
+  <path d="M14 16H50V27H37.5V50H26.5V27H14V16Z" fill="url(#goldGrad)"/>
+  <path d="M14 16L26.5 27M50 16L37.5 27M26.5 50L32 43L37.5 50" stroke="#0F172A" stroke-width="2" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="goldGrad" x1="14" y1="16" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBBF24"/>
+      <stop offset="1" stop-color="#D97706"/>
+    </linearGradient>
+  </defs>
+</svg>

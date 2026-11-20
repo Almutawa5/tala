@@ -7,6 +7,8 @@ export interface HistoryInput {
     weight: number;
     itemPrice?: number;
     makingPerGram?: number;
+    sellerPrice?: number;
+    stoneWeight?: number;
 }
 
 export interface HistoryResult {

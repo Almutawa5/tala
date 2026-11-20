@@ -96,25 +96,25 @@ export const getMakingTiers = (currency: string): MakingTier[] => {
     if (['BHD', 'KWD', 'OMR'].includes(currency)) {
         return [
             { name: 'Simple', nameAr: 'بسيطة', value: 1.5, color: '#10B981' },
-            { name: 'Standard', nameAr: 'عادية', value: 2.5, color: '#3B82F6' },
-            { name: 'Detailed', nameAr: 'متقنة', value: 4.0, color: '#F59E0B' },
-            { name: 'Luxury', nameAr: 'فاخرة', value: 6.0, color: '#EF4444' },
+            { name: 'Standard', nameAr: 'متوسطة', value: 2.5, color: '#38BDF8' },
+            { name: 'Detailed', nameAr: 'متقنة', value: 4.0, color: '#E5A93B' },
+            { name: 'Luxury', nameAr: 'فاخرة', value: 6.0, color: '#F87171' },
         ];
     }
     if (['USD', 'EUR'].includes(currency)) {
         return [
             { name: 'Simple', nameAr: 'بسيطة', value: 5, color: '#10B981' },
-            { name: 'Standard', nameAr: 'عادية', value: 10, color: '#3B82F6' },
-            { name: 'Detailed', nameAr: 'متقنة', value: 18, color: '#F59E0B' },
-            { name: 'Luxury', nameAr: 'فاخرة', value: 30, color: '#EF4444' },
+            { name: 'Standard', nameAr: 'متوسطة', value: 10, color: '#38BDF8' },
+            { name: 'Detailed', nameAr: 'متقنة', value: 18, color: '#E5A93B' },
+            { name: 'Luxury', nameAr: 'فاخرة', value: 30, color: '#F87171' },
         ];
     }
     // SAR, AED, QAR, etc.
     return [
         { name: 'Simple', nameAr: 'بسيطة', value: 15, color: '#10B981' },
-        { name: 'Standard', nameAr: 'عادية', value: 25, color: '#3B82F6' },
-        { name: 'Detailed', nameAr: 'متقنة', value: 40, color: '#F59E0B' },
-        { name: 'Luxury', nameAr: 'فاخرة', value: 60, color: '#EF4444' },
+        { name: 'Standard', nameAr: 'متوسطة', value: 25, color: '#38BDF8' },
+        { name: 'Detailed', nameAr: 'متقنة', value: 40, color: '#E5A93B' },
+        { name: 'Luxury', nameAr: 'فاخرة', value: 60, color: '#F87171' },
     ];
 };
 
@@ -148,38 +148,38 @@ export const getDealRating = (
     if (ratio <= 0.08) {
         return {
             tier: 'great',
-            label: isAr ? 'صفقة ممتازة (مصنعية منخفضة)' : 'Great Deal (Very Low Making)',
-            subtext: isAr ? 'أقل من ٨٪ من سعر الذهب' : '<8% of raw gold spot price',
-            color: '#10B981',
-            bgColor: 'rgba(16, 185, 129, 0.15)',
-            borderColor: 'rgba(16, 185, 129, 0.35)'
+            label: isAr ? 'صفقة ممتازة · مصنعية منخفضة' : 'Great Deal (Very Low Making)',
+            subtext: isAr ? 'أقل من ٨٪ من قيمة الذهب' : '<8% of raw gold spot price',
+            color: '#34D399',
+            bgColor: 'rgba(16, 185, 129, 0.14)',
+            borderColor: 'rgba(52, 211, 153, 0.35)'
         };
     } else if (ratio <= 0.16) {
         return {
             tier: 'fair',
-            label: isAr ? 'سعر عادل (متوسط السوق)' : 'Fair Price (Market Average)',
+            label: isAr ? 'سعر عادل · متوسط السوق' : 'Fair Price (Market Average)',
             subtext: isAr ? 'مصنعية قياسية ومتداولة' : 'Standard competitive jeweler rate',
-            color: '#3B82F6',
-            bgColor: 'rgba(59, 130, 246, 0.15)',
-            borderColor: 'rgba(59, 130, 246, 0.35)'
+            color: '#38BDF8',
+            bgColor: 'rgba(56, 189, 248, 0.14)',
+            borderColor: 'rgba(56, 189, 248, 0.35)'
         };
     } else if (ratio <= 0.25) {
         return {
             tier: 'premium',
-            label: isAr ? 'شغل متقن / تصاميم خاصة' : 'Premium / Intricate Craft',
-            subtext: isAr ? 'مناسب للقطع المعقدة والأحجار' : 'Typical for detailed or designer work',
-            color: '#F59E0B',
-            bgColor: 'rgba(245, 158, 11, 0.15)',
-            borderColor: 'rgba(245, 158, 11, 0.35)'
+            label: isAr ? 'شغل متقن · تصميم خاص' : 'Premium / Intricate Craft',
+            subtext: isAr ? 'مناسب للقطع الدقيقة والأحجار' : 'Typical for detailed or designer work',
+            color: '#E5A93B',
+            bgColor: 'rgba(229, 169, 59, 0.14)',
+            borderColor: 'rgba(229, 169, 59, 0.35)'
         };
     } else {
         return {
             tier: 'high',
-            label: isAr ? 'مصنعية مرتفعة (تفاوض)' : 'High Making (Negotiate)',
-            subtext: isAr ? 'أعلى من ٢٥٪ — حاول التفاوض للتخفيض' : '>25% — recommend asking for a discount',
-            color: '#EF4444',
-            bgColor: 'rgba(239, 68, 68, 0.15)',
-            borderColor: 'rgba(239, 68, 68, 0.35)'
+            label: isAr ? 'مصنعية مرتفعة · يُنصح بالتفاوض' : 'High Making (Negotiate)',
+            subtext: isAr ? 'أعلى من ٢٥٪ — اطلب تخفيضاً من البائع' : '>25% — recommend asking for a discount',
+            color: '#F87171',
+            bgColor: 'rgba(248, 113, 113, 0.14)',
+            borderColor: 'rgba(248, 113, 113, 0.35)'
         };
     }
 };

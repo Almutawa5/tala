@@ -8,22 +8,22 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Montserrat', '"Noto Sans Arabic"', 'sans-serif'],
-        serif: ['Cormorant', 'serif'],
-        heading: ['Cormorant', '"Noto Sans Arabic"', 'serif'],
+        sans: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'monospace'],
+        heading: ['"Plus Jakarta Sans"', '"IBM Plex Sans Arabic"', 'sans-serif'],
       },
       colors: {
         gold: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+          50: '#FDF8EC',
+          100: '#F9EED2',
+          200: '#F3DBA4',
+          300: '#ECC36E',
+          400: '#E5A93B',
+          500: '#C68A1E',
+          600: '#A66F15',
+          700: '#855513',
+          800: '#6D4415',
+          900: '#5A3816',
         }
       }
     },

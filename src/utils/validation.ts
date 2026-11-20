@@ -13,6 +13,7 @@ const DEFAULT_LABELS: Record<string, Record<'en' | 'ar', string>> = {
     goldPrice: { en: 'Gold price', ar: 'سعر الذهب' },
     itemPrice: { en: 'Item price', ar: 'سعر القطعة' },
     weight: { en: 'Weight', ar: 'الوزن' },
+    stoneWeight: { en: 'Stone weight', ar: 'وزن الفصوص' },
     makingPerGram: { en: 'Making charge per gram', ar: 'المصنعية للجرام' }
 };
 
@@ -51,7 +52,7 @@ export const getGoldPriceWarnings = (
         level: 'info',
         text: language === 'en'
             ? 'Enter a gold price or use the live price before relying on results.'
-            : 'أدخل سعر الذهب أو استخدم السعر المباشر قبل الاعتماد على النتائج.'
+            : 'أدخل سعر الذهب أو اضغط تحديث لجلب السعر المباشر.'
     }];
 };
 
@@ -66,7 +67,7 @@ export const getWeightWarnings = (
         level: 'info',
         text: language === 'en'
             ? 'Enter the item weight to calculate per-gram values.'
-            : 'أدخل وزن القطعة لحساب القيم لكل جرام.'
+            : 'أدخل وزن القطعة لحساب التكلفة لكل جرام.'
     }];
 };
 
@@ -83,7 +84,7 @@ export const getMakingChargeWarnings = (
             level: 'warning',
             text: language === 'en'
                 ? 'Making charge is negative. Check item price, weight, and gold price.'
-                : 'المصنعية سالبة. تحقق من سعر القطعة والوزن وسعر الذهب.'
+                : 'المصنعية سالبة؛ تأكد من صحة السعر والوزن وسعر الذهب.'
         });
     }
 
@@ -93,9 +94,26 @@ export const getMakingChargeWarnings = (
             level: 'warning',
             text: language === 'en'
                 ? 'Making charge is unusually high compared with the gold value.'
-                : 'المصنعية مرتفعة بشكل غير معتاد مقارنة بقيمة الذهب.'
+                : 'المصنعية مرتفعة جداً مقارنة بقيمة الذهب الخام.'
         });
     }
 
     return messages;
+};
+
+export const getStoneWeightWarnings = (
+    weight: number,
+    stoneWeight: number,
+    language: 'en' | 'ar'
+): ValidationMessage[] => {
+    if (stoneWeight > 0 && weight > 0 && stoneWeight >= weight) {
+        return [{
+            id: 'stone-weight-exceeds',
+            level: 'error',
+            text: language === 'en'
+                ? 'Stone weight must be less than total item weight.'
+                : 'يجب أن يكون وزن الفصوص أقل من الوزن الإجمالي للقطعة.'
+        }];
+    }
+    return [];
 };

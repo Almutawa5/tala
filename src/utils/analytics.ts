@@ -12,6 +12,7 @@ interface SessionData {
 }
 
 export const recordVisitor = async () => {
+    if (!db) return;
     try {
         // Fetch IP address
         const ipResponse = await fetch('https://api.ipify.org?format=json');
@@ -37,6 +38,7 @@ export const recordVisitor = async () => {
 };
 
 export const trackEvent = async (eventName: string, eventData: any = {}) => {
+    if (!db) return;
     try {
         await addDoc(collection(db, 'events'), {
             eventName,
